@@ -1,0 +1,7 @@
+{
+  "name": "amantia-wiki",
+  "compatibility_date": "2026-06-07",
+  "assets": {
+    "directory": "./public"
+  }
+}
