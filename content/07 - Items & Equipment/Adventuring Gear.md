@@ -178,7 +178,9 @@ tags: [equipment, gear, rules-reference]
 
 **Grappling Hook (2 gp)** — Utilize action: throw at a catch within 50 ft (DC 13 DEX Acrobatics to catch). Tie a Rope to climb.
 
-**Healer's Kit (5 gp)** — 10 uses. Utilize action: expend 1 use to stabilize an Unconscious creature at 0 HP (no WIS Medicine check required).
+**Healer's Kit (5 gp)**
+![Healer's Kit](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/PHB/Healer%27s%20Kit.webp)
+10 uses. Utilize action: expend 1 use to stabilize an Unconscious creature at 0 HP (no WIS Medicine check required).
 
 **Holy Water (25 gp)** — As part of Attack action, replace one attack: throw at target within 20 ft. DEX save or take 2d8 Radiant if target is a Fiend or Undead.
 
@@ -192,7 +194,9 @@ tags: [equipment, gear, rules-reference]
 
 **Ladder (1 sp)** — 10 feet tall. Must climb to move up or down.
 
-**Lamp (5 sp)** — Bright Light 15-ft radius, Dim Light 30 ft more. Burns 6 hours per flask of oil.
+**Lamp (5 sp)**
+![Lamp](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Lamp.webp)
+Bright Light 15-ft radius, Dim Light 30 ft more. Burns 6 hours per flask of oil.
 
 **Lantern, Bullseye (10 gp)** — Bright Light in 60-ft cone, Dim Light 60 ft more. Burns 6 hours per flask.
 
@@ -208,7 +212,9 @@ tags: [equipment, gear, rules-reference]
 
 **Mirror (5 gp)** — Handheld steel mirror. Useful for cosmetics, peeking around corners, and signaling.
 
-**Net (1 gp)** — Attack action replacement: throw at target within 15 ft. DEX save or Restrained (auto-success for Huge or larger). Escape: DC 10 STR Athletics. Net: AC 10, 5 HP; Immune to Bludgeoning, Piercing, Poison, Psychic.
+**Net (1 gp)**
+![Net](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Net.webp)
+Attack action replacement: throw at target within 15 ft. DEX save or Restrained (auto-success for Huge or larger). Escape: DC 10 STR Athletics. Net: AC 10, 5 HP; Immune to Bludgeoning, Piercing, Poison, Psychic.
 
 **Oil (1 sp)** — Multiple uses:
 - *Douse creature/object:* DEX save or covered in oil; next Fire damage deals +5 Fire before oil dries (1 min)

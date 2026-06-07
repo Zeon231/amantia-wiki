@@ -71,35 +71,95 @@ tags: [equipment, armor, rules-reference]
 
 ## Armor Descriptions
 
-**Breastplate** — A fitted metal chest piece worn with supple leather. Protects vital organs without encumbering the wearer's movement.
+> *Images from the 2024 Player's Handbook.*
 
-**Chain Mail** — Interlocking metal rings over a quilted underlayer. Includes gauntlets. Heavy but thorough.
+**Breastplate**
+![Breastplate](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Breastplate.webp)
+A fitted metal chest piece worn with supple leather. Protects vital organs without encumbering the wearer's movement.
 
-**Chain Shirt** — Interlocking metal rings worn between layers of clothing or leather. Modest protection for the upper body; the sound is muffled by outer layers.
+---
 
-**Half Plate** — Shaped metal plates covering most of the body, without full leg protection beyond simple greaves.
+**Chain Mail**
+![Chain Mail](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Chain%20Mail.webp)
+Interlocking metal rings over a quilted underlayer. Includes gauntlets. Heavy but thorough.
 
-**Hide** — Thick furs and pelts. Common among barbarian tribes and those who lack access to refined materials.
+---
 
-**Leather** — A boiled leather breastplate and shoulder protectors with softer, flexible material elsewhere. The classic light armor.
+**Chain Shirt**
+![Chain Shirt](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Chain%20Shirt.webp)
+Interlocking metal rings worn between layers of clothing or leather. Modest protection for the upper body; the sound is muffled by outer layers.
 
-**Padded** — Quilted layers of cloth and batting. Light but noisy.
+---
 
-**Plate** — Shaped, interlocking metal plates covering the entire body, with gauntlets, heavy leather boots, a visored helmet, and thick padding. Buckles and straps distribute weight. The gold standard of martial protection.
+**Half Plate**
+![Half Plate](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Half%20Plate%20Armor.webp)
+Shaped metal plates covering most of the body, without full leg protection beyond simple greaves.
 
-**Ring Mail** — Leather armor with heavy rings sewn into it. Inferior to chain mail. Usually worn by those who cannot afford better.
+---
 
-**Scale Mail** — Leather coat and leggings covered with overlapping metal scales. Includes gauntlets.
+**Hide**
+![Hide Armor](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Hide%20Armor.webp)
+Thick furs and pelts. Common among barbarian tribes and those who lack access to refined materials.
 
-**Shield** — A defensive piece carried in the hand or strapped to the arm. Courage with a handle: painted, battered, and often the thin wall between a hero and a very sharp ending.
+---
 
-**Spiked Armor** — Rare dwarven armor: a leather coat and leggings covered in metal spikes. When grappling, the spikes function as a martial melee weapon (Light; 1d4 Piercing).
+**Leather**
+![Leather Armor](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Leather%20Armor.webp)
+A boiled leather breastplate and shoulder protectors with softer, flexible material elsewhere. The classic light armor.
 
-**Spiked Buckler** — A small, light shield with a central boss and projecting spike. Can make an attack (martial melee, Light; 1d4 Piercing). If worn on the arm (rotella style), the spike is largely ornamental — attacks made with it have Disadvantage.
+---
 
-**Splint** — Narrow vertical strips of metal riveted to a leather backing, worn over cloth padding. Flexible chain mail protects the joints.
+**Padded**
+![Padded Armor](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Padded%20Armor.webp)
+Quilted layers of cloth and batting. Light but noisy.
 
-**Studded Leather** — Tough flexible leather reinforced with close-set rivets or spikes. Better protection than plain leather with no stealth penalty.
+---
+
+**Plate**
+![Plate Armor](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Plate%20Armor.webp)
+Shaped, interlocking metal plates covering the entire body, with gauntlets, heavy leather boots, a visored helmet, and thick padding. Buckles and straps distribute weight. The gold standard of martial protection.
+
+---
+
+**Ring Mail**
+![Ring Mail](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Ring%20Mail.webp)
+Leather armor with heavy rings sewn into it. Inferior to chain mail. Usually worn by those who cannot afford better.
+
+---
+
+**Scale Mail**
+![Scale Mail](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scale%20Mail.webp)
+Leather coat and leggings covered with overlapping metal scales. Includes gauntlets.
+
+---
+
+**Shield**
+![Shield](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Shield.webp)
+A defensive piece carried in the hand or strapped to the arm. Courage with a handle: painted, battered, and often the thin wall between a hero and a very sharp ending.
+
+---
+
+**Spiked Armor**
+![Spiked Armor](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scale%20Mail.webp)
+Rare dwarven armor: a leather coat and leggings covered in metal spikes. When grappling, the spikes function as a martial melee weapon (Light; 1d4 Piercing).
+
+---
+
+**Spiked Buckler**
+![Spiked Buckler](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Shield.webp)
+A small, light shield with a central boss and projecting spike. Can make an attack (martial melee, Light; 1d4 Piercing). If worn on the arm (rotella style), the spike is largely ornamental — attacks made with it have Disadvantage.
+
+---
+
+**Splint**
+![Splint Armor](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Splint%20Armor.webp)
+Narrow vertical strips of metal riveted to a leather backing, worn over cloth padding. Flexible chain mail protects the joints.
+
+---
+
+**Studded Leather**
+![Studded Leather Armor](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Studded%20Leather%20Armor.webp)
+Tough flexible leather reinforced with close-set rivets or spikes. Better protection than plain leather with no stealth penalty.
 
 ---
 

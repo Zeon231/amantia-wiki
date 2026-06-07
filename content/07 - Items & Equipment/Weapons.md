@@ -151,101 +151,291 @@ Any object wielded as a makeshift weapon. A Simple or Martial weapon used contra
 
 ## Weapon Descriptions
 
-> *Flavour text from the Amantia: Goods & Equipment sourcebook.*
+> *Flavour text from the Amantia: Goods & Equipment sourcebook. Images from the 2024 Player's Handbook.*
 
-**Battle Axe** — A heavy, one- or two-handed axe with a broad metal blade built to chop through shields, armor gaps, and bone. Battlefield brutality: large, fearsome, hungry for a heroic swing.
+**Battle Axe**
+![Battle Axe](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Battleaxe.webp)
+A heavy, one- or two-handed axe with a broad metal blade built to chop through shields, armor gaps, and bone. Battlefield brutality: large, fearsome, hungry for a heroic swing.
 
-**Claymore** — A large sword with a long grip that can be wielded in one or two hands. The noble brute of the blade rack: elegant enough for a knight, heavy enough to make one reconsider its life choices.
+---
 
-**Club** — A simple blunt weapon, usually heavy wood. Knotted, reinforced, and ugly in the honest way of something built to break bones.
+**Claymore**
+![Claymore](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greatsword.webp)
+A large sword with a long grip that can be wielded in one or two hands. The noble brute of the blade rack: elegant enough for a knight, heavy enough to make one reconsider its life choices.
 
-**Cutlass** — A short, slightly curved sword with a sturdy single-edged blade. The blade of sailors, raiders, and dockside duelists: practical and wickedly quick.
+---
 
-**Dagger** — A short, double-edged blade for quick thrusts and concealment. The quiet fang of the armory: elegant, deadly, often hidden until the moment it matters.
+**Club**
+![Club](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Club.webp)
+A simple blunt weapon, usually heavy wood. Knotted, reinforced, and ugly in the honest way of something built to break bones.
 
-**Dart** — A small, lightweight thrown weapon. A pocket-sized spear with spite in its feathers: fast, quiet, easy to underestimate.
+---
 
-**Double Crossbow** — A heavy ranged weapon with two firing channels. The crossbow's overengineered cousin: bulky, intimidating, built for anyone who thinks one bolt is merely a polite suggestion.
+**Cutlass**
+![Cutlass](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scimitar.webp)
+A short, slightly curved sword with a sturdy single-edged blade. The blade of sailors, raiders, and dockside duelists: practical and wickedly quick.
 
-**Falchion** — A single-edged sword with a broad, slightly curved blade for powerful chopping. Heavy near the tip, brutal in the swing, happiest when cleaving through shields.
+---
 
-**Fauchard-fork** — A polearm with a curved cutting blade and forked spear tip. Part spear, part scythe, part "please stay over there."
+**Dagger**
+![Dagger](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Dagger.webp)
+A short, double-edged blade for quick thrusts and concealment. The quiet fang of the armory: elegant, deadly, often hidden until the moment it matters.
 
-**Flail** — A handle connected by chain to one or more heavy striking heads. Chaos on a leash: awkward, brutal, terrifying when swung by someone who knows exactly where the skulls are.
+---
 
-**Flintlock Pistol** — An early one-handed firearm. Pocket thunder for duelists, pirates, and troublemakers: smoky, dramatic, dangerously persuasive at close range.
+**Dart**
+![Dart](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Dart.webp)
+A small, lightweight thrown weapon. A pocket-sized spear with spite in its feathers: fast, quiet, easy to underestimate.
 
-**Garrote** — A strangling weapon of cord, wire, or chain. The assassin's cruel whisper: small enough to hide, deadly enough to end a fight without ringing steel.
+---
 
-**Glaive** — A polearm with a long shaft and single-edged blade. More than a sword on a stick: graceful, far-reaching, perfectly happy to carve trouble before it gets close.
+**Double Crossbow**
+![Double Crossbow](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Heavy%20Crossbow.webp)
+A heavy ranged weapon with two firing channels. The crossbow's overengineered cousin: bulky, intimidating, built for anyone who thinks one bolt is merely a polite suggestion.
 
-**Glaive-guisarme** — A polearm with blade, hook, and spike projections. A battlefield can-opener: elegant at a distance, deeply unpleasant up close.
+---
 
-**Greataxe** — A massive chopping weapon with a heavy crescent blade. The executioner's moon on a pole: grim, broad-edged, built for turning shields into firewood.
+**Falchion**
+![Falchion](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scimitar.webp)
+A single-edged sword with a broad, slightly curved blade for powerful chopping. Heavy near the tip, brutal in the swing, happiest when cleaving through shields.
 
-**Greatclub** — An oversized two-handed club. Less a crafted weapon and more a portable tree trunk.
+---
 
-**Greatsword** — A massive blade wielded with both hands. The battlefield's iron sermon: grand, brutal, loud enough to make lesser weapons whisper.
+**Fauchard-fork**
+![Fauchard-fork](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Glaive.webp)
+A polearm with a curved cutting blade and forked spear tip. Part spear, part scythe, part "please stay over there."
 
-**Handaxe** — A compact axe balanced for one-handed use or throwing. A workhorse: practical for the woodpile, nasty on the battlefield.
+---
 
-**Javelin** — A light throwing spear. The battlefield's lightning bolt in wooden form: swift, sharp, and gone from the hand before regret can catch up.
+**Flail**
+![Flail](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Flail.webp)
+A handle connected by chain to one or more heavy striking heads. Chaos on a leash: awkward, brutal, terrifying when swung by someone who knows exactly where the skulls are.
 
-**Khopesh** — A curved, sickle-like sword. Ancient royalty with a predator's curve: ceremonial, brutal, shaped like a crescent moon.
+---
 
-**Lance** — A long, heavy spear for mounted combat. A knight's thunderbolt, couched beneath the arm and aimed straight through fear.
+**Flintlock Pistol**
+![Flintlock Pistol](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Pistol.webp)
+An early one-handed firearm. Pocket thunder for duelists, pirates, and troublemakers: smoky, dramatic, dangerously persuasive at close range.
 
-**Light Crossbow** — A compact ranged weapon. The patient hunter's answer to distance: quieter than a war cry, nastier than a thrown stone.
+---
 
-**Light Hammer** — A small, one-handed hammer for quick strikes or throwing. A blacksmith's battlefield punctuation: blunt, practical, very good at ending a sentence.
+**Garrote**
+A strangling weapon of cord, wire, or chain. The assassin's cruel whisper: small enough to hide, deadly enough to end a fight without ringing steel.
 
-**Longsword** — A versatile straight-bladed weapon. The classic knightly blade: balanced, dependable, sharp enough to settle arguments that diplomacy fumbled.
+---
 
-**Mace** — A one-handed blunt weapon with a heavy metal head. Authority with a handle: compact, merciless, built to make steel helmets ring like funeral bells.
+**Glaive**
+![Glaive](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Glaive.webp)
+A polearm with a long shaft and single-edged blade. More than a sword on a stick: graceful, far-reaching, perfectly happy to carve trouble before it gets close.
 
-**Malakbar** — A rare Hobgoblin polearm combining halberd blade and mace head. A war-priest's nightmare scepter: part axe, part hammer, entirely too heavy with consequences.
+---
 
-**Man Catcher** — A polearm with a spring-loaded metal collar to trap a target by the neck. A jailer's favorite: cold, controlling, built to turn a charging warrior into a very angry prisoner.
+**Glaive-guisarme**
+![Glaive-guisarme](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Glaive.webp)
+A polearm with blade, hook, and spike projections. A battlefield can-opener: elegant at a distance, deeply unpleasant up close.
 
-**Maul** — A massive two-handed hammer. Less a weapon than a portable earthquake: blunt, brutal, impossible to ignore.
+---
 
-**Morning Star** — A spiked metal weapon. A mace with sharper intentions: compact, vicious, built to make even armored knights nervous.
+**Greataxe**
+![Greataxe](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greataxe.webp)
+A massive chopping weapon with a heavy crescent blade. The executioner's moon on a pole: grim, broad-edged, built for turning shields into firewood.
 
-**Musket** — An early long-barrel firearm. Thunder trapped in wood and iron: slow to load, loud as judgment, terrifying when the smoke clears.
+---
 
-**Orc Double Axe** — A two-headed weapon with axe blades at both ends. Twice the blade, twice the danger, very little interest in subtlety.
+**Greatclub**
+![Greatclub](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greatclub.webp)
+An oversized two-handed club. Less a crafted weapon and more a portable tree trunk.
 
-**Pike** — An exceptionally long spear for formation fighting. A forest of iron points daring anything with legs to come closer.
+---
 
-**Quarterstaff** — A long, sturdy wooden staff. The humble line between walking stick and wizard-approved skull-thumper.
+**Greatsword**
+![Greatsword](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greatsword.webp)
+A massive blade wielded with both hands. The battlefield's iron sermon: grand, brutal, loud enough to make lesser weapons whisper.
 
-**Rapier** — A slender, sharply pointed sword for precise thrusts. Steel with a silver tongue: refined, fast, lethal in the hands of someone who treats combat like conversation.
+---
 
-**Sabre** — A curved, single-edged sword for swift slashing. A crescent of polished menace: quick, elegant, happiest when carving through the chaos of a charge.
+**Handaxe**
+![Handaxe](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Handaxe.webp)
+A compact axe balanced for one-handed use or throwing. A workhorse: practical for the woodpile, nasty on the battlefield.
 
-**Scimitar** — A curved, single-edged sword for fluid slashing. A blade of desert wind and polished steel: graceful, flashing, always ready to turn motion into bloodshed.
+---
 
-**Scourge** — A whip-like weapon with leather thongs or barbed chains. Cruelty in motion.
+**Javelin**
+![Javelin](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Javelin.webp)
+A light throwing spear. The battlefield's lightning bolt in wooden form: swift, sharp, and gone from the hand before regret can catch up.
 
-**Scythe** — A long-handled tool with a sweeping curved blade. The reaper's signature: elegant, ominous, shaped for harvesting far darker things than wheat.
+---
 
-**Shortbow** — A small, flexible bow. The ranger's quiet companion: light, swift, always ready to whisper trouble from the treeline.
+**Khopesh**
+A curved, sickle-like sword. Ancient royalty with a predator's curve: ceremonial, brutal, shaped like a crescent moon.
 
-**Shortsword** — A compact, straight-bladed weapon for close combat. The alley-fighter's blade: fast, practical, suited for work where a longer sword gets in the way.
+---
 
-**Sickle** — A short-handled weapon with a curved crescent blade. Humble farm tool by daylight, moonlit throat-slicer by night.
+**Lance**
+![Lance](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Lance.webp)
+A long, heavy spear for mounted combat. A knight's thunderbolt, couched beneath the arm and aimed straight through fear.
 
-**Sling** — A cord and pouch for hurling stones. The poor warrior's thunderbolt: humble, ancient, capable of cracking a helmet from across the field.
+---
 
-**Spear** — A long pole with a sharpened metal point. The soldier's faithful equalizer: simple, far-reaching, deadly in disciplined hands.
+**Light Crossbow**
+![Light Crossbow](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Light%20Crossbow.webp)
+A compact ranged weapon. The patient hunter's answer to distance: quieter than a war cry, nastier than a thrown stone.
 
-**Trident** — A polearm with three sharp prongs. The spear's sea-born cousin: regal, dangerous, carrying the quiet threat of drowned kingdoms.
+---
 
-**Warhammer** — A compact military hammer. The blacksmith's wrath refined for battle: short-handled, bone-rattling, built to make armored knights regret their confidence.
+**Light Hammer**
+![Light Hammer](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Light%20Hammer.webp)
+A small, one-handed hammer for quick strikes or throwing. A blacksmith's battlefield punctuation: blunt, practical, very good at ending a sentence.
 
-**War Pick** — A military pickaxe. All leverage, cruelty, and one very persuasive spike.
+---
 
-**Whip** — A flexible braided leather or cord weapon. Pain with a long shadow: theatrical, cruelly precise, always moving faster than caution.
+**Longbow**
+![Longbow](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Longbow.webp)
+A tall, powerful bow for long-range accuracy. The archer's patient eye made wood and string: slow to prepare, devastating to deliver.
+
+---
+
+**Longsword**
+![Longsword](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Longsword.webp)
+A versatile straight-bladed weapon. The classic knightly blade: balanced, dependable, sharp enough to settle arguments that diplomacy fumbled.
+
+---
+
+**Mace**
+![Mace](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Mace.webp)
+A one-handed blunt weapon with a heavy metal head. Authority with a handle: compact, merciless, built to make steel helmets ring like funeral bells.
+
+---
+
+**Malakbar**
+![Malakbar](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Halberd.webp)
+A rare Hobgoblin polearm combining halberd blade and mace head. A war-priest's nightmare scepter: part axe, part hammer, entirely too heavy with consequences.
+
+---
+
+**Man Catcher**
+![Man Catcher](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Pike.webp)
+A polearm with a spring-loaded metal collar to trap a target by the neck. A jailer's favorite: cold, controlling, built to turn a charging warrior into a very angry prisoner.
+
+---
+
+**Maul**
+![Maul](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Maul.webp)
+A massive two-handed hammer. Less a weapon than a portable earthquake: blunt, brutal, impossible to ignore.
+
+---
+
+**Morning Star**
+![Morning Star](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Morningstar.webp)
+A spiked metal weapon. A mace with sharper intentions: compact, vicious, built to make even armored knights nervous.
+
+---
+
+**Musket**
+![Musket](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Musket.webp)
+An early long-barrel firearm. Thunder trapped in wood and iron: slow to load, loud as judgment, terrifying when the smoke clears.
+
+---
+
+**Orc Double Axe**
+![Orc Double Axe](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greataxe.webp)
+A two-headed weapon with axe blades at both ends. Twice the blade, twice the danger, very little interest in subtlety.
+
+---
+
+**Pike**
+![Pike](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Pike.webp)
+An exceptionally long spear for formation fighting. A forest of iron points daring anything with legs to come closer.
+
+---
+
+**Quarterstaff**
+![Quarterstaff](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Quarterstaff.webp)
+A long, sturdy wooden staff. The humble line between walking stick and wizard-approved skull-thumper.
+
+---
+
+**Rapier**
+![Rapier](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Rapier.webp)
+A slender, sharply pointed sword for precise thrusts. Steel with a silver tongue: refined, fast, lethal in the hands of someone who treats combat like conversation.
+
+---
+
+**Sabre**
+![Sabre](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scimitar.webp)
+A curved, single-edged sword for swift slashing. A crescent of polished menace: quick, elegant, happiest when carving through the chaos of a charge.
+
+---
+
+**Scimitar**
+![Scimitar](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scimitar.webp)
+A curved, single-edged sword for fluid slashing. A blade of desert wind and polished steel: graceful, flashing, always ready to turn motion into bloodshed.
+
+---
+
+**Scourge**
+![Scourge](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Whip.webp)
+A whip-like weapon with leather thongs or barbed chains. Cruelty in motion.
+
+---
+
+**Scythe**
+![Scythe](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Sickle.webp)
+A long-handled tool with a sweeping curved blade. The reaper's signature: elegant, ominous, shaped for harvesting far darker things than wheat.
+
+---
+
+**Shortbow**
+![Shortbow](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Shortbow.webp)
+A small, flexible bow. The ranger's quiet companion: light, swift, always ready to whisper trouble from the treeline.
+
+---
+
+**Shortsword**
+![Shortsword](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Shortsword.webp)
+A compact, straight-bladed weapon for close combat. The alley-fighter's blade: fast, practical, suited for work where a longer sword gets in the way.
+
+---
+
+**Sickle**
+![Sickle](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Sickle.webp)
+A short-handled weapon with a curved crescent blade. Humble farm tool by daylight, moonlit throat-slicer by night.
+
+---
+
+**Sling**
+![Sling](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Sling.webp)
+A cord and pouch for hurling stones. The poor warrior's thunderbolt: humble, ancient, capable of cracking a helmet from across the field.
+
+---
+
+**Spear**
+![Spear](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Spear.webp)
+A long pole with a sharpened metal point. The soldier's faithful equalizer: simple, far-reaching, deadly in disciplined hands.
+
+---
+
+**Trident**
+![Trident](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Trident.webp)
+A polearm with three sharp prongs. The spear's sea-born cousin: regal, dangerous, carrying the quiet threat of drowned kingdoms.
+
+---
+
+**Warhammer**
+![Warhammer](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Warhammer.webp)
+A compact military hammer. The blacksmith's wrath refined for battle: short-handled, bone-rattling, built to make armored knights regret their confidence.
+
+---
+
+**War Pick**
+![War Pick](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/War%20Pick.webp)
+A military pickaxe. All leverage, cruelty, and one very persuasive spike.
+
+---
+
+**Whip**
+![Whip](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Whip.webp)
+A flexible braided leather or cord weapon. Pain with a long shadow: theatrical, cruelly precise, always moving faster than caution.
 
 ---
 

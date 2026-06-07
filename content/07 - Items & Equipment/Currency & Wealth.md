@@ -11,13 +11,13 @@ tags: [equipment, currency, rules-reference]
 
 ## Coins
 
-| Coin | Abbreviation | Common Use |
-|---|---|---|
-| Copper piece | cp | Laborers, beggars — a candle, a torch, chalk |
-| Silver piece | sp | Commoners — half a day's labor, lamp oil, a poor inn |
-| Gold piece | gp | Standard unit of wealth — a bedroll, 50 ft rope, a goat |
-| Electrum piece | ep | Rare; from fallen empires — sometimes met with suspicion |
-| Platinum piece | pp | Rare; extreme wealth |
+| Coin | Image | Abbreviation | Common Use |
+|---|---|---|---|
+| Copper piece | ![cp](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/PHB/Copper%20(cp).webp) | cp | Laborers, beggars — a candle, a torch, chalk |
+| Silver piece | ![sp](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/PHB/Silver%20(sp).webp) | sp | Commoners — half a day's labor, lamp oil, a poor inn |
+| Electrum piece | ![ep](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/PHB/Electrum%20(ep).webp) | ep | Rare; from fallen empires — sometimes met with suspicion |
+| Gold piece | ![gp](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/PHB/Gold%20(gp).webp) | gp | Standard unit of wealth — a bedroll, 50 ft rope, a goat |
+| Platinum piece | ![pp](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/PHB/Platinum%20(pp).webp) | pp | Rare; extreme wealth |
 
 *A standard coin weighs ~⅓ oz. — 50 coins = 1 pound.*
 

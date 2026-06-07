@@ -149,6 +149,7 @@ tags: [equipment, tools, rules-reference]
 - **Craft:** Basic Poison
 
 ### Thieves' Tools — 25 gp | 1 lb.
+![Thieves' Tools](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/PHB/Thieves%27%20Tools.webp)
 - **Ability:** Dexterity
 - **Utilize:** Pick a lock (DC 15), or disarm a trap (DC 15)
 
