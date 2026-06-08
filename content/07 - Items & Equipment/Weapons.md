@@ -153,289 +153,475 @@ Any object wielded as a makeshift weapon. A Simple or Martial weapon used contra
 
 > *Flavour text from the Amantia: Goods & Equipment sourcebook. Images from the 2024 Player's Handbook.*
 
-**Battle Axe**
-![Battle Axe](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Battleaxe.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Battleaxe.webp" align="right" width="130" />
+
+**Battle Axe** · *Martial Melee*
+
 A heavy, one- or two-handed axe with a broad metal blade built to chop through shields, armor gaps, and bone. Battlefield brutality: large, fearsome, hungry for a heroic swing.
 
+<br clear="right" />
+
 ---
 
-**Claymore**
-![Claymore](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greatsword.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greatsword.webp" align="right" width="130" />
+
+**Claymore** · *Martial Melee*
+
 A large sword with a long grip that can be wielded in one or two hands. The noble brute of the blade rack: elegant enough for a knight, heavy enough to make one reconsider its life choices.
 
+<br clear="right" />
+
 ---
 
-**Club**
-![Club](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Club.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Club.webp" align="right" width="130" />
+
+**Club** · *Simple Melee*
+
 A simple blunt weapon, usually heavy wood. Knotted, reinforced, and ugly in the honest way of something built to break bones.
 
+<br clear="right" />
+
 ---
 
-**Cutlass**
-![Cutlass](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scimitar.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scimitar.webp" align="right" width="130" />
+
+**Cutlass** · *Martial Melee*
+
 A short, slightly curved sword with a sturdy single-edged blade. The blade of sailors, raiders, and dockside duelists: practical and wickedly quick.
 
+<br clear="right" />
+
 ---
 
-**Dagger**
-![Dagger](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Dagger.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Dagger.webp" align="right" width="130" />
+
+**Dagger** · *Simple Melee*
+
 A short, double-edged blade for quick thrusts and concealment. The quiet fang of the armory: elegant, deadly, often hidden until the moment it matters.
 
+<br clear="right" />
+
 ---
 
-**Dart**
-![Dart](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Dart.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Dart.webp" align="right" width="130" />
+
+**Dart** · *Simple Ranged*
+
 A small, lightweight thrown weapon. A pocket-sized spear with spite in its feathers: fast, quiet, easy to underestimate.
 
+<br clear="right" />
+
 ---
 
-**Double Crossbow**
-![Double Crossbow](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Heavy%20Crossbow.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Heavy%20Crossbow.webp" align="right" width="130" />
+
+**Double Crossbow** · *Exotic Ranged*
+
 A heavy ranged weapon with two firing channels. The crossbow's overengineered cousin: bulky, intimidating, built for anyone who thinks one bolt is merely a polite suggestion.
 
+<br clear="right" />
+
 ---
 
-**Falchion**
-![Falchion](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scimitar.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scimitar.webp" align="right" width="130" />
+
+**Falchion** · *Martial Melee*
+
 A single-edged sword with a broad, slightly curved blade for powerful chopping. Heavy near the tip, brutal in the swing, happiest when cleaving through shields.
 
+<br clear="right" />
+
 ---
 
-**Fauchard-fork**
-![Fauchard-fork](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Glaive.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Glaive.webp" align="right" width="130" />
+
+**Fauchard-fork** · *Martial Melee*
+
 A polearm with a curved cutting blade and forked spear tip. Part spear, part scythe, part "please stay over there."
 
+<br clear="right" />
+
 ---
 
-**Flail**
-![Flail](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Flail.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Flail.webp" align="right" width="130" />
+
+**Flail** · *Martial Melee*
+
 A handle connected by chain to one or more heavy striking heads. Chaos on a leash: awkward, brutal, terrifying when swung by someone who knows exactly where the skulls are.
 
+<br clear="right" />
+
 ---
 
-**Flintlock Pistol**
-![Flintlock Pistol](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Pistol.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Pistol.webp" align="right" width="130" />
+
+**Flintlock Pistol** · *Exotic Ranged*
+
 An early one-handed firearm. Pocket thunder for duelists, pirates, and troublemakers: smoky, dramatic, dangerously persuasive at close range.
 
+<br clear="right" />
+
 ---
 
-**Garrote**
+**Garrote** · *Exotic Melee*
+
 A strangling weapon of cord, wire, or chain. The assassin's cruel whisper: small enough to hide, deadly enough to end a fight without ringing steel.
 
 ---
 
-**Glaive**
-![Glaive](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Glaive.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Glaive.webp" align="right" width="130" />
+
+**Glaive** · *Martial Melee*
+
 A polearm with a long shaft and single-edged blade. More than a sword on a stick: graceful, far-reaching, perfectly happy to carve trouble before it gets close.
 
+<br clear="right" />
+
 ---
 
-**Glaive-guisarme**
-![Glaive-guisarme](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Glaive.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Glaive.webp" align="right" width="130" />
+
+**Glaive-guisarme** · *Martial Melee*
+
 A polearm with blade, hook, and spike projections. A battlefield can-opener: elegant at a distance, deeply unpleasant up close.
 
+<br clear="right" />
+
 ---
 
-**Greataxe**
-![Greataxe](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greataxe.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greataxe.webp" align="right" width="130" />
+
+**Greataxe** · *Martial Melee*
+
 A massive chopping weapon with a heavy crescent blade. The executioner's moon on a pole: grim, broad-edged, built for turning shields into firewood.
 
+<br clear="right" />
+
 ---
 
-**Greatclub**
-![Greatclub](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greatclub.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greatclub.webp" align="right" width="130" />
+
+**Greatclub** · *Simple Melee*
+
 An oversized two-handed club. Less a crafted weapon and more a portable tree trunk.
 
+<br clear="right" />
+
 ---
 
-**Greatsword**
-![Greatsword](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greatsword.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greatsword.webp" align="right" width="130" />
+
+**Greatsword** · *Martial Melee*
+
 A massive blade wielded with both hands. The battlefield's iron sermon: grand, brutal, loud enough to make lesser weapons whisper.
 
+<br clear="right" />
+
 ---
 
-**Handaxe**
-![Handaxe](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Handaxe.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Handaxe.webp" align="right" width="130" />
+
+**Handaxe** · *Simple Melee*
+
 A compact axe balanced for one-handed use or throwing. A workhorse: practical for the woodpile, nasty on the battlefield.
 
+<br clear="right" />
+
 ---
 
-**Javelin**
-![Javelin](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Javelin.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Javelin.webp" align="right" width="130" />
+
+**Javelin** · *Simple Melee*
+
 A light throwing spear. The battlefield's lightning bolt in wooden form: swift, sharp, and gone from the hand before regret can catch up.
 
+<br clear="right" />
+
 ---
 
-**Khopesh**
+**Khopesh** · *Exotic Melee*
+
 A curved, sickle-like sword. Ancient royalty with a predator's curve: ceremonial, brutal, shaped like a crescent moon.
 
 ---
 
-**Lance**
-![Lance](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Lance.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Lance.webp" align="right" width="130" />
+
+**Lance** · *Martial Melee*
+
 A long, heavy spear for mounted combat. A knight's thunderbolt, couched beneath the arm and aimed straight through fear.
 
+<br clear="right" />
+
 ---
 
-**Light Crossbow**
-![Light Crossbow](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Light%20Crossbow.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Light%20Crossbow.webp" align="right" width="130" />
+
+**Light Crossbow** · *Simple Ranged*
+
 A compact ranged weapon. The patient hunter's answer to distance: quieter than a war cry, nastier than a thrown stone.
 
+<br clear="right" />
+
 ---
 
-**Light Hammer**
-![Light Hammer](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Light%20Hammer.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Light%20Hammer.webp" align="right" width="130" />
+
+**Light Hammer** · *Simple Melee*
+
 A small, one-handed hammer for quick strikes or throwing. A blacksmith's battlefield punctuation: blunt, practical, very good at ending a sentence.
 
+<br clear="right" />
+
 ---
 
-**Longbow**
-![Longbow](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Longbow.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Longbow.webp" align="right" width="130" />
+
+**Longbow** · *Martial Ranged*
+
 A tall, powerful bow for long-range accuracy. The archer's patient eye made wood and string: slow to prepare, devastating to deliver.
 
+<br clear="right" />
+
 ---
 
-**Longsword**
-![Longsword](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Longsword.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Longsword.webp" align="right" width="130" />
+
+**Longsword** · *Martial Melee*
+
 A versatile straight-bladed weapon. The classic knightly blade: balanced, dependable, sharp enough to settle arguments that diplomacy fumbled.
 
+<br clear="right" />
+
 ---
 
-**Mace**
-![Mace](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Mace.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Mace.webp" align="right" width="130" />
+
+**Mace** · *Simple Melee*
+
 A one-handed blunt weapon with a heavy metal head. Authority with a handle: compact, merciless, built to make steel helmets ring like funeral bells.
 
+<br clear="right" />
+
 ---
 
-**Malakbar**
-![Malakbar](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Halberd.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Halberd.webp" align="right" width="130" />
+
+**Malakbar** · *Exotic Melee*
+
 A rare Hobgoblin polearm combining halberd blade and mace head. A war-priest's nightmare scepter: part axe, part hammer, entirely too heavy with consequences.
 
+<br clear="right" />
+
 ---
 
-**Man Catcher**
-![Man Catcher](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Pike.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Pike.webp" align="right" width="130" />
+
+**Man Catcher** · *Exotic Melee*
+
 A polearm with a spring-loaded metal collar to trap a target by the neck. A jailer's favorite: cold, controlling, built to turn a charging warrior into a very angry prisoner.
 
+<br clear="right" />
+
 ---
 
-**Maul**
-![Maul](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Maul.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Maul.webp" align="right" width="130" />
+
+**Maul** · *Martial Melee*
+
 A massive two-handed hammer. Less a weapon than a portable earthquake: blunt, brutal, impossible to ignore.
 
+<br clear="right" />
+
 ---
 
-**Morning Star**
-![Morning Star](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Morningstar.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Morningstar.webp" align="right" width="130" />
+
+**Morning Star** · *Martial Melee*
+
 A spiked metal weapon. A mace with sharper intentions: compact, vicious, built to make even armored knights nervous.
 
+<br clear="right" />
+
 ---
 
-**Musket**
-![Musket](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Musket.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Musket.webp" align="right" width="130" />
+
+**Musket** · *Exotic Ranged*
+
 An early long-barrel firearm. Thunder trapped in wood and iron: slow to load, loud as judgment, terrifying when the smoke clears.
 
+<br clear="right" />
+
 ---
 
-**Orc Double Axe**
-![Orc Double Axe](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greataxe.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greataxe.webp" align="right" width="130" />
+
+**Orc Double Axe** · *Exotic Melee*
+
 A two-headed weapon with axe blades at both ends. Twice the blade, twice the danger, very little interest in subtlety.
 
+<br clear="right" />
+
 ---
 
-**Pike**
-![Pike](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Pike.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Pike.webp" align="right" width="130" />
+
+**Pike** · *Martial Melee*
+
 An exceptionally long spear for formation fighting. A forest of iron points daring anything with legs to come closer.
 
+<br clear="right" />
+
 ---
 
-**Quarterstaff**
-![Quarterstaff](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Quarterstaff.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Quarterstaff.webp" align="right" width="130" />
+
+**Quarterstaff** · *Simple Melee*
+
 A long, sturdy wooden staff. The humble line between walking stick and wizard-approved skull-thumper.
 
+<br clear="right" />
+
 ---
 
-**Rapier**
-![Rapier](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Rapier.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Rapier.webp" align="right" width="130" />
+
+**Rapier** · *Martial Melee*
+
 A slender, sharply pointed sword for precise thrusts. Steel with a silver tongue: refined, fast, lethal in the hands of someone who treats combat like conversation.
 
+<br clear="right" />
+
 ---
 
-**Sabre**
-![Sabre](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scimitar.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scimitar.webp" align="right" width="130" />
+
+**Sabre** · *Martial Melee*
+
 A curved, single-edged sword for swift slashing. A crescent of polished menace: quick, elegant, happiest when carving through the chaos of a charge.
 
+<br clear="right" />
+
 ---
 
-**Scimitar**
-![Scimitar](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scimitar.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scimitar.webp" align="right" width="130" />
+
+**Scimitar** · *Martial Melee*
+
 A curved, single-edged sword for fluid slashing. A blade of desert wind and polished steel: graceful, flashing, always ready to turn motion into bloodshed.
 
+<br clear="right" />
+
 ---
 
-**Scourge**
-![Scourge](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Whip.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Whip.webp" align="right" width="130" />
+
+**Scourge** · *Exotic Melee*
+
 A whip-like weapon with leather thongs or barbed chains. Cruelty in motion.
 
+<br clear="right" />
+
 ---
 
-**Scythe**
-![Scythe](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Sickle.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Sickle.webp" align="right" width="130" />
+
+**Scythe** · *Simple Melee*
+
 A long-handled tool with a sweeping curved blade. The reaper's signature: elegant, ominous, shaped for harvesting far darker things than wheat.
 
+<br clear="right" />
+
 ---
 
-**Shortbow**
-![Shortbow](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Shortbow.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Shortbow.webp" align="right" width="130" />
+
+**Shortbow** · *Simple Ranged*
+
 A small, flexible bow. The ranger's quiet companion: light, swift, always ready to whisper trouble from the treeline.
 
+<br clear="right" />
+
 ---
 
-**Shortsword**
-![Shortsword](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Shortsword.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Shortsword.webp" align="right" width="130" />
+
+**Shortsword** · *Martial Melee*
+
 A compact, straight-bladed weapon for close combat. The alley-fighter's blade: fast, practical, suited for work where a longer sword gets in the way.
 
+<br clear="right" />
+
 ---
 
-**Sickle**
-![Sickle](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Sickle.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Sickle.webp" align="right" width="130" />
+
+**Sickle** · *Simple Melee*
+
 A short-handled weapon with a curved crescent blade. Humble farm tool by daylight, moonlit throat-slicer by night.
 
+<br clear="right" />
+
 ---
 
-**Sling**
-![Sling](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Sling.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Sling.webp" align="right" width="130" />
+
+**Sling** · *Simple Ranged*
+
 A cord and pouch for hurling stones. The poor warrior's thunderbolt: humble, ancient, capable of cracking a helmet from across the field.
 
+<br clear="right" />
+
 ---
 
-**Spear**
-![Spear](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Spear.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Spear.webp" align="right" width="130" />
+
+**Spear** · *Simple Melee*
+
 A long pole with a sharpened metal point. The soldier's faithful equalizer: simple, far-reaching, deadly in disciplined hands.
 
+<br clear="right" />
+
 ---
 
-**Trident**
-![Trident](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Trident.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Trident.webp" align="right" width="130" />
+
+**Trident** · *Martial Melee*
+
 A polearm with three sharp prongs. The spear's sea-born cousin: regal, dangerous, carrying the quiet threat of drowned kingdoms.
 
+<br clear="right" />
+
 ---
 
-**Warhammer**
-![Warhammer](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Warhammer.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Warhammer.webp" align="right" width="130" />
+
+**Warhammer** · *Martial Melee*
+
 A compact military hammer. The blacksmith's wrath refined for battle: short-handled, bone-rattling, built to make armored knights regret their confidence.
 
+<br clear="right" />
+
 ---
 
-**War Pick**
-![War Pick](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/War%20Pick.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/War%20Pick.webp" align="right" width="130" />
+
+**War Pick** · *Martial Melee*
+
 A military pickaxe. All leverage, cruelty, and one very persuasive spike.
 
+<br clear="right" />
+
 ---
 
-**Whip**
-![Whip](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Whip.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Whip.webp" align="right" width="130" />
+
+**Whip** · *Martial Melee*
+
 A flexible braided leather or cord weapon. Pain with a long shadow: theatrical, cruelly precise, always moving faster than caution.
+
+<br clear="right" />
 
 ---
 

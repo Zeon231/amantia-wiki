@@ -73,93 +73,153 @@ tags: [equipment, armor, rules-reference]
 
 > *Images from the 2024 Player's Handbook.*
 
-**Breastplate**
-![Breastplate](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Breastplate.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Breastplate.webp" align="right" width="130" />
+
+**Breastplate** · *Medium Armor · AC 14 + DEX (max 2) · 400 gp*
+
 A fitted metal chest piece worn with supple leather. Protects vital organs without encumbering the wearer's movement.
 
+<br clear="right" />
+
 ---
 
-**Chain Mail**
-![Chain Mail](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Chain%20Mail.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Chain%20Mail.webp" align="right" width="130" />
+
+**Chain Mail** · *Heavy Armor · AC 16 · STR 13 · Stealth Disadv. · 75 gp*
+
 Interlocking metal rings over a quilted underlayer. Includes gauntlets. Heavy but thorough.
 
+<br clear="right" />
+
 ---
 
-**Chain Shirt**
-![Chain Shirt](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Chain%20Shirt.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Chain%20Shirt.webp" align="right" width="130" />
+
+**Chain Shirt** · *Medium Armor · AC 13 + DEX (max 2) · 50 gp*
+
 Interlocking metal rings worn between layers of clothing or leather. Modest protection for the upper body; the sound is muffled by outer layers.
 
+<br clear="right" />
+
 ---
 
-**Half Plate**
-![Half Plate](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Half%20Plate%20Armor.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Half%20Plate%20Armor.webp" align="right" width="130" />
+
+**Half Plate** · *Medium Armor · AC 15 + DEX (max 2) · Stealth Disadv. · 750 gp*
+
 Shaped metal plates covering most of the body, without full leg protection beyond simple greaves.
 
+<br clear="right" />
+
 ---
 
-**Hide**
-![Hide Armor](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Hide%20Armor.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Hide%20Armor.webp" align="right" width="130" />
+
+**Hide** · *Medium Armor · AC 12 + DEX (max 2) · 10 gp*
+
 Thick furs and pelts. Common among barbarian tribes and those who lack access to refined materials.
 
+<br clear="right" />
+
 ---
 
-**Leather**
-![Leather Armor](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Leather%20Armor.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Leather%20Armor.webp" align="right" width="130" />
+
+**Leather** · *Light Armor · AC 11 + DEX · 10 gp*
+
 A boiled leather breastplate and shoulder protectors with softer, flexible material elsewhere. The classic light armor.
 
+<br clear="right" />
+
 ---
 
-**Padded**
-![Padded Armor](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Padded%20Armor.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Padded%20Armor.webp" align="right" width="130" />
+
+**Padded** · *Light Armor · AC 11 + DEX · Stealth Disadv. · 5 gp*
+
 Quilted layers of cloth and batting. Light but noisy.
 
+<br clear="right" />
+
 ---
 
-**Plate**
-![Plate Armor](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Plate%20Armor.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Plate%20Armor.webp" align="right" width="130" />
+
+**Plate** · *Heavy Armor · AC 18 · STR 15 · Stealth Disadv. · 1,500 gp*
+
 Shaped, interlocking metal plates covering the entire body, with gauntlets, heavy leather boots, a visored helmet, and thick padding. Buckles and straps distribute weight. The gold standard of martial protection.
 
+<br clear="right" />
+
 ---
 
-**Ring Mail**
-![Ring Mail](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Ring%20Mail.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Ring%20Mail.webp" align="right" width="130" />
+
+**Ring Mail** · *Heavy Armor · AC 14 · Stealth Disadv. · 30 gp*
+
 Leather armor with heavy rings sewn into it. Inferior to chain mail. Usually worn by those who cannot afford better.
 
+<br clear="right" />
+
 ---
 
-**Scale Mail**
-![Scale Mail](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scale%20Mail.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scale%20Mail.webp" align="right" width="130" />
+
+**Scale Mail** · *Medium Armor · AC 14 + DEX (max 2) · Stealth Disadv. · 50 gp*
+
 Leather coat and leggings covered with overlapping metal scales. Includes gauntlets.
 
+<br clear="right" />
+
 ---
 
-**Shield**
-![Shield](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Shield.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Shield.webp" align="right" width="130" />
+
+**Shield** · *Shield · +2 AC · 10 gp*
+
 A defensive piece carried in the hand or strapped to the arm. Courage with a handle: painted, battered, and often the thin wall between a hero and a very sharp ending.
 
+<br clear="right" />
+
 ---
 
-**Spiked Armor**
-![Spiked Armor](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scale%20Mail.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Scale%20Mail.webp" align="right" width="130" />
+
+**Spiked Armor** · *Medium Armor · AC 14 + DEX (max 2) · Stealth Disadv. · 75 gp*
+
 Rare dwarven armor: a leather coat and leggings covered in metal spikes. When grappling, the spikes function as a martial melee weapon (Light; 1d4 Piercing).
 
+<br clear="right" />
+
 ---
 
-**Spiked Buckler**
-![Spiked Buckler](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Shield.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Shield.webp" align="right" width="130" />
+
+**Spiked Buckler** · *Shield · +1 AC · 10 gp*
+
 A small, light shield with a central boss and projecting spike. Can make an attack (martial melee, Light; 1d4 Piercing). If worn on the arm (rotella style), the spike is largely ornamental — attacks made with it have Disadvantage.
 
+<br clear="right" />
+
 ---
 
-**Splint**
-![Splint Armor](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Splint%20Armor.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Splint%20Armor.webp" align="right" width="130" />
+
+**Splint** · *Heavy Armor · AC 17 · STR 15 · Stealth Disadv. · 200 gp*
+
 Narrow vertical strips of metal riveted to a leather backing, worn over cloth padding. Flexible chain mail protects the joints.
 
+<br clear="right" />
+
 ---
 
-**Studded Leather**
-![Studded Leather Armor](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Studded%20Leather%20Armor.webp)
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Studded%20Leather%20Armor.webp" align="right" width="130" />
+
+**Studded Leather** · *Light Armor · AC 12 + DEX · 45 gp*
+
 Tough flexible leather reinforced with close-set rivets or spikes. Better protection than plain leather with no stealth penalty.
+
+<br clear="right" />
 
 ---
 
