@@ -25,6 +25,7 @@ Full Fae beings — born of the Feywild, not shaped by it.
 | **Aes Sídhe** | [[Aes Sídhe]] | High Fae nobility; obligation-bound; ancient |
 | **Summer Court Faerie** | [[Summer Court Faerie]] | Bold, passionate; Seelie Court |
 | **Winter Court Faerie** | [[Winter Court Faerie]] | Cold, calculating; Unseelie Court |
+| **Satyr** | [[Satyr]] | Full Fae; magic resistance; revelers |
 
 ---
 
@@ -36,7 +37,6 @@ Beings with deep Fae ancestry — not full Fae, but not mortal either.
 |---------|------|-------|
 | **Faenari Elf** | [[Elves#Faenari Elf\|Elves]] | Half-Fae elves; most adventurous elf type |
 | **Fae'ri** (3 subtypes) | [[Fae'ri]] | Altered Fae — Ashblood, Glamourbound, Riftwing |
-| **Satyr** | [[Satyr]] | Full Fae; magic resistance; revelers |
 | **Centaur** | [[Centaur]] | Fae hybrid; plains-bound |
 | **Cervitaur** | [[Cervitaur]] | Fae hybrid; forest-bound |
 

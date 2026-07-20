@@ -14,6 +14,8 @@ common: false
 
 # Greater Minotaur
 
+![[04 - Species/Species Images/greater-minotaur.jpg]]
+
 Hailing from the island archipelago southwest of the Republic of Arcadia, Greater Minotaur are the civilised, intelligent branch of minotaur kind — distinct from the brutish "Lesser Minotaur" by their superior intellect and civic organisation. They have built a **Theocracy** called **Minotauros** that venerates the Demon Lord **Baphomet**, the Horned King.
 
 Minotaur embody the tension between civilisation and savagery, discipline and madness. They stand in two worlds, tugged toward violence but bound by conscience. The greatest of them seek the balance between the monstrous and the refined. The weakest succumb to Baphomet's thrall.

@@ -1,7 +1,9 @@
 ---
-banner: 04 - Species/Species Images/hill-goliath.jpg
+banner: "04 - Species/Species Images/hill-goliath.jpg"
 banner-y: 0
 banner-fade: -10
+banner-height: 700
+content-start: 712
 tags:
   - species
   - goliath
@@ -10,8 +12,6 @@ size: Medium
 speed: 30 ft
 lifespan: ~100 years
 common: false
-banner-height: 700
-content-start: 712
 ---
 
 # Goliaths

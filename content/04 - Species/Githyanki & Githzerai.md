@@ -11,9 +11,6 @@ common: false
 
 # Githyanki & Githzerai
 
-![[04 - Species/Species Images/githyanki.jpg]]
-![[04 - Species/Species Images/githzerai.jpg]]
-
 Ancient humanoids who escaped enslavement by Mind Flayers in the distant past. The trauma of that enslavement split them forever into two distinct peoples: the militant, conquest-minded **Githyanki** and the disciplined, ascetic **Githzerai**. Both carry psionic gifts and a deep hatred of illithids — but they disagree bitterly on everything else.
 
 > [!info] Racial Traits (All Gith)
@@ -26,6 +23,8 @@ Ancient humanoids who escaped enslavement by Mind Flayers in the distant past. T
 
 ## Githyanki
 
+![[04 - Species/Species Images/githyanki.jpg]]
+
 Warrior-conquerors who ride astral ships and red dragons. Githyanki society is militaristic, hierarchical, and expansionist. They live on the Astral Plane in the city of Tu'narath and raid other planes for resources, slaves, and glory.
 
 **Key Traits:**
@@ -36,6 +35,8 @@ Warrior-conquerors who ride astral ships and red dragons. Githyanki society is m
 ---
 
 ## Githzerai
+
+![[04 - Species/Species Images/githzerai.jpg]]
 
 Monks and philosophers who dwell in fortress-monasteries in the Plane of Limbo, where they impose order on raw chaos through sheer mental discipline. Quieter than Githyanki, but no less dangerous.
 

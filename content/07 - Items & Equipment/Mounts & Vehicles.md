@@ -21,6 +21,16 @@ tags: [equipment, mounts, vehicles, rules-reference]
 | Pony | 225 lb. | 40 ft. | 30 gp |
 | Warhorse | 540 lb. | 60 ft. | 400 gp |
 
+> *Images from the 2025 Monster Manual.*
+
+| Camel | Elephant | Horse, Draft | Horse, Riding |
+|---|---|---|---|
+| <img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/bestiary/XMM/Camel.webp" width="150" /> | <img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/bestiary/XMM/Elephant.webp" width="150" /> | <img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/bestiary/XMM/Draft%20Horse.webp" width="150" /> | <img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/bestiary/XMM/Riding%20Horse.webp" width="150" /> |
+
+| Mastiff | Mule | Pony | Warhorse |
+|---|---|---|---|
+| <img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/bestiary/XMM/Mastiff.webp" width="150" /> | <img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/bestiary/XMM/Mule.webp" width="150" /> | <img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/bestiary/XMM/Pony.webp" width="150" /> | <img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/bestiary/XMM/Warhorse.webp" width="150" /> |
+
 > [!info] Mounts & Cargo
 > An animal pulling a carriage, cart, chariot, sled, or wagon can move up to **5×** its base carrying capacity (including vehicle weight). Multiple animals: add capacities together.
 
@@ -114,9 +124,13 @@ Powered by magic, this iron coach has a flamethrower turret mounted atop it. Acc
 ### Keg Launcher
 *Large Object — AC 15 | HP 30*
 
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/objects/XDMG/Keg%20Launcher.webp" align="right" style="max-width:200px;max-height:180px;" />
+
 **Toxic Keg** *(Requires Load + Aim)* — CON Save DC 15, each creature in a 20-ft sphere centered 30–300 ft from the launcher. Failure: 4d6 Poison damage. Success: half damage.
 
 A back-mounted wooden catapult that flings small kegs of toxic gas. Loading requires Utilize; aiming requires Utilize; then a crew member fires.
+
+<br clear="right" />
 
 ---
 
@@ -132,7 +146,11 @@ A small bronze cannon inlaid with arcane runes, mounted on a heavy tripod. Launc
 ### Mangonel
 *Large Object — AC 15 | HP 100*
 
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/objects/XDMG/Mangonel.webp" align="right" style="max-width:200px;max-height:180px;" />
+
 **Mangonel Stone** *(Requires Load + Aim)* — Ranged Attack Roll: +5, range 200/800 ft (cannot hit within 60 ft of itself). Hit: 5d10 Bludgeoning damage.
+
+<br clear="right" />
 
 ---
 

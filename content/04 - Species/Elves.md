@@ -111,10 +111,7 @@ Elves can live well over 700 years. They reach adulthood around age 100, and thi
 ### Eladrin
 *The Four Seasons*
 
-![[04 - Species/Species Images/spring-eladrin.jpg]]
-![[04 - Species/Species Images/summer-eladrin.jpg]]
-![[04 - Species/Species Images/autumn-eladrin.jpg]]
-![[04 - Species/Species Images/winter-eladrin.jpg]]
+![[04 - Species/Species Images/spring-eladrin.jpg|170]] ![[04 - Species/Species Images/summer-eladrin.jpg|170]] ![[04 - Species/Species Images/autumn-eladrin.jpg|170]] ![[04 - Species/Species Images/winter-eladrin.jpg|170]]
 
 **Character:** The Eladrin are elves most strongly tied to the Fae and to the Feywild. Each Eladrin is bound to a season — Spring, Summer, Autumn, or Winter — and their personality, appearance, and even magical abilities shift subtly with their emotional state and season.
 

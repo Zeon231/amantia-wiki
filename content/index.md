@@ -1,35 +1,20 @@
 ---
-title: Amantia Wiki
+title: Welcome to Amantia
+tags: [index]
 ---
 
-# Amantia
+# The World of Amantia
 
-> *A homebrew world for Dungeons & Dragons 5e (2024 edition).*
+Welcome, travelers. This is the living wiki for our campaign — everything the party has learned about the world, its people, and its gods lives here.
 
-Amantia is a world shaped by the withdrawal of gods, the ambitions of empires, and the slow return of old magic. This wiki is the living reference for the campaign — lore, factions, deities, history, and the rules that govern play.
+## Explore
 
----
+- **[[01 - World/01 - World|The World]]** — countries, cities, history, magic & cosmology
+- **[[02 - People/02 - People|People]]** — player characters, NPCs, and factions
+- **[[03 - Religion/03 - Religion|Religion]]** — the deities and religious orders of Amantia
+- **[[04 - Species/04 - Species|Species]]** — the peoples of the world
+- **[[05 - Sessions/05 - Sessions|Sessions]]** — recaps of our adventures so far
+- **[[07 - Items & Equipment/07 - Items & Equipment|Items & Equipment]]** — notable loot and gear
+- **[[08 - Rules Reference/08 - Rules Reference|Rules Reference]]** — house rules, classes, and origins
 
-## Browse by Section
-
-| | |
-|---|---|
-| 🌍 **[[01 - World/01 - World\|The World]]** | Geography, history, nations, cosmology |
-| 👥 **[[02 - People/02 - People\|People]]** | Player characters, NPCs, factions |
-| ⛪ **[[03 - Religion/03 - Religion\|Religion]]** | Deities, pantheons, religious orders |
-| 🧬 **[[04 - Species/04 - Species\|Species]]** | Playable species and their traits |
-| ⚔️ **[[07 - Items & Equipment/07 - Items & Equipment\|Items & Equipment]]** | Weapons, armor, gear |
-| 📖 **[[08 - Rules Reference/08 - Rules Reference\|Rules Reference]]** | Classes, backgrounds, spells, house rules |
-
----
-
-## Quick Links
-
-- [[History of Amantia]]
-- [[Deity Index]]
-- [[Amantian Calendar]]
-- [[Cosmology & The Planes]]
-
----
-
-*Campaign system: D&D 5e 2024 · Setting: Amantia (homebrew)*
+Use the search (top left) or the graph view to wander — every page links to its neighbors, just like the world itself.

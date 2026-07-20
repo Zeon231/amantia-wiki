@@ -1,5 +1,5 @@
 ---
-banner: 04 - Species/Species Images/ruzvarkun-dwarf.jpg
+banner: "04 - Species/Species Images/ruzvarkun-dwarf.jpg"
 banner-y: 0.3
 banner-fade: -10
 banner-height: 700

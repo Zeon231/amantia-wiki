@@ -11,6 +11,9 @@ first-appeared: Pre-campaign (Vesper's backstory)
 
 # Aldric Crowe
 
+> [!danger] Private / Unlisted — Vesper's tier
+> Vesper's private knowledge; excluded from the public wiki. Add public info only if the party learns it in play.
+
 > [!info] At a Glance
 > **Species:** Human
 > **Gender:** Male

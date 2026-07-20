@@ -30,6 +30,7 @@ const SKIP_FOLDERS = new Set([
   '09 - DM Notes',
   '10 - Private',
   'Amantia Source Material',
+  'website', // vault's own local Quartz project — not campaign content
 ])
 
 // Per-player private tiers live in "10 - Private/<Player>/" and are SKIPPED above by default.

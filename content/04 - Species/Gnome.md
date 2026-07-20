@@ -11,9 +11,6 @@ common: true
 
 # Gnome
 
-![[04 - Species/Species Images/forest-gnome.jpg]]
-![[04 - Species/Species Images/gray-gnome.jpg]]
-
 The most widespread small folk in Amantia — curious, inventive, and possessed of an arcane resistance that makes them frustrating to enchant. Gnomes are found in virtually every major civilisation, typically as tinkerers, scholars, illusionists, or eccentric experts in whatever niche they've decided to master.
 
 > [!info] Racial Traits (All Gnomes)
@@ -27,6 +24,8 @@ The most widespread small folk in Amantia — curious, inventive, and possessed 
 
 ## Forest Gnome
 
+![[04 - Species/Species Images/forest-gnome.jpg]]
+
 The more common and sociable of the two subtypes. Forest Gnomes live in hidden communities tucked into woodland, and have a natural affinity for animals and illusion magic.
 
 **Key Traits:**
@@ -38,6 +37,8 @@ The more common and sociable of the two subtypes. Forest Gnomes live in hidden c
 ---
 
 ## Gray Gnome
+
+![[04 - Species/Species Images/gray-gnome.jpg]]
 
 *Svirfneblin* — deep gnomes adapted to life underground. Quieter, more cautious, and more magic-resistant than their forest cousins.
 

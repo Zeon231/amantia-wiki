@@ -11,6 +11,9 @@ first-appeared: Pre-campaign (Vesper's backstory)
 
 # Maren Voss
 
+> [!danger] Private / Unlisted — Vesper's tier
+> Vesper's private knowledge; excluded from the public wiki. Add public info only if the party learns it in play.
+
 > [!info] At a Glance
 > **Species:** Hag (disguised as Human)
 > **Gender:** Female
@@ -55,4 +58,5 @@ She then cursed Ashveil and left before Vesper could confront her. By the time h
 - Someone else may be looking for Maren for their own reasons
 
 ## Session History
-*(append here as sessions happen)*
+
+- **[[Session 1]]** *(Brindelvik, Fall 1681)* — The herb keeper of [[Brindelvik]] reported that several months ago a traveler tied blackthorn twigs in a **three-knot pattern** — a pattern Vesper recognizes as Maren's. The traveler also asked about the **road toward [[Aldgrind]]**. First in-play lead on her trail.

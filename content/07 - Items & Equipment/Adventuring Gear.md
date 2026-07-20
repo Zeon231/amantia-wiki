@@ -132,27 +132,45 @@ tags: [equipment, gear, rules-reference]
 
 **Backpack (2 gp)** — Holds up to 30 lb within 1 cubic foot. Can also serve as a saddlebag.
 
+![[07 - Items & Equipment/Item Images/backpack.png|160]]
+
 **Ball Bearings (1 gp)** — Utilize action: spill to cover a 10-ft square within 10 ft. DC 10 DEX save or Prone on first entry. Takes 10 minutes to recover.
 
 **Barrel (2 gp)** — Holds up to 40 gallons of liquid or 4 cubic feet of dry goods.
 
+![[07 - Items & Equipment/Item Images/barrel.png|160]]
+
 **Basket (4 sp)** — Holds up to 40 lb within 2 cubic feet.
+
+![[07 - Items & Equipment/Item Images/basket.png|160]]
 
 **Bedroll (1 gp)** — Sleeps one Small or Medium creature. Auto-succeeds on saves against extreme cold while in it.
 
 **Bell (1 gp)** — Utilize action: produces sound heard up to 60 ft away.
 
+![[07 - Items & Equipment/Item Images/bell.png|160]]
+
 **Blanket (5 sp)** — Advantage on saves against extreme cold while wrapped in it.
 
 **Block and Tackle (1 gp)** — Allows hoisting up to 4× the weight you can normally lift.
+
+![[07 - Items & Equipment/Item Images/block-and-tackle.png|160]]
 
 **Book (25 gp)** — Fiction or nonfiction. Consulting an accurate nonfiction book grants +5 to INT (Arcana, History, Nature, or Religion) checks on that topic.
 
 **Bottle, Glass (2 gp)** — Holds up to 1½ pints.
 
+![[07 - Items & Equipment/Item Images/glass-bottle.png|160]]
+
+**Bucket (5 cp)** — Holds up to ½ cubic foot (about 3 gallons).
+
+![[07 - Items & Equipment/Item Images/bucket.png|160]]
+
 **Caltrops (1 gp)** — Utilize action: spread to cover 5-ft square within 5 ft. DC 15 DEX save or 1 Piercing damage and Speed 0 until next turn. 10 minutes to recover.
 
 **Candle (1 cp)** — Burns 1 hour: Bright Light in 5-ft radius, Dim Light for another 5 ft.
+
+![[07 - Items & Equipment/Item Images/candle.png|160]]
 
 **Case, Crossbow Bolt (1 gp)** — Holds up to 20 bolts.
 
@@ -160,9 +178,15 @@ tags: [equipment, gear, rules-reference]
 
 **Chain (5 gp)** — Utilize action: wrap around an unwilling creature within 5 ft that is Grappled, Incapacitated, or Restrained (STR Athletics DC 13). Legs bound = Restrained. Escape: DC 18 DEX Acrobatics. Burst: DC 20 STR Athletics.
 
+![[07 - Items & Equipment/Item Images/chain.png|160]]
+
 **Chest (5 gp)** — Holds up to 12 cubic feet.
 
+![[07 - Items & Equipment/Item Images/chest.png|160]]
+
 **Climber's Kit (25 gp)** — Boot tips, gloves, pitons, harness. Utilize action to anchor yourself: cannot fall more than 25 ft from anchor point or move more than 25 ft without undoing the anchor (Bonus Action).
+
+![[07 - Items & Equipment/Item Images/climbers-kit.png|160]]
 
 **Clothes, Fine (15 gp)** — Expensive fabrics. Required for some events and locations.
 
@@ -174,17 +198,27 @@ tags: [equipment, gear, rules-reference]
 
 **Crowbar (2 gp)** — Grants Advantage on STR checks where its leverage applies.
 
+![[07 - Items & Equipment/Item Images/crowbar.png|160]]
+
 **Flask (2 cp)** — Holds up to 1 pint.
+
+![[07 - Items & Equipment/Item Images/flask.png|160]]
 
 **Grappling Hook (2 gp)** — Utilize action: throw at a catch within 50 ft (DC 13 DEX Acrobatics to catch). Tie a Rope to climb.
 
-**Healer's Kit (5 gp)**
-![Healer's Kit](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/PHB/Healer%27s%20Kit.webp)
-10 uses. Utilize action: expend 1 use to stabilize an Unconscious creature at 0 HP (no WIS Medicine check required).
+![[07 - Items & Equipment/Item Images/grappling-hook.png|160]]
+
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/PHB/Healer%27s%20Kit.webp" align="right" style="max-width:200px;max-height:180px;" />
+
+**Healer's Kit (5 gp)** — 10 uses. Utilize action: expend 1 use to stabilize an Unconscious creature at 0 HP (no WIS Medicine check required).
+
+<br clear="right" />
 
 **Holy Water (25 gp)** — As part of Attack action, replace one attack: throw at target within 20 ft. DEX save or take 2d8 Radiant if target is a Fiend or Undead.
 
 **Hunting Trap (5 gp)** — Utilize action to set. DEX save or 1d4 Piercing + Speed 0 until next turn. Trapped creature limited by chain (~3 ft). Escape: DC 13 STR Athletics as an action (each failure deals 1 Piercing).
+
+![[07 - Items & Equipment/Item Images/hunting-trap.png|160]]
 
 **Ink (10 gp)** — 1-oz bottle; enough ink for ~500 pages.
 
@@ -192,19 +226,31 @@ tags: [equipment, gear, rules-reference]
 
 **Jug (2 cp)** — Holds up to 1 gallon.
 
+![[07 - Items & Equipment/Item Images/jug.png|160]]
+
 **Ladder (1 sp)** — 10 feet tall. Must climb to move up or down.
 
-**Lamp (5 sp)**
-![Lamp](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Lamp.webp)
-Bright Light 15-ft radius, Dim Light 30 ft more. Burns 6 hours per flask of oil.
+![[07 - Items & Equipment/Item Images/ladder.png|160]]
+
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Lamp.webp" align="right" style="max-width:200px;max-height:180px;" />
+
+**Lamp (5 sp)** — Bright Light 15-ft radius, Dim Light 30 ft more. Burns 6 hours per flask of oil.
+
+<br clear="right" />
 
 **Lantern, Bullseye (10 gp)** — Bright Light in 60-ft cone, Dim Light 60 ft more. Burns 6 hours per flask.
 
+![[07 - Items & Equipment/Item Images/lantern-bullseye.png|160]]
+
 **Lantern, Hooded (5 gp)** — Bright Light 30-ft radius, Dim Light 30 ft more. Bonus Action: lower/raise hood (reduces to 5-ft radius Dim Light). Burns 6 hours per flask.
+
+![[07 - Items & Equipment/Item Images/lantern-hooded.png|160]]
 
 **Lock (10 gp)** — Comes with a key. Without the key: DC 15 DEX Sleight of Hand with Thieves' Tools to pick.
 
 **Magnifying Glass (100 gp)** — Advantage on checks to appraise or inspect highly detailed items. Can start fires if in bright sunlight (takes ~5 min).
+
+![[07 - Items & Equipment/Item Images/magnifying-glass.png|160]]
 
 **Manacles (2 gp)** — Utilize action: bind an unwilling Small or Medium creature within 5 ft that is Grappled, Incapacitated, or Restrained (DC 13 DEX Sleight of Hand). Bound: Disadvantage on attack rolls; Restrained if fixed to a wall/hook. Escape: DC 20 DEX Sleight of Hand. Burst: DC 25 STR Athletics. Includes a key (without it: DC 15 to pick).
 
@@ -212,14 +258,20 @@ Bright Light 15-ft radius, Dim Light 30 ft more. Burns 6 hours per flask of oil.
 
 **Mirror (5 gp)** — Handheld steel mirror. Useful for cosmetics, peeking around corners, and signaling.
 
-**Net (1 gp)**
-![Net](https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Net.webp)
-Attack action replacement: throw at target within 15 ft. DEX save or Restrained (auto-success for Huge or larger). Escape: DC 10 STR Athletics. Net: AC 10, 5 HP; Immune to Bludgeoning, Piercing, Poison, Psychic.
+![[07 - Items & Equipment/Item Images/mirror.png|160]]
+
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Net.webp" align="right" style="max-width:200px;max-height:180px;" />
+
+**Net (1 gp)** — Attack action replacement: throw at target within 15 ft. DEX save or Restrained (auto-success for Huge or larger). Escape: DC 10 STR Athletics. Net: AC 10, 5 HP; Immune to Bludgeoning, Piercing, Poison, Psychic.
+
+<br clear="right" />
 
 **Oil (1 sp)** — Multiple uses:
 - *Douse creature/object:* DEX save or covered in oil; next Fire damage deals +5 Fire before oil dries (1 min)
 - *Douse space:* pour on 5-ft square; if lit, burns 2 rounds, dealing 5 Fire to any creature that enters or ends its turn there (once per turn)
 - *Fuel:* burns 6 hours in a Lamp or Lantern (extinguishable and re-lightable)
+
+![[07 - Items & Equipment/Item Images/oil-flask.png|160]]
 
 **Paper (2 sp)** — One sheet holds ~250 handwritten words.
 
@@ -227,19 +279,33 @@ Attack action replacement: throw at target within 15 ft. DEX save or Restrained 
 
 **Perfume (5 gp)** — 4-oz vial. For 1 hour: Advantage on CHA Persuasion checks to influence an Indifferent Humanoid within 5 ft.
 
+![[07 - Items & Equipment/Item Images/perfume.png|160]]
+
 **Poison, Basic (100 gp)** — Bonus Action: coat one weapon or up to 3 pieces of ammunition. Target that takes Piercing or Slashing damage takes extra 1d4 Poison. Lasts 1 minute or until triggered.
 
 **Pole (5 cp)** — 10 feet long. Touch things up to 10 ft away. Used as a vaulting pole: Advantage on STR Athletics checks for High or Long Jumps.
 
+![[07 - Items & Equipment/Item Images/pole.png|160]]
+
 **Pot, Iron (2 gp)** — Holds up to 1 gallon.
+
+![[07 - Items & Equipment/Item Images/iron-pot.png|160]]
+
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XDMG/Potion%20of%20Healing.webp" align="right" style="max-width:200px;max-height:180px;" />
 
 **Potion of Healing (50 gp)** — *Magic item.* Bonus Action: drink or administer to creature within 5 ft. Restores 2d4 + 2 Hit Points.
 
+<br clear="right" />
+
 **Pouch (5 sp)** — Holds up to 6 lb within ⅕ cubic foot.
+
+![[07 - Items & Equipment/Item Images/pouch.png|160]]
 
 **Quiver (1 gp)** — Holds up to 20 arrows.
 
 **Ram, Portable (4 gp)** — Use to break down doors: +4 bonus to STR check. One helper grants Advantage.
+
+![[07 - Items & Equipment/Item Images/portable-ram.png|160]]
 
 **Rations (5 sp)** — Travel food: jerky, dried fruit, hardtack, nuts. See food needs table below.
 
@@ -247,17 +313,33 @@ Attack action replacement: throw at target within 15 ft. DEX save or Restrained 
 
 **Rope (1 gp)** — Utilize action: tie a knot (DC 10 DEX Sleight of Hand). Burst: DC 20 STR Athletics. Can bind a Grappled/Incapacitated/Restrained creature (legs bound = Restrained). Escape: DC 15 DEX Acrobatics.
 
+![[07 - Items & Equipment/Item Images/rope.png|160]]
+
 **Sack (1 cp)** — Holds up to 30 lb within 1 cubic foot.
+
+![[07 - Items & Equipment/Item Images/sack.png|160]]
 
 **Shovel (2 gp)** — 1 hour of work: dig a 5-ft cube in soil.
 
+![[07 - Items & Equipment/Item Images/shovel.png|160]]
+
 **Signal Whistle (5 cp)** — Heard up to 600 ft away.
+
+![[07 - Items & Equipment/Item Images/signal-whistle.png|160]]
+
+<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XDMG/Spell%20Scroll.webp" align="right" style="max-width:200px;max-height:180px;" />
 
 **Spell Scroll (30 / 50 gp)** — *Magic item.* Cantrip (30 gp) or Level 1 (50 gp). If on your class's spell list: cast with normal casting time, no material components. Save DC 13; attack bonus +5. Disintegrates after casting.
 
+<br clear="right" />
+
 **Spikes, Iron (1 gp)** — Bundle of 10. Utilize action + blunt object: hammer into wood or earth. Use to jam a door shut or anchor a Rope or Chain.
 
+![[07 - Items & Equipment/Item Images/iron-spikes.png|160]]
+
 **Spyglass (1,000 gp)** — Magnifies objects to twice their size.
+
+![[07 - Items & Equipment/Item Images/spyglass.png|160]]
 
 **String (1 sp)** — 10 feet. Tie a knot as a Utilize action.
 
@@ -265,9 +347,15 @@ Attack action replacement: throw at target within 15 ft. DEX save or Restrained 
 
 **Tinderbox (5 sp)** — Flint, fire steel, and tinder. Lighting exposed fuel: Bonus Action. Any other fire: 1 minute.
 
+![[07 - Items & Equipment/Item Images/tinderbox.png|160]]
+
 **Torch (1 cp)** — Burns 1 hour: Bright Light 20-ft radius, Dim Light 20 ft more. Can attack with it as a Simple Melee weapon (1 Fire damage on hit).
 
+![[07 - Items & Equipment/Item Images/torch.png|160]]
+
 **Vial (1 gp)** — Holds up to 4 ounces.
+
+![[07 - Items & Equipment/Item Images/vial.png|160]]
 
 **Waterskin (2 sp)** — Holds up to 4 pints. See water needs table below.
 

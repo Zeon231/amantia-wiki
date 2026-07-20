@@ -14,6 +14,8 @@ common: false
 
 # Loxodon
 
+![[04 - Species/Species Images/loxodon.jpg]]
+
 Humanoid elephants. Often an oasis of calm in an otherwise chaotic world. The Loxodon hum and chant in sonorous tones, move slowly, or sit in perfect stillness — but when provoked into action, they are true terrors: bellowing with rage, trumpeting, and flapping their great ears.
 
 Their serene wisdom, fierce loyalty, and unwavering conviction make them tremendous assets wherever they commit themselves.

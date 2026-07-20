@@ -1,6 +1,6 @@
 ---
-banner: 04 - Species/Species Images/raptor-avian.jpg
-banner-y: 3
+banner: "04 - Species/Species Images/raptor-avian.jpg"
+banner-y: 0.3
 banner-fade: -10
 banner-height: 700
 content-start: 712

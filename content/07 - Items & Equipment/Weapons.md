@@ -163,7 +163,7 @@ A heavy, one- or two-handed axe with a broad metal blade built to chop through s
 
 ---
 
-<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greatsword.webp" align="right" style="max-width:200px;max-height:180px;" />
+<div style="float:right;width:180px;height:45px;overflow:hidden;position:relative;margin:0 0 0.5em 0.5em;"><img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greatsword.webp" style="position:absolute;width:45px;height:180px;object-fit:contain;left:68px;top:-68px;transform:rotate(90deg);transform-origin:22px 90px;" /></div>
 
 **Claymore** · *Martial Melee*
 
@@ -233,7 +233,7 @@ A single-edged sword with a broad, slightly curved blade for powerful chopping. 
 
 ---
 
-<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Glaive.webp" align="right" style="max-width:200px;max-height:180px;" />
+<div style="float:right;width:180px;height:55px;overflow:hidden;position:relative;margin:0 0 0.5em 0.5em;"><img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Glaive.webp" style="position:absolute;width:55px;height:180px;object-fit:contain;left:62px;top:-62px;transform:rotate(90deg);transform-origin:27px 90px;" /></div>
 
 **Fauchard-fork** · *Martial Melee*
 
@@ -269,7 +269,7 @@ A strangling weapon of cord, wire, or chain. The assassin's cruel whisper: small
 
 ---
 
-<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Glaive.webp" align="right" style="max-width:200px;max-height:180px;" />
+<div style="float:right;width:180px;height:55px;overflow:hidden;position:relative;margin:0 0 0.5em 0.5em;"><img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Glaive.webp" style="position:absolute;width:55px;height:180px;object-fit:contain;left:62px;top:-62px;transform:rotate(90deg);transform-origin:27px 90px;" /></div>
 
 **Glaive** · *Martial Melee*
 
@@ -279,7 +279,7 @@ A polearm with a long shaft and single-edged blade. More than a sword on a stick
 
 ---
 
-<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Glaive.webp" align="right" style="max-width:200px;max-height:180px;" />
+<div style="float:right;width:180px;height:55px;overflow:hidden;position:relative;margin:0 0 0.5em 0.5em;"><img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Glaive.webp" style="position:absolute;width:55px;height:180px;object-fit:contain;left:62px;top:-62px;transform:rotate(90deg);transform-origin:27px 90px;" /></div>
 
 **Glaive-guisarme** · *Martial Melee*
 
@@ -309,7 +309,7 @@ An oversized two-handed club. Less a crafted weapon and more a portable tree tru
 
 ---
 
-<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greatsword.webp" align="right" style="max-width:200px;max-height:180px;" />
+<div style="float:right;width:180px;height:45px;overflow:hidden;position:relative;margin:0 0 0.5em 0.5em;"><img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Greatsword.webp" style="position:absolute;width:45px;height:180px;object-fit:contain;left:68px;top:-68px;transform:rotate(90deg);transform-origin:22px 90px;" /></div>
 
 **Greatsword** · *Martial Melee*
 
@@ -329,7 +329,7 @@ A compact axe balanced for one-handed use or throwing. A workhorse: practical fo
 
 ---
 
-<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Javelin.webp" align="right" style="max-width:200px;max-height:180px;" />
+<div style="float:right;width:180px;height:40px;overflow:hidden;position:relative;margin:0 0 0.5em 0.5em;"><img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Javelin.webp" style="position:absolute;width:40px;height:180px;object-fit:contain;left:70px;top:-70px;transform:rotate(90deg);transform-origin:20px 90px;" /></div>
 
 **Javelin** · *Simple Melee*
 
@@ -405,7 +405,7 @@ A one-handed blunt weapon with a heavy metal head. Authority with a handle: comp
 
 ---
 
-<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Halberd.webp" align="right" style="max-width:200px;max-height:180px;" />
+<div style="float:right;width:180px;height:70px;overflow:hidden;position:relative;margin:0 0 0.5em 0.5em;"><img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Halberd.webp" style="position:absolute;width:70px;height:180px;object-fit:contain;left:55px;top:-55px;transform:rotate(90deg);transform-origin:35px 90px;" /></div>
 
 **Malakbar** · *Exotic Melee*
 
@@ -415,7 +415,7 @@ A rare Hobgoblin polearm combining halberd blade and mace head. A war-priest's n
 
 ---
 
-<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Pike.webp" align="right" style="max-width:200px;max-height:180px;" />
+<div style="float:right;width:180px;height:60px;overflow:hidden;position:relative;margin:0 0 0.5em 0.5em;"><img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Pike.webp" style="position:absolute;width:60px;height:180px;object-fit:contain;left:60px;top:-60px;transform:rotate(90deg);transform-origin:30px 90px;" /></div>
 
 **Man Catcher** · *Exotic Melee*
 
@@ -465,7 +465,7 @@ A two-headed weapon with axe blades at both ends. Twice the blade, twice the dan
 
 ---
 
-<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Pike.webp" align="right" style="max-width:200px;max-height:180px;" />
+<div style="float:right;width:180px;height:60px;overflow:hidden;position:relative;margin:0 0 0.5em 0.5em;"><img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Pike.webp" style="position:absolute;width:60px;height:180px;object-fit:contain;left:60px;top:-60px;transform:rotate(90deg);transform-origin:30px 90px;" /></div>
 
 **Pike** · *Martial Melee*
 
@@ -475,7 +475,7 @@ An exceptionally long spear for formation fighting. A forest of iron points dari
 
 ---
 
-<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Quarterstaff.webp" align="right" style="max-width:200px;max-height:180px;" />
+<div style="float:right;width:180px;height:40px;overflow:hidden;position:relative;margin:0 0 0.5em 0.5em;"><img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Quarterstaff.webp" style="position:absolute;width:40px;height:180px;object-fit:contain;left:70px;top:-70px;transform:rotate(90deg);transform-origin:20px 90px;" /></div>
 
 **Quarterstaff** · *Simple Melee*
 
@@ -575,7 +575,7 @@ A cord and pouch for hurling stones. The poor warrior's thunderbolt: humble, anc
 
 ---
 
-<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Spear.webp" align="right" style="max-width:200px;max-height:180px;" />
+<div style="float:right;width:180px;height:52px;overflow:hidden;position:relative;margin:0 0 0.5em 0.5em;"><img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Spear.webp" style="position:absolute;width:52px;height:180px;object-fit:contain;left:64px;top:-64px;transform:rotate(90deg);transform-origin:26px 90px;" /></div>
 
 **Spear** · *Simple Melee*
 
@@ -585,7 +585,7 @@ A long pole with a sharpened metal point. The soldier's faithful equalizer: simp
 
 ---
 
-<img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Trident.webp" align="right" style="max-width:200px;max-height:180px;" />
+<div style="float:right;width:180px;height:67px;overflow:hidden;position:relative;margin:0 0 0.5em 0.5em;"><img src="https://raw.githubusercontent.com/5etools-mirror-3/5etools-img/main/items/XPHB/Trident.webp" style="position:absolute;width:67px;height:180px;object-fit:contain;left:56px;top:-56px;transform:rotate(90deg);transform-origin:33px 90px;" /></div>
 
 **Trident** · *Martial Melee*
 

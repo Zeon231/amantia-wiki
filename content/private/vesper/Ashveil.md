@@ -1,13 +1,16 @@
 ---
 tags: [location, village, cursed, player-backstory]
 type: village
-country: TBD
-region: Borderlands — old forests, dark hills, edge of something wilder
+country: Holy Rose Empire
+region: "Holy Rose Empire — specific sub-region TBD with DM"
 population: Small — exact number TBD with DM
 ruler: No formal authority — elder-led
 ---
 
 # Ashveil
+
+> [!danger] Private / Unlisted — Vesper's tier
+> Vesper's private backstory; excluded from the public wiki. **Name/location pending update** — DM is relocating this village into the Holy Rose Empire and renaming it (the name "Ashveil" belongs to another campaign).
 
 > [!info] At a Glance
 > **Type:** Village

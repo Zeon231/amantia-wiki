@@ -1,7 +1,9 @@
 ---
-banner: 04 - Species/Species Images/lion-tabaxi.jpg
+banner: "04 - Species/Species Images/lion-tabaxi.jpg"
 banner-y: 0.3
 banner-fade: -10
+banner-height: 700
+content-start: 712
 tags:
   - species
   - tabaxi
@@ -11,8 +13,6 @@ size: Medium
 speed: 30 ft
 lifespan: ~100 years
 common: false
-banner-height: 700
-content-start: 712
 ---
 
 # Tabaxi
