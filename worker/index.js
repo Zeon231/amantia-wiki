@@ -34,6 +34,10 @@
 
 const PRIVATE_PREFIX = "/private/"
 
+// Roles that grant "see everything" (all private tiers). Both are admin-tier.
+const ADMIN_ROLES = new Set(["admin", "dm"])
+const isAdminRole = (role) => ADMIN_ROLES.has(role)
+
 export default {
   async fetch(request, env) {
     const path = new URL(request.url).pathname
@@ -56,7 +60,7 @@ export default {
         role: auth.role,
         tier: auth.tier || null,
         editLevel: auth.editLevel,
-        canSeeAllTiers: auth.role === "admin",
+        canSeeAllTiers: isAdminRole(auth.role),
       })
     }
 
@@ -68,9 +72,9 @@ export default {
   },
 }
 
-// /private/<tier>/... — admins see all tiers; players only their own.
+// /private/<tier>/... — admin-tier roles see everything; players only their own.
 function canAccessTier(auth, path) {
-  if (auth.role === "admin") return true
+  if (isAdminRole(auth.role)) return true
   const tier = path.slice(PRIVATE_PREFIX.length).split("/")[0]
   return !!tier && tier === auth.tier
 }
@@ -102,16 +106,17 @@ async function authenticate(request, env) {
   const passHash = await sha256hex(pass)
   if (!timingSafeEqualHex(passHash, entry.hash.toLowerCase())) return { ok: false }
 
+  const role = isAdminRole(entry.role) ? entry.role : "player"
   return {
     ok: true,
     user,
-    role: entry.role === "admin" ? "admin" : "player",
+    role,
     tier: entry.tier,
-    // Default players to a mid level so they can edit their own player-editable pages
-    // but not admin-only ones. Admins default to 1 (can edit anything).
+    // Default players to a mid level so they can edit player-editable pages
+    // but not admin-only ones. Admin-tier roles default to 1 (can edit anything).
     editLevel: Number.isFinite(entry.editLevel)
       ? entry.editLevel
-      : entry.role === "admin"
+      : isAdminRole(role)
         ? 1
         : 3,
   }
