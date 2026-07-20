@@ -41,4 +41,4 @@ A macabre experimenter with a collector's curiosity — muses about stitching wi
 
 ---
 
-*See also:* [[Player Characters]] | [[Vesper Crowe]] | [[Daryl - Medusa Ranger|Aphelia]]
+*See also:* [[Player Characters]] | [[Vesper Crowe]] | [[Aphelia]]

@@ -11,7 +11,7 @@ status: active
 # Aphelia — Full (Private)
 
 > [!danger] Private / Unlisted
-> Full character record — **backstory, goals, and secret ties (the forest druid, family)**. This note lives in a folder excluded from the public wiki. Public version: [[Daryl - Medusa Ranger|Aphelia]].
+> Full character record — **backstory, goals, and secret ties (the forest druid, family)**. This note lives in a gated folder (login required). Public version: [[Aphelia]].
 
 > [!info] Character Info
 > **Player:** Daryl

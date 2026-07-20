@@ -25,8 +25,10 @@
  *   }
  * Generate a hash on any OS:   printf '%s' 'THE-PASSWORD' | sha256sum
  *
- * SHARED_REQUIRES_LOGIN="true" gates the whole site (otherwise only /private/*).
- * Fail-closed: anything protected without valid creds → 401.
+ * The whole site requires a login BY DEFAULT (fail-closed) — this is not
+ * dependent on any dashboard variable, so it cannot silently lapse.
+ * Set PUBLIC_SHARED="true" only if you deliberately want the shared wiki open
+ * to the public; /private/* stays gated regardless.
  *
  * Requires wrangler.jsonc: main = worker/index.js, assets.binding = ASSETS,
  * assets.run_worker_first = true (so no asset is served before this runs).
@@ -42,9 +44,13 @@ export default {
   async fetch(request, env) {
     const path = new URL(request.url).pathname
     const isPrivate = path.startsWith(PRIVATE_PREFIX)
-    const shareGate = env.SHARED_REQUIRES_LOGIN === "true"
 
-    // Public shared content — straight from assets, no login.
+    // Whole-site login is ON BY DEFAULT (fail-closed). It does not depend on a
+    // dashboard variable being present, so it can't silently lapse on a redeploy.
+    // To deliberately open the shared wiki to the public, set PUBLIC_SHARED="true".
+    const shareGate = env.PUBLIC_SHARED !== "true"
+
+    // Shared content, only when explicitly made public.
     if (!isPrivate && !shareGate && path !== "/whoami") {
       return env.ASSETS.fetch(request)
     }

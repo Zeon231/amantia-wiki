@@ -349,7 +349,7 @@ Not sure — some of these I think I need to revisit once the story gets going t
 
 ---
 
-*[[Daryl - Medusa Ranger]] | Medusa (Lesser) | Ranger | Level 1*
+*[[Aphelia]] | Medusa (Lesser) | Ranger | Level 1*
 *Player: Daryl | Campaign: Amantia*
 
 ---
