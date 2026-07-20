@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Brindelvik — Map Zone Editor</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin:0; background:#15151a; color:#eee; font:14px/1.5 system-ui, sans-serif; }
+  .wrap { max-width:1000px; margin:0 auto; padding:16px; }
+  h1 { color:#e8b04b; font-size:20px; margin:.2rem 0; }
+  .hint { color:#aaa; font-size:13px; }
+  .mapbox { position:relative; user-select:none; line-height:0; border-radius:8px; margin-top:12px; }
+  .mapbox img { width:100%; height:auto; display:block; border-radius:8px; }
+  .zbox { position:absolute; box-sizing:border-box; border:2px solid #e8b04b; background:rgba(232,176,75,.18); border-radius:6px; cursor:move; }
+  .zbox .ztag { position:absolute; left:0; top:-19px; font-size:11px; line-height:1.4; background:rgba(0,0,0,.82); color:#fff; padding:0 5px; border-radius:3px; white-space:nowrap; pointer-events:none; }
+  .zbox .zdel { position:absolute; right:-9px; top:-9px; width:18px; height:18px; border-radius:50%; background:#c0392b; color:#fff; font:bold 12px/18px sans-serif; text-align:center; cursor:pointer; }
+  .zbox .zres { position:absolute; right:-6px; bottom:-6px; width:13px; height:13px; background:#e8b04b; border:2px solid #fff; border-radius:2px; cursor:se-resize; }
+  .bar { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  button { background:#e8b04b; color:#111; border:0; border-radius:6px; padding:6px 12px; font-weight:600; cursor:pointer; }
+  button.ghost { background:#2a2a33; color:#eee; }
+  .row { display:flex; gap:6px; align-items:center; margin:5px 0; }
+  input { background:#0d0d12; color:#eee; border:1px solid #444; border-radius:4px; padding:4px 7px; font-size:12px; }
+  .lbl-in { width:170px; } .href-in { flex:1; min-width:160px; }
+  .row button { background:#3a2a2a; color:#f0b0b0; padding:3px 9px; }
+  textarea { width:100%; height:140px; background:#0d0d12; color:#9fe0a0; font-family:ui-monospace,monospace; font-size:12px; border:1px solid #444; border-radius:6px; padding:10px; margin-top:8px; box-sizing:border-box; }
+  code { background:#0d0d12; padding:1px 5px; border-radius:4px; color:#e8b04b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Brindelvik — Map Zone Editor</h1>
+  <p class="hint">Drag a box to <b>move</b>, drag its corner to <b>resize</b>, click <b>×</b> to delete, <b>＋ Add zone</b> for a new one. Set each zone's label and link below. When done, <b>Copy HTML</b> and paste it into <code>Brindelvik.md</code> — between <code>&lt;img …&gt;</code> and <code>&lt;/div&gt;</code>, replacing the existing <code>&lt;a class="zone"&gt;</code> lines — then re-sync.</p>
+
+  <div class="mapbox" id="mapbox">
+    <img id="map" src="/01---world/maps/brindelvik.png" alt="Brindelvik map" draggable="false" />
+  </div>
+
+  <div class="bar">
+    <button id="add">＋ Add zone</button>
+    <button id="copy">Copy HTML for Brindelvik.md</button>
+    <button id="reset" class="ghost">Reset to defaults</button>
+    <span class="hint" id="status"></span>
+  </div>
+
+  <div id="list"></div>
+  <textarea id="out" readonly></textarea>
+</div>
+
+<script>
+(function(){
+  var LS = 'brindelvik-zones-v1';
+  // Defaults mirror the zones currently in Brindelvik.md
+  var DEFAULTS = [
+    { href:'/01---world/cities--and--locations/aldermans-hall', label:"Alderman's Hall (12)", left:45.5, top:44.5, width:7,   height:9.5 },
+    { href:'/01---world/cities--and--locations/our-house',      label:"Our House (21)",       left:4.5,  top:17.5, width:6.5, height:9 },
+    { href:'/01---world/cities--and--locations/butcher',        label:"Butcher (4)",          left:78.5, top:31,   width:6.5, height:9 },
+  ];
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function r(n){return Math.round(n*10)/10;}
+  function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+
+  var mapbox = document.getElementById('mapbox');
+  var img = document.getElementById('map');
+  var listEl = document.getElementById('list');
+  var out = document.getElementById('out');
+  var status = document.getElementById('status');
+
+  var zones;
+  try { zones = JSON.parse(localStorage.getItem(LS)) || null; } catch(e){}
+  if (!zones || !zones.length) zones = JSON.parse(JSON.stringify(DEFAULTS));
+
+  function save(){ try{ localStorage.setItem(LS, JSON.stringify(zones)); }catch(e){} }
+  function anchorHTML(z){
+    return '  <a class="zone" href="'+esc(z.href)+'" style="position:absolute;left:'+r(z.left)+'%;top:'+r(z.top)+'%;width:'+r(z.width)+'%;height:'+r(z.height)+'%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">'+esc(z.label)+'</span></a>';
+  }
+  function renderExport(){ out.value = zones.map(anchorHTML).join('\n'); }
+
+  function render(){
+    // boxes
+    Array.prototype.forEach.call(mapbox.querySelectorAll('.zbox'), function(e){ e.remove(); });
+    zones.forEach(function(z, i){
+      var b = document.createElement('div');
+      b.className = 'zbox'; b.dataset.i = i;
+      b.style.cssText = 'left:'+z.left+'%;top:'+z.top+'%;width:'+z.width+'%;height:'+z.height+'%;';
+      b.innerHTML = '<span class="ztag">'+esc(z.label || ('zone '+(i+1)))+'</span><span class="zdel">×</span><span class="zres"></span>';
+      mapbox.appendChild(b);
+    });
+    // list rows
+    listEl.innerHTML = zones.map(function(z,i){
+      return '<div class="row" data-i="'+i+'"><input class="lbl-in" value="'+esc(z.label)+'" placeholder="label"/>'+
+             '<input class="href-in" value="'+esc(z.href)+'" placeholder="/01---world/cities--and--locations/..."/>'+
+             '<button class="del">delete</button></div>';
+    }).join('');
+    renderExport(); save();
+  }
+
+  document.getElementById('add').addEventListener('click', function(){
+    zones.push({ href:'/01---world/cities--and--locations/', label:'New zone', left:45, top:45, width:8, height:10 });
+    render();
+  });
+  document.getElementById('reset').addEventListener('click', function(){
+    if(!confirm('Reset all zones to the current Brindelvik.md defaults?')) return;
+    zones = JSON.parse(JSON.stringify(DEFAULTS)); render();
+  });
+  document.getElementById('copy').addEventListener('click', function(){
+    out.select(); try{ navigator.clipboard.writeText(out.value); }catch(e){ document.execCommand('copy'); }
+    status.textContent = 'Copied! Paste into Brindelvik.md, then re-sync.';
+    setTimeout(function(){ status.textContent=''; }, 2500);
+  });
+  listEl.addEventListener('input', function(e){
+    var row = e.target.closest('.row'); if(!row) return; var i = +row.dataset.i;
+    if (e.target.classList.contains('lbl-in')) zones[i].label = e.target.value;
+    if (e.target.classList.contains('href-in')) zones[i].href = e.target.value;
+    var tag = mapbox.querySelector('.zbox[data-i="'+i+'"] .ztag'); if(tag) tag.textContent = zones[i].label || ('zone '+(i+1));
+    renderExport(); save();
+  });
+  listEl.addEventListener('click', function(e){
+    if (!e.target.classList.contains('del')) return;
+    var i = +e.target.closest('.row').dataset.i; zones.splice(i,1); render();
+  });
+
+  var drag = null;
+  mapbox.addEventListener('mousedown', function(e){
+    var box = e.target.closest('.zbox'); if(!box) return;
+    var i = +box.dataset.i;
+    if (e.target.classList.contains('zdel')) { zones.splice(i,1); render(); return; }
+    drag = { i:i, box:box, rect:img.getBoundingClientRect(),
+      mode: e.target.classList.contains('zres') ? 'resize' : 'move',
+      sx:e.clientX, sy:e.clientY, z:Object.assign({}, zones[i]) };
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', function(e){
+    if(!drag) return;
+    var dx = (e.clientX - drag.sx) / drag.rect.width * 100;
+    var dy = (e.clientY - drag.sy) / drag.rect.height * 100;
+    var z = zones[drag.i];
+    if (drag.mode === 'move'){
+      z.left = clamp(drag.z.left + dx, 0, 100 - z.width);
+      z.top  = clamp(drag.z.top + dy, 0, 100 - z.height);
+    } else {
+      z.width  = clamp(drag.z.width + dx, 2, 100 - z.left);
+      z.height = clamp(drag.z.height + dy, 2, 100 - z.top);
+    }
+    drag.box.style.left = z.left+'%'; drag.box.style.top = z.top+'%';
+    drag.box.style.width = z.width+'%'; drag.box.style.height = z.height+'%';
+    renderExport();
+  });
+  document.addEventListener('mouseup', function(){ if(drag){ drag=null; save(); } });
+
+  render();
+})();
+</script>
+</body>
+</html>

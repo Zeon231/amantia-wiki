@@ -10,9 +10,12 @@
  * Then: npm run quartz build (or git add/commit/push to trigger Cloudflare)
  */
 
-import { readdir, readFile, writeFile, mkdir, rm } from 'fs/promises'
+import { readdir, readFile, writeFile, mkdir, rm, copyFile } from 'fs/promises'
 import { existsSync } from 'fs'
 import { join, extname, dirname, basename } from 'path'
+
+// Image/asset extensions to copy verbatim (maps, portraits, item art, etc.)
+const ASSET_EXTS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg', '.avif'])
 
 // ── CONFIG ─────────────────────────────────────────────────────────────────
 
@@ -23,11 +26,46 @@ const CONTENT_DIR = './content'
 const SKIP_FOLDERS = new Set([
   '.obsidian',
   'Templates',
-  '05 - Sessions',
   '06 - Encounters',
   '09 - DM Notes',
+  '10 - Private',
   'Amantia Source Material',
 ])
+
+// Per-player private tiers live in "10 - Private/<Player>/" and are SKIPPED above by default.
+// When PUBLISH_PRIVATE=1, they are instead published into gated paths: content/private/<player>/
+// These pages are protected ONLY by the edge Worker (worker/index.js) + the WIKI_USERS secret.
+// NEVER deploy a build that includes them unless that Worker is live and you have tested that
+// /private/<player>/ returns 401 without credentials.
+const PRIVATE_DIR = '10 - Private'
+const PUBLISH_PRIVATE = process.env.PUBLISH_PRIVATE === '1'
+
+async function syncPrivate() {
+  const srcRoot = join(VAULT_DIR, PRIVATE_DIR)
+  if (!existsSync(srcRoot)) return
+  const players = await readdir(srcRoot, { withFileTypes: true })
+  for (const p of players) {
+    if (!p.isDirectory()) continue
+    const slug = p.name.toLowerCase().replace(/\s+/g, '-')
+    await copyPrivateDir(join(srcRoot, p.name), join(CONTENT_DIR, 'private', slug))
+    console.log(`  🔒 published private tier: ${p.name} → /private/${slug}/`)
+  }
+}
+
+async function copyPrivateDir(srcDir, destDir) {
+  const entries = await readdir(srcDir, { withFileTypes: true })
+  for (const e of entries) {
+    const s = join(srcDir, e.name)
+    const d = join(destDir, e.name)
+    if (e.isDirectory()) { await copyPrivateDir(s, d); continue }
+    if (extname(e.name).toLowerCase() !== '.md') continue
+    await mkdir(dirname(d), { recursive: true })
+    let content = await readFile(s, 'utf8')
+    if (content.includes('## DM Notes')) content = stripDmNotes(content)
+    await writeFile(d, content, 'utf8')
+    copied++
+  }
+}
 
 // ── DM NOTES STRIPPING ─────────────────────────────────────────────────────
 
@@ -69,6 +107,7 @@ function stripDmNotes(content) {
 let copied = 0
 let stripped = 0
 let skipped = 0
+let assets = 0
 
 async function syncDir(srcDir, destDir) {
   const entries = await readdir(srcDir, { withFileTypes: true })
@@ -87,8 +126,18 @@ async function syncDir(srcDir, destDir) {
       await syncDir(srcPath, destPath)
 
     } else if (entry.isFile()) {
-      // Only copy markdown files
-      if (extname(entry.name).toLowerCase() !== '.md') continue
+      const ext = extname(entry.name).toLowerCase()
+
+      // Copy image/asset files verbatim (maps, portraits, item art, etc.)
+      if (ASSET_EXTS.has(ext)) {
+        await mkdir(dirname(destPath), { recursive: true })
+        await copyFile(srcPath, destPath)
+        assets++
+        continue
+      }
+
+      // Only process markdown otherwise
+      if (ext !== '.md') continue
 
       await mkdir(dirname(destPath), { recursive: true })
 
@@ -122,9 +171,14 @@ if (existsSync(CONTENT_DIR)) {
 
 await mkdir(CONTENT_DIR, { recursive: true })
 await syncDir(VAULT_DIR, CONTENT_DIR)
+if (PUBLISH_PRIVATE) {
+  console.log('\n🔒 PUBLISH_PRIVATE=1 — publishing per-player private tiers into /private/* (gate with the Worker!)')
+  await syncPrivate()
+}
 
 console.log(`✅  Done`)
 console.log(`   ${copied} notes copied`)
+console.log(`   ${assets} image assets copied`)
 console.log(`   ${stripped} notes had DM Notes sections stripped`)
 console.log(`   ${skipped} private folders skipped`)
 console.log(`\nNext: git add content/ && git commit -m "sync vault" && git push`)
