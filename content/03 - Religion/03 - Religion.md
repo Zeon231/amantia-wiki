@@ -1,5 +1,6 @@
 ---
 tags: [religion, index]
+modified: 2026-05-10T20:04:29.152Z
 ---
 
 # Religion & the Divine

@@ -2,6 +2,7 @@
 tags: [country]
 government: "Guild Based Republic of city-states, Singoria by lot from eligible guild members"
 population: 1307300
+modified: 2026-05-10T20:09:53.614Z
 ---
 
 # Líga Aurimercátia

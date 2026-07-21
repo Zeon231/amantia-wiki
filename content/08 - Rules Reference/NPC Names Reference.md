@@ -1,5 +1,6 @@
 ---
 tags: [rules-reference, names, npc]
+modified: 2026-05-10T20:13:46.123Z
 ---
 
 # NPC Names Reference

@@ -10,6 +10,7 @@ size: Medium
 speed: 30 ft
 lifespan: ~750 years
 common: true
+modified: 2026-06-10T15:29:56.951Z
 ---
 
 # Elves

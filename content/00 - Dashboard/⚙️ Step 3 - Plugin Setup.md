@@ -1,3 +1,7 @@
+---
+modified: 2026-05-10T12:29:05.131Z
+---
+
 # ⚙️ Step 3 — Plugin & Settings Setup
 
 Work through this top to bottom. Each section has a checkbox — tick it off when done.

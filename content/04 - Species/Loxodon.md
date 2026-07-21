@@ -10,6 +10,7 @@ size: Medium
 speed: 30 ft
 lifespan: ~450 years
 common: false
+modified: 2026-06-10T15:28:42.097Z
 ---
 
 # Loxodon

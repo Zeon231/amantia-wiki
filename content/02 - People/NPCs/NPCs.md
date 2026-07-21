@@ -1,5 +1,6 @@
 ---
 tags: [npc, index]
+modified: 2026-05-10T20:04:29.185Z
 ---
 
 # NPCs

@@ -2,6 +2,7 @@
 tags: [country]
 government: "Hereditary King, held by strength"
 population: 192900
+modified: 2026-05-10T20:09:53.502Z
 ---
 
 # Kingdom of Fjarrkaldra

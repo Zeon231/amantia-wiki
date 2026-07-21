@@ -1,3 +1,7 @@
+---
+modified: 2026-06-07T16:29:42.685Z
+---
+
 ﻿---
 tags: [deity]
 pantheon: "Elder Elemental"

@@ -2,6 +2,7 @@
 tags: [country]
 government: "Elected Proconsul"
 population: 102200
+modified: 2026-05-10T20:09:53.588Z
 ---
 
 # Campia Aurea

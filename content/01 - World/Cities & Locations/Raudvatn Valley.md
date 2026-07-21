@@ -1,6 +1,7 @@
 ---
 tags: [location, region, map, campaign]
 discovered: Session 1
+modified: 2026-07-18T16:07:39.192Z
 ---
 
 # Raudvatn Valley

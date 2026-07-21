@@ -2,6 +2,7 @@
 tags: [country]
 government: "Viceroy appointed by the Crown  of Aragonne"
 population: 272000
+modified: 2026-05-10T20:09:53.611Z
 ---
 
 # Vice-Régna Nordikassa

@@ -3,6 +3,7 @@ tags: [country]
 government: "Confederated monarchy under the Ard Rígan; the High Council of Bards and Druids"
 ruler: "Ard Rígan Maenya na Lir"
 population: 1695500
+modified: 2026-05-28T05:12:26.302Z
 ---
 
 # The High Kingdom of Séraevirhae

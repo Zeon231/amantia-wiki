@@ -2,6 +2,7 @@
 tags: [country]
 government: "Autocratic Mage Tzar, elected by a council of nine archmages of each of the scho"
 population: 3931700
+modified: 2026-05-10T20:09:53.526Z
 ---
 
 # Rúnskeldar

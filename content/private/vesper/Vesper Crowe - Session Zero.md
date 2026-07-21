@@ -1,3 +1,7 @@
+---
+modified: 2026-06-06T05:05:20.151Z
+---
+
 # Amantia Campaign — Session Zero Questionnaire
 **D&D 2024 Rules + Homebrew | Level 1 Start | In-Person | Player-Driven Campaign**
 

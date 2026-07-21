@@ -2,6 +2,7 @@
 tags: [country]
 ruler: "Lord Roderic Aerath"
 population: 129000
+modified: 2026-05-10T20:09:53.426Z
 ---
 
 # Val Lyrumaen

@@ -2,6 +2,7 @@
 tags: [country]
 government: "Autocratic Rule by an Ancient Red Dragon"
 population: 1188300
+modified: 2026-05-10T20:09:53.714Z
 ---
 
 # Garud-Guur Empire

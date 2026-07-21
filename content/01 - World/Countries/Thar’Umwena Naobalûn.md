@@ -1,6 +1,7 @@
 ---
 tags: [country]
 population: 2114100
+modified: 2026-05-10T20:09:53.711Z
 ---
 
 # Thar’Umwena Naobalûn

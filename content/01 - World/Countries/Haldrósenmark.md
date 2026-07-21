@@ -2,6 +2,7 @@
 tags: [country]
 government: "Capital District, Adminitered by the High Priest(ess) of the Rose Knight from Ro"
 population: 509600
+modified: 2026-05-10T20:09:53.439Z
 ---
 
 # Haldrósenmark

@@ -3,6 +3,7 @@ tags: [country]
 government: "Confederation of independent vales; each vale seat acts as a capital within its "
 ruler: "High Lady Keira Dornach"
 population: 780400
+modified: 2026-05-10T20:09:53.403Z
 ---
 
 # Tir Valaeskyr

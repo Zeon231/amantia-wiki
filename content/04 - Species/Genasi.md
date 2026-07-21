@@ -9,6 +9,7 @@ creature-type: Humanoid (Elemental)
 size: Medium
 speed: 30 ft
 common: false
+modified: 2026-05-28T05:34:39.619Z
 ---
 
 # Genasi

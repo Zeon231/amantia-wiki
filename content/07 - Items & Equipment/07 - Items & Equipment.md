@@ -1,5 +1,6 @@
 ---
 tags: [item, index]
+modified: 2026-06-07T21:40:58.908Z
 ---
 
 # Items & Equipment

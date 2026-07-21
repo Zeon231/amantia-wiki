@@ -3,6 +3,7 @@ tags: [country]
 government: "Feudal lordship with elective council oversight; nominally independent, though a"
 ruler: "Marquis Brenn Caerwyn"
 population: 532000
+modified: 2026-05-10T20:09:53.399Z
 ---
 
 # Marquisate of Caerovina

@@ -1,6 +1,7 @@
 ---
 tags: [country]
 population: 714800
+modified: 2026-05-10T20:09:53.637Z
 ---
 
 # Amīrûnat Ras al-Sabāûn

@@ -3,6 +3,7 @@ tags: [country]
 government: "Hereditary lordship bound to the Circle of the Nine Rivers — an ancient druidic "
 ruler: "Count Aedric Fenwyck"
 population: 187000
+modified: 2026-05-10T20:09:53.429Z
 ---
 
 # County of Mornolace

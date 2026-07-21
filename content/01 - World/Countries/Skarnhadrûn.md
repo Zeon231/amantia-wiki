@@ -2,6 +2,7 @@
 tags: [country]
 government: "Nomadic horse clans lead by individual chieftains, every once in a while a chari"
 population: 1757200
+modified: 2026-05-10T20:09:53.529Z
 ---
 
 # Skarnhadrûn

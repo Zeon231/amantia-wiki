@@ -5,6 +5,7 @@ country: Holy Rose Empire
 region: "Holy Rose Empire — specific sub-region TBD with DM"
 population: Small — exact number TBD with DM
 ruler: No formal authority — elder-led
+modified: 2026-07-18T16:08:52.773Z
 ---
 
 # Ashveil

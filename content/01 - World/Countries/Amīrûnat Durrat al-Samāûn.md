@@ -1,6 +1,7 @@
 ---
 tags: [country]
 population: 936600
+modified: 2026-05-10T20:09:53.634Z
 ---
 
 # Amīrûnat Durrat al-Samāûn

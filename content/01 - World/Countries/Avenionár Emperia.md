@@ -2,6 +2,7 @@
 tags: [country]
 government: "Hereditary Autocratic Emporer"
 population: 3317900
+modified: 2026-05-10T20:09:53.537Z
 ---
 
 # Avenionár Emperia

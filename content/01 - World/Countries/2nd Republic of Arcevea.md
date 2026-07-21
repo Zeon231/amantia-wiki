@@ -2,6 +2,7 @@
 tags: [country]
 government: "Two Consules elected by democratic vote: the Head of State and Commandeer-in-Chi"
 population: 1606700
+modified: 2026-05-10T20:09:53.568Z
 ---
 
 # 2nd Republic of Arcevea

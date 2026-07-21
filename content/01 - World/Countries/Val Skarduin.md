@@ -2,6 +2,7 @@
 tags: [country]
 ruler: "Lady Eirwen Maeryn"
 population: 171200
+modified: 2026-05-10T20:09:53.415Z
 ---
 
 # Val Skarduin

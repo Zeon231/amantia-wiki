@@ -2,6 +2,7 @@
 tags: [country]
 ruler: "Lord Garran Calmarra"
 population: 134700
+modified: 2026-05-10T20:09:53.418Z
 ---
 
 # Val Braethlaen

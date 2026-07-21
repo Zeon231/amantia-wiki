@@ -2,6 +2,7 @@
 tags: [country]
 government: "Ecclesiarchal duchy ruled by the Archon-Prince of Varnhal, under the spiritual a"
 population: 241500
+modified: 2026-05-10T20:09:53.447Z
 ---
 
 # The Dominion Varnhal

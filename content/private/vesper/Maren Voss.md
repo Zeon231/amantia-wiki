@@ -7,6 +7,7 @@ location: At large — whereabouts unknown
 faction: Unknown
 status: alive
 first-appeared: Pre-campaign (Vesper's backstory)
+modified: 2026-07-18T16:07:55.688Z
 ---
 
 # Maren Voss

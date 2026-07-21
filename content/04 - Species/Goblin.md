@@ -7,6 +7,7 @@ content-start: 712
 tags: [species, common, goblinoid]
 creature-type: Humanoid (Goblinoid)
 common: true
+modified: 2026-05-28T13:40:08.690Z
 ---
 
 # Goblin

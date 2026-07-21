@@ -1,5 +1,6 @@
 ---
 tags: [world, calendar]
+modified: 2026-06-07T15:55:28.048Z
 ---
 
 # The Amantian Calendar

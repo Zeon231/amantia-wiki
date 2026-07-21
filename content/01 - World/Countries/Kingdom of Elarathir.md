@@ -2,6 +2,7 @@
 tags: [country]
 government: "Hereditary King, advised by a council of nobles, priests, druids, and mages"
 population: 515400
+modified: 2026-05-10T20:09:53.520Z
 ---
 
 # Kingdom of Elarathir

@@ -2,6 +2,7 @@
 tags: [country]
 government: "Elected Proconsul"
 population: 294000
+modified: 2026-05-10T20:09:53.594Z
 ---
 
 # Campanéa Magna

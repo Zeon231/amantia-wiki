@@ -2,6 +2,7 @@
 tags: [country]
 government: "Feudal electorate ruled by the High Elector-Prince of Rosen, seat of the Parliam"
 population: 497000
+modified: 2026-05-10T20:09:53.450Z
 ---
 
 # Rosensk Morka

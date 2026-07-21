@@ -2,6 +2,7 @@
 tags: [country]
 government: "Hereditary Elf Prince"
 population: 261700
+modified: 2026-05-10T20:09:53.466Z
 ---
 
 # Principality of Faelnyssa

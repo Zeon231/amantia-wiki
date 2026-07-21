@@ -7,6 +7,7 @@ content-start: 712
 tags: [species, rare, goblinoid]
 creature-type: Humanoid (Goblinoid)
 common: false
+modified: 2026-05-28T13:40:03.322Z
 ---
 
 # Bugbear

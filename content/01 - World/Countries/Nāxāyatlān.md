@@ -1,6 +1,7 @@
 ---
 tags: [country]
 population: 699600
+modified: 2026-05-10T20:09:53.657Z
 ---
 
 # Nāxāyatlān

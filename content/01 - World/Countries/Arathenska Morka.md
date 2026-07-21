@@ -2,6 +2,7 @@
 tags: [country]
 government: "Hereditary duchy under Duchess Elayne Arathens, who holds both secular title and"
 population: 498400
+modified: 2026-05-10T20:09:53.454Z
 ---
 
 # Arathenska Morka

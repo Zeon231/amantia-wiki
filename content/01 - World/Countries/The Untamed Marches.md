@@ -3,6 +3,7 @@ tags: [country]
 government: "Unclaimed wilderness on the Rose subcontinent"
 ruler: "None officially; governed only by clan law, druidic tradition, and Fae caprice"
 population: 469000
+modified: 2026-05-10T20:09:53.432Z
 ---
 
 # The Untamed Marches

@@ -1,5 +1,6 @@
 ---
 tags: [equipment, armor, rules-reference]
+modified: 2026-06-08T13:41:21.217Z
 ---
 
 # Armor

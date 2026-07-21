@@ -1,6 +1,7 @@
 ---
 tags: [rules, classes]
 system: D&D 5e 2024
+modified: 2026-06-07T15:55:35.014Z
 ---
 
 # Character Classes in Amantia

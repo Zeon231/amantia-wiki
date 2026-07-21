@@ -95,6 +95,15 @@ export default (() => {
         <meta name="description" content={description} />
         <meta name="generator" content="Quartz" />
 
+        {/* Campaign UI: banner path + per-reader bookmarks/views/home widgets */}
+        {fileData.frontmatter?.banner && (
+          <meta name="banner-image" content={String(fileData.frontmatter.banner)} />
+        )}
+        {fileData.frontmatter?.["banner-y"] != null && (
+          <meta name="banner-y" content={String(fileData.frontmatter["banner-y"])} />
+        )}
+        <script src={joinSegments(baseDir, "static/campaign-ui.js")} defer></script>
+
         {css.map((resource) => CSSResourceToStyleElement(resource, true))}
         {js
           .filter((resource) => resource.loadTime === "beforeDOMReady")

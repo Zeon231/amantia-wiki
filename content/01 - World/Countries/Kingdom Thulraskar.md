@@ -2,6 +2,7 @@
 tags: [country]
 government: "Hereditary King"
 population: 260100
+modified: 2026-05-10T20:09:53.508Z
 ---
 
 # Kingdom Thulraskar

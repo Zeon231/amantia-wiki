@@ -2,6 +2,7 @@
 tags: [country]
 government: "Ruled by the Grand Admiral appointed by the Empress"
 population: 572300
+modified: 2026-05-10T20:09:53.457Z
 ---
 
 # The Admiralty of Sjóskjaldheim

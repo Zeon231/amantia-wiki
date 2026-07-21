@@ -1,6 +1,7 @@
 ---
 tags: [location, building, brindelvik, campaign]
 town: Brindelvik
+modified: 2026-07-19T02:56:30.289Z
 ---
 
 # Butcher

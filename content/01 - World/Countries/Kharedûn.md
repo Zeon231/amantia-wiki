@@ -2,6 +2,7 @@
 tags: [country]
 government: "Pharoah 'God-King'"
 population: 87800
+modified: 2026-06-07T18:06:19.714Z
 ---
 
 # Kharedûn

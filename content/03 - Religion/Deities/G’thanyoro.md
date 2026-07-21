@@ -1,3 +1,7 @@
+---
+modified: 2026-06-07T16:28:41.381Z
+---
+
 ﻿---
 tags: [deity]
 pantheon: "Bestial"

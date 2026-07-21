@@ -3,6 +3,7 @@ tags: [country]
 government: "Autocratic duchy with a ceremonial council of healers and church advisors"
 ruler: "Duchess Isolde Maenloch"
 population: 
+modified: 2026-05-28T05:12:31.396Z
 ---
 
 # Duchy of Saxolace

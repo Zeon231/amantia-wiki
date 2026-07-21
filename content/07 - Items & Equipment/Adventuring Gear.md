@@ -1,4 +1,8 @@
 ---
+modified: 2026-06-10T16:10:08.455Z
+---
+
+---
 tags: [equipment, gear, rules-reference]
 ---
 

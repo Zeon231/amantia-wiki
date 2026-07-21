@@ -7,6 +7,7 @@ content-start: 712
 tags: [species, rare]
 creature-type: Humanoid (Celestial)
 common: false
+modified: 2026-05-28T13:40:02.561Z
 ---
 
 # Aasimar

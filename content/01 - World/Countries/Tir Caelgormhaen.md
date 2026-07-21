@@ -3,6 +3,7 @@ tags: [country]
 government: "Hereditary monarchy advised by the Council of the Watchfires, a conclave of drui"
 ruler: "Rí Thalen Maerwyn"
 population: 804000
+modified: 2026-05-10T20:09:53.395Z
 ---
 
 # Tir Caelgormhaen

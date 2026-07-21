@@ -2,6 +2,7 @@
 tags: [country]
 government: "Fuedal Hereditary Monarchy ruling at the will of the nobles (szlachta). Towns ha"
 population: 3847600
+modified: 2026-05-10T20:09:53.532Z
 ---
 
 # Tarnvalisavea

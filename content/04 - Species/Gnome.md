@@ -7,6 +7,7 @@ content-start: 712
 tags: [species, common]
 creature-type: Humanoid
 common: true
+modified: 2026-06-10T15:29:26.975Z
 ---
 
 # Gnome

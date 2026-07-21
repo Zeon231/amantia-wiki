@@ -7,6 +7,7 @@ content-start: 712
 tags: [species, rare, draconic]
 creature-type: Humanoid (Draconic)
 common: false
+modified: 2026-05-28T13:40:08.704Z
 ---
 
 # Kobold

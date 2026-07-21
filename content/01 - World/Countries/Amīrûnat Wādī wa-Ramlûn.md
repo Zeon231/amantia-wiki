@@ -1,6 +1,7 @@
 ---
 tags: [country]
 population: 584400
+modified: 2026-05-10T20:09:53.640Z
 ---
 
 # Amīrûnat Wādī wa-Ramlûn

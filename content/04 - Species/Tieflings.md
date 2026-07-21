@@ -10,6 +10,7 @@ size: Medium
 speed: 30 ft
 lifespan: ~100 years
 common: false
+modified: 2026-05-28T05:34:15.763Z
 ---
 
 # Tieflings

@@ -1,3 +1,7 @@
+---
+modified: 2026-06-07T16:28:41.388Z
+---
+
 ﻿---
 tags: [deity]
 pantheon: "Dwarven"

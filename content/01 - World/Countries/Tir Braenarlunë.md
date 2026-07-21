@@ -3,6 +3,7 @@ tags: [country]
 government: "Hereditary monarchy tempered by the Council of the Twelve Winds, an assembly of "
 ruler: "Rí Tharan mac Caerwyn"
 population: 225600
+modified: 2026-05-10T20:09:53.385Z
 ---
 
 # Tir Braenarlunë

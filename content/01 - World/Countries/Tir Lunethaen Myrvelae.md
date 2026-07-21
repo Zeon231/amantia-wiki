@@ -3,6 +3,7 @@ tags: [country]
 government: "Hereditary Ard Rígan; the High Council of Bards and Druids"
 ruler: "Ard Rígan Maenya na Lir"
 population: 426600
+modified: 2026-05-10T20:09:53.379Z
 ---
 
 # Tir Lunethaen Myrvelae

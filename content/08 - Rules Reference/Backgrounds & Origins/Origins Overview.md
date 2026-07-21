@@ -1,6 +1,7 @@
 ---
 tags: [rules, backgrounds, origins, feats]
 system: D&D 5e 2024
+modified: 2026-06-07T15:55:41.801Z
 ---
 
 # Character Origins in Amantia

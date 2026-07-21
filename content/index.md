@@ -1,11 +1,14 @@
 ---
 title: Welcome to Amantia
 tags: [index]
+modified: 2026-07-21T11:59:09.236Z
 ---
 
 # The World of Amantia
 
 Welcome, travelers. This is the living wiki for our campaign — everything the party has learned about the world, its people, and its gods lives here.
+
+<div id="campaign-home"></div>
 
 ## Explore
 

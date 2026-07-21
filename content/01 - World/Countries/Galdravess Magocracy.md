@@ -2,6 +2,7 @@
 tags: [country]
 government: "Council of Mages, elctes a leader among them, the High Archmage"
 population: 926800
+modified: 2026-05-10T20:09:53.495Z
 ---
 
 # Galdravess Magocracy

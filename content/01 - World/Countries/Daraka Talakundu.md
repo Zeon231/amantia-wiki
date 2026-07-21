@@ -2,6 +2,7 @@
 tags: [country]
 government: "Modelled after the Hanseatic League"
 population: 601100
+modified: 2026-05-10T20:09:53.690Z
 ---
 
 # Daraka Talakundu

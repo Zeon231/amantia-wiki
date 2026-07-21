@@ -7,6 +7,7 @@ content-start: 712
 tags: [species, rare, fae, lineage]
 creature-type: Fae (Altered)
 common: false
+modified: 2026-05-28T13:46:58.201Z
 ---
 
 # Fae'ri

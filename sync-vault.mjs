@@ -10,7 +10,7 @@
  * Then: npm run quartz build (or git add/commit/push to trigger Cloudflare)
  */
 
-import { readdir, readFile, writeFile, mkdir, rm, copyFile } from 'fs/promises'
+import { readdir, readFile, writeFile, mkdir, rm, copyFile, stat } from 'fs/promises'
 import { existsSync } from 'fs'
 import { join, extname, dirname, basename } from 'path'
 
@@ -63,12 +63,26 @@ async function copyPrivateDir(srcDir, destDir) {
     await mkdir(dirname(d), { recursive: true })
     let content = await readFile(s, 'utf8')
     if (content.includes('## DM Notes')) content = stripDmNotes(content)
+    content = stampModified(content, (await stat(s)).mtime.toISOString())
     await writeFile(d, content, 'utf8')
     copied++
   }
 }
 
 // ── DM NOTES STRIPPING ─────────────────────────────────────────────────────
+
+// Stamp `modified:` in frontmatter from the vault file's mtime, so the wiki's
+// "Most Recent" ordering survives git (which does not preserve file mtimes).
+function stampModified(content, iso) {
+  if (content.startsWith('---\n')) {
+    const end = content.indexOf('\n---', 4)
+    if (end !== -1) {
+      const body = content.slice(4, end).split('\n').filter((l) => !/^modified:\s*/.test(l)).join('\n')
+      return '---\n' + body + '\nmodified: ' + iso + content.slice(end)
+    }
+  }
+  return '---\nmodified: ' + iso + '\n---\n\n' + content
+}
 
 function stripDmNotes(content) {
   const lines = content.split('\n')
@@ -148,6 +162,8 @@ async function syncDir(srcDir, destDir) {
         content = stripDmNotes(content)
         stripped++
       }
+      const srcStat = await stat(srcPath)
+      content = stampModified(content, srcStat.mtime.toISOString())
 
       await writeFile(destPath, content, 'utf8')
       copied++

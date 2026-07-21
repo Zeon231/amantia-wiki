@@ -4,6 +4,7 @@ session-number: 1
 date-played: 2026-07-17
 in-game-date: Fall 1681
 players-present: Trent (Vesper Crowe), Daryl (Aphelia), Lucas (Alexander)
+modified: 2026-07-19T05:41:14.966Z
 ---
 
 # Session 1

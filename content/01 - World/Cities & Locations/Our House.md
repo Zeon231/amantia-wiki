@@ -1,6 +1,7 @@
 ---
 tags: [location, building, brindelvik, campaign]
 town: Brindelvik
+modified: 2026-07-19T03:23:52.765Z
 ---
 
 # Our House

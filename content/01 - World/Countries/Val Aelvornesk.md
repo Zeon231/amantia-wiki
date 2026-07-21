@@ -2,6 +2,7 @@
 tags: [country]
 ruler: "Lord Alric Stormborn"
 population: 125000
+modified: 2026-05-10T20:09:53.408Z
 ---
 
 # Val Aelvornesk

@@ -12,6 +12,7 @@ size: Medium
 speed: 25 ft
 lifespan: ~350 years
 common: true
+modified: 2026-06-10T15:30:25.058Z
 ---
 
 # Dwarves

@@ -2,6 +2,7 @@
 tags: [country]
 government: "Hereditary Dwarf King of the surface realm; and  a Holy (Erisvara Draumvalk) Que"
 population: 474100
+modified: 2026-05-10T20:09:53.513Z
 ---
 
 # Dual Kingdom of Edrum-Khaelyth

@@ -12,6 +12,7 @@ size: Medium
 speed: 30 ft (walk), 50 ft (fly)
 lifespan: ~100 years
 common: false
+modified: 2026-06-10T15:30:20.528Z
 ---
 
 # Avians

@@ -1,5 +1,6 @@
 ---
 tags: [world, history, lore]
+modified: 2026-06-07T15:55:02.724Z
 ---
 
 # History of Amantia

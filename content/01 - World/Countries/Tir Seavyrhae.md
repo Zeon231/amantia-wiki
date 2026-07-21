@@ -3,6 +3,7 @@ tags: [country]
 government: "Merchant monarchy; the Rí rules with the Council of…"
 ruler: "Rí Maeron na Seavyr"
 population: 
+modified: 2026-05-28T05:12:30.282Z
 ---
 
 # Tir Seavyrhae

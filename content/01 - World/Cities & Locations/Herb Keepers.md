@@ -2,6 +2,7 @@
 tags: [location, building, brindelvik, campaign]
 town: Brindelvik
 discovered: Session 1
+modified: 2026-07-19T02:57:03.269Z
 ---
 
 # Herb Keeper's

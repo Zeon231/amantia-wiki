@@ -2,6 +2,7 @@
 tags: [country]
 government: "Hereditary Sultan"
 population: 868100
+modified: 2026-05-10T20:09:53.499Z
 ---
 
 # Sulṭanat Dār al-Ḥikmûn

@@ -3,6 +3,7 @@ tags: [country]
 government: "Hereditary monarchy under the Rígan, guided by the Council of Riversong (advisor"
 ruler: "Rígan Elaria na Veyra"
 population: 487500
+modified: 2026-05-10T20:09:53.382Z
 ---
 
 # Tir Aelyrhae

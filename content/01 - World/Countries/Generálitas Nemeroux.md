@@ -2,6 +2,7 @@
 tags: [country]
 government: "Indendant appointed by the Emporer. They are usually trusted bureaucrats"
 population: 414500
+modified: 2026-05-10T20:09:53.561Z
 ---
 
 # Generálitas Nemeroux

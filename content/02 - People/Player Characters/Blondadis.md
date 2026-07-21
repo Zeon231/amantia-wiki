@@ -5,6 +5,7 @@ species: TBD
 class: Cleric
 level: 1
 status: active
+modified: 2026-07-18T16:09:31.338Z
 ---
 
 # Blondadis

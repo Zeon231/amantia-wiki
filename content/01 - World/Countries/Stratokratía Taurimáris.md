@@ -2,6 +2,7 @@
 tags: [country]
 government: "Autocratic Holy Military Leader"
 population: 53300
+modified: 2026-05-10T20:09:53.621Z
 ---
 
 # Stratokratía Taurimáris

@@ -7,6 +7,7 @@ content-start: 712
 tags: [species, rare, lineage]
 creature-type: Humanoid (Lineage)
 common: false
+modified: 2026-05-28T13:40:08.658Z
 ---
 
 # Dhampir

@@ -7,6 +7,7 @@ content-start: 712
 tags: [species, rare, fae]
 creature-type: Fae (Full Fae)
 common: false
+modified: 2026-05-28T13:47:25.202Z
 ---
 
 # Winter Court Faerie

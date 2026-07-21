@@ -1,6 +1,7 @@
 ---
 tags: [location, town, campaign]
 discovered: Session 1
+modified: 2026-07-19T03:43:17.925Z
 ---
 
 # Brindelvik

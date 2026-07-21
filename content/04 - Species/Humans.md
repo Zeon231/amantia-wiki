@@ -10,6 +10,7 @@ size: Medium
 speed: 30 ft
 lifespan: ~80 years
 common: true
+modified: 2026-05-28T05:35:07.485Z
 ---
 
 # Humans

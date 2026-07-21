@@ -2,6 +2,7 @@
 tags: [country]
 government: "Monastic Duke Head of the Knights of the Order of the White Rose, Appointed by t"
 population: 907100
+modified: 2026-05-10T20:09:53.472Z
 ---
 
 # Monastic Duchy of Thornharkûn

@@ -2,6 +2,7 @@
 tags: [country]
 government: "Autocratic Rakshasa Raja, provinces ruled by Noble Rakshasa"
 population: 2062000
+modified: 2026-05-10T20:09:53.646Z
 ---
 
 # Prathamātlan Rājaya

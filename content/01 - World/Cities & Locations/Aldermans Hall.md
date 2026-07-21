@@ -2,6 +2,7 @@
 tags: [location, building, brindelvik, campaign]
 town: Brindelvik
 discovered: Session 1
+modified: 2026-07-18T16:45:52.314Z
 ---
 
 # Alderman's Hall

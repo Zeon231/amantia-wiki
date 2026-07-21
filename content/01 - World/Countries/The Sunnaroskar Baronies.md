@@ -2,6 +2,7 @@
 tags: [country]
 government: "No central authority, local baronies ruled by barons"
 population: 1253200
+modified: 2026-05-10T20:09:53.493Z
 ---
 
 # The Sunnaroskar Baronies

@@ -7,6 +7,7 @@ location: Ashveil — afflicted, still alive
 faction: Ashveil village
 status: alive
 first-appeared: Pre-campaign (Vesper's backstory)
+modified: 2026-07-18T16:08:16.655Z
 ---
 
 # Aldric Crowe

@@ -2,6 +2,7 @@
 tags: [country]
 government: "No central authority, local baronies ruled by barons"
 population: 667800
+modified: 2026-05-10T20:09:53.463Z
 ---
 
 # Veyrmarchen

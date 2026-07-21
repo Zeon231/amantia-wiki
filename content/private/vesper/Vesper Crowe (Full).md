@@ -6,6 +6,7 @@ class: Rogue
 background: Soldier (Ex-Soldier)
 level: 1
 status: active
+modified: 2026-07-18T16:08:44.514Z
 ---
 
 # Vesper Crowe — Full (Private)

@@ -2,6 +2,7 @@
 tags: [country]
 government: "Theocracy ruled by a Yuan-Ti high priestess"
 population: 1726300
+modified: 2026-05-10T20:09:53.650Z
 ---
 
 # Ssazharissar Empire

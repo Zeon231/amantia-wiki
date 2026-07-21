@@ -1,5 +1,6 @@
 ---
 tags: [equipment, currency, rules-reference]
+modified: 2026-06-07T21:54:42.582Z
 ---
 
 # Currency & Wealth

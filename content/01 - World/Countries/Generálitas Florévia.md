@@ -2,6 +2,7 @@
 tags: [country]
 government: "Indendant appointed by the Emporer. They are usually trusted bureaucrats"
 population: 516300
+modified: 2026-05-10T20:09:53.555Z
 ---
 
 # Generálitas Florévia

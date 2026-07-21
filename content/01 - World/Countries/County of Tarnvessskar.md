@@ -2,6 +2,7 @@
 tags: [country]
 government: "Hereditary Count"
 population: 1283500
+modified: 2026-05-10T20:09:53.481Z
 ---
 
 # County of Tarnvessskar

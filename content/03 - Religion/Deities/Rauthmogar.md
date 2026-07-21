@@ -1,3 +1,7 @@
+---
+modified: 2026-06-07T16:28:41.507Z
+---
+
 ﻿---
 tags: [deity]
 pantheon: "Siórtharan"

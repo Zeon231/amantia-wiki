@@ -2,6 +2,7 @@
 tags: [npc, mentor, campaign]
 status: missing
 first-appeared: Session 1 (referenced)
+modified: 2026-07-19T03:30:02.139Z
 ---
 
 # Master Belric

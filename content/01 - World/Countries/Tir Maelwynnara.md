@@ -3,6 +3,7 @@ tags: [country]
 government: "Hereditary monarchy bound by the Oath of the Wolf — an ancient covenant between "
 ruler: "Rígan Siofra na Morvanyr"
 population: 359100
+modified: 2026-05-10T20:09:53.392Z
 ---
 
 # Tir Maelwynnara

@@ -7,6 +7,7 @@ content-start: 712
 tags: [species, rare, planar]
 creature-type: Humanoid (Gith)
 common: false
+modified: 2026-06-10T15:29:39.800Z
 ---
 
 # Githyanki & Githzerai

@@ -1,5 +1,6 @@
 ---
 tags: [equipment, weapons, rules-reference]
+modified: 2026-06-08T13:54:25.346Z
 ---
 
 # Weapons

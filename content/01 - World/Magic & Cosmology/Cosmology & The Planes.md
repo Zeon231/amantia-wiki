@@ -1,5 +1,6 @@
 ---
 tags: [world, cosmology, magic, lore]
+modified: 2026-05-05T13:30:31.682Z
 ---
 
 # Cosmology & The Planes

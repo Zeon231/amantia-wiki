@@ -10,6 +10,7 @@ size: Medium
 speed: 30 ft
 lifespan: ~150 years
 common: false
+modified: 2026-06-10T15:28:40.855Z
 ---
 
 # Greater Minotaur

@@ -3,6 +3,7 @@ tags: [country]
 government: "Hereditary monarchy under the Starwood Assembly, a council of druids, Fae envoys"
 ruler: "Rí Faenor Velthirion"
 population: 196700
+modified: 2026-05-10T20:09:53.388Z
 ---
 
 # Tu Liraenyllae

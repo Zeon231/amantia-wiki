@@ -2,6 +2,7 @@
 tags: [country]
 government: "Hereditary Prince-Elector"
 population: 491600
+modified: 2026-05-10T20:09:53.477Z
 ---
 
 # Principality of Dalgrûnvaldr

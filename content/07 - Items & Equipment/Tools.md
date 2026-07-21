@@ -1,5 +1,6 @@
 ---
 tags: [equipment, tools, rules-reference]
+modified: 2026-06-08T14:28:43.502Z
 ---
 
 # Tools
