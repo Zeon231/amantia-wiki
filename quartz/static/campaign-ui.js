@@ -244,12 +244,32 @@
     })
   }
 
+  // ---- Template placeholders: hide "[?]" tokens so partial notes look clean --
+  function tidyPlaceholders() {
+    var mount = document.querySelector("article")
+    if (!mount || mount.dataset.axTidied) return
+    mount.dataset.axTidied = "1"
+    // Callout rows like "**Species:** [?]" → dim + tag "unknown"
+    mount.querySelectorAll(".callout p").forEach(function (p) {
+      if (/\[\?\]/.test(p.innerHTML)) {
+        p.innerHTML = p.innerHTML.replace(/\[\?\]/g, '<span style="opacity:.55;font-style:italic">unknown</span>')
+      }
+    })
+    // Body paragraphs / list items that are just "[?]" → hide entirely
+    mount.querySelectorAll("p, li").forEach(function (el) {
+      var t = (el.textContent || "").trim()
+      if (t === "[?]" || t === "" || t === "-") el.style.display = "none"
+      else if (/\[\?\]/.test(t)) el.innerHTML = el.innerHTML.replace(/\[\?\]/g, '<span style="opacity:.55;font-style:italic">unknown</span>')
+    })
+  }
+
   function init() {
     injectStyles()
     renderBanner()
     trackView()
     addBookmarkButton()
     renderHome()
+    tidyPlaceholders()
     adminInit()
   }
   if (document.readyState !== "loading") init()
