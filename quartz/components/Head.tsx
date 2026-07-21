@@ -102,6 +102,9 @@ export default (() => {
         {fileData.frontmatter?.["banner-y"] != null && (
           <meta name="banner-y" content={String(fileData.frontmatter["banner-y"])} />
         )}
+        {fileData.filePath && (
+          <meta name="source-path" content={String(fileData.filePath)} />
+        )}
         <script src={joinSegments(baseDir, "static/campaign-ui.js")} defer></script>
 
         {css.map((resource) => CSSResourceToStyleElement(resource, true))}

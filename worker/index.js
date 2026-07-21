@@ -67,7 +67,13 @@ export default {
         tier: auth.tier || null,
         editLevel: auth.editLevel,
         canSeeAllTiers: isAdminRole(auth.role),
+        canEdit: isAdminRole(auth.role), // admin-only editing, for now
       })
+    }
+
+    // ---- Editing API (admin-only) ------------------------------------------
+    if (path.startsWith("/api/")) {
+      return handleApi(path, request, env, auth)
     }
 
     if (isPrivate && !canAccessTier(auth, path)) {
@@ -83,6 +89,96 @@ function canAccessTier(auth, path) {
   if (isAdminRole(auth.role)) return true
   const tier = path.slice(PRIVATE_PREFIX.length).split("/")[0]
   return !!tier && tier === auth.tier
+}
+
+// ---- Editing API ----------------------------------------------------------
+// Reads/commits page files in the GitHub `content/` tree (the source of truth).
+// A commit to `main` triggers Cloudflare's build, so edits go live in ~1–2 min.
+// Requires secret GITHUB_TOKEN (fine-grained, Contents: read+write on the repo).
+async function handleApi(path, request, env, auth) {
+  if (!isAdminRole(auth.role)) return json({ error: "forbidden — admin only" }, 403)
+  if (!env.GITHUB_TOKEN) return json({ error: "editing not configured (GITHUB_TOKEN not set)" }, 501)
+
+  const url = new URL(request.url)
+  const m = request.method
+
+  if (path === "/api/page" && m === "GET") {
+    const p = normPath(url.searchParams.get("path"))
+    if (!p) return json({ error: "bad path" }, 400)
+    const r = await gh(env, "GET", p)
+    if (r.status === 404) return json({ exists: false, path: p, content: "", sha: null })
+    if (!r.ok) return json({ error: "github " + r.status }, 502)
+    const data = await r.json()
+    return json({ exists: true, path: p, sha: data.sha, content: b64decode(data.content) })
+  }
+
+  if (path === "/api/page" && (m === "PUT" || m === "POST")) {
+    const body = await request.json().catch(() => null)
+    if (!body) return json({ error: "bad json" }, 400)
+    const p = normPath(body.path)
+    if (!p) return json({ error: "bad path (must be content/…/*.md)" }, 400)
+    const payload = {
+      message: (body.message || "web edit: " + p).slice(0, 200) + " (by " + auth.user + ")",
+      content: b64encode(body.content == null ? "" : String(body.content)),
+      branch: "main",
+    }
+    if (body.sha) payload.sha = body.sha
+    const r = await gh(env, "PUT", p, payload)
+    if (!r.ok) return json({ error: "github " + r.status, detail: (await r.text()).slice(0, 200) }, 502)
+    const data = await r.json()
+    return json({ ok: true, path: p, sha: data.content && data.content.sha, commit: data.commit && data.commit.sha })
+  }
+
+  if (path === "/api/page" && m === "DELETE") {
+    const body = await request.json().catch(() => null)
+    if (!body || !body.sha) return json({ error: "sha required to delete" }, 400)
+    const p = normPath(body.path)
+    if (!p) return json({ error: "bad path" }, 400)
+    const r = await gh(env, "DELETE", p, {
+      message: ("web delete: " + p + " (by " + auth.user + ")").slice(0, 200),
+      sha: body.sha,
+      branch: "main",
+    })
+    if (!r.ok) return json({ error: "github " + r.status, detail: (await r.text()).slice(0, 200) }, 502)
+    return json({ ok: true, deleted: p })
+  }
+
+  return json({ error: "unknown endpoint" }, 404)
+}
+
+function normPath(p) {
+  if (!p) return null
+  p = String(p).replace(/^\/+/, "")
+  if (!p.startsWith("content/")) p = "content/" + p
+  if (p.indexOf("..") !== -1 || !p.endsWith(".md")) return null
+  return p
+}
+
+function gh(env, method, repoPath, body) {
+  const repo = env.GITHUB_REPO || "Zeon231/amantia-wiki"
+  const encoded = repoPath.split("/").map(encodeURIComponent).join("/")
+  return fetch("https://api.github.com/repos/" + repo + "/contents/" + encoded, {
+    method,
+    headers: {
+      Authorization: "Bearer " + env.GITHUB_TOKEN,
+      Accept: "application/vnd.github+json",
+      "User-Agent": "amantia-wiki-worker",
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  })
+}
+
+function b64decode(b64) {
+  const bin = atob((b64 || "").replace(/\s/g, ""))
+  const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0))
+  return new TextDecoder().decode(bytes)
+}
+function b64encode(str) {
+  const bytes = new TextEncoder().encode(str)
+  let bin = ""
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i])
+  return btoa(bin)
 }
 
 async function authenticate(request, env) {

@@ -38,6 +38,17 @@
       ".amantia-card a{text-decoration:none}",
       ".amantia-card .empty{color:var(--gray);font-size:.86rem;font-style:italic;padding-left:.1rem}",
       ".amantia-card .cnt{color:var(--gray);font-size:.78rem}",
+      "#amantia-admin-bar{position:fixed;right:16px;bottom:16px;z-index:900;display:flex;gap:8px}",
+      "#amantia-admin-bar button{background:var(--secondary);color:#fff;border:0;border-radius:8px;padding:8px 13px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.35)}",
+      ".ax-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:20px}",
+      ".ax-modal{background:var(--light);color:var(--darkgray);width:min(900px,96vw);max-height:92vh;display:flex;flex-direction:column;border-radius:12px;border:1px solid var(--gray);overflow:hidden}",
+      ".ax-modal header{padding:.7rem 1rem;border-bottom:1px solid var(--lightgray);display:flex;align-items:center;gap:.6rem;font-size:.9rem}",
+      ".ax-modal header .path{font-family:ui-monospace,monospace;color:var(--secondary);flex:1;word-break:break-all}",
+      ".ax-modal textarea{flex:1;min-height:45vh;border:0;outline:0;resize:none;padding:1rem;font-family:ui-monospace,monospace;font-size:13px;line-height:1.5;background:var(--light);color:var(--darkgray)}",
+      ".ax-modal footer{padding:.7rem 1rem;border-top:1px solid var(--lightgray);display:flex;align-items:center;gap:.6rem}",
+      ".ax-modal footer .status{flex:1;font-size:.82rem;color:var(--gray)}",
+      ".ax-btn{border:0;border-radius:7px;padding:7px 14px;font-weight:600;cursor:pointer}",
+      ".ax-save{background:var(--secondary);color:#fff}.ax-cancel{background:var(--lightgray);color:var(--darkgray)}.ax-del{background:#8a2020;color:#fff;margin-right:auto}",
     ].join("\n")
     document.head.appendChild(s)
   }
@@ -151,12 +162,95 @@
     })
   }
 
+  // ---- Admin editor (Phase 1: text) --------------------------------------
+  var ADMIN = null
+  function adminInit() {
+    if (ADMIN === true) { addAdminTools(); return }
+    if (ADMIN === false) return
+    fetch("/whoami", { credentials: "same-origin" })
+      .then(function (r) { return r.ok ? r.json() : null })
+      .then(function (w) { ADMIN = !!(w && w.canEdit); if (ADMIN) addAdminTools() })
+      .catch(function () { ADMIN = false })
+  }
+  function addAdminTools() {
+    if (document.getElementById("amantia-admin-bar")) return
+    var bar = document.createElement("div")
+    bar.id = "amantia-admin-bar"
+    var edit = document.createElement("button"); edit.textContent = "✏️ Edit page"
+    var add = document.createElement("button"); add.textContent = "＋ New"
+    bar.appendChild(edit); bar.appendChild(add)
+    document.body.appendChild(bar)
+    edit.addEventListener("click", function () {
+      var sp = (document.querySelector('meta[name="source-path"]') || {}).content
+      if (sp) openEditor(sp, false)
+      else alert("This page has no editable source file.")
+    })
+    add.addEventListener("click", function () {
+      var p = prompt("New page path, relative to content/ — e.g.\n01 - World/Cities & Locations/New Place.md")
+      if (p && /\.md$/.test(p)) openEditor(p, true)
+      else if (p) alert("Path must end in .md")
+    })
+  }
+  function openEditor(path, isNew) {
+    var ov = document.createElement("div")
+    ov.className = "ax-overlay"
+    ov.innerHTML =
+      '<div class="ax-modal"><header><b>' + (isNew ? "New page" : "Editing") + ':</b>' +
+      '<span class="path">' + esc(path) + '</span></header>' +
+      '<textarea spellcheck="false" placeholder="Loading…"></textarea>' +
+      '<footer>' + (isNew ? "" : '<button class="ax-btn ax-del">Delete</button>') +
+      '<span class="status"></span><button class="ax-btn ax-cancel">Cancel</button>' +
+      '<button class="ax-btn ax-save">Save</button></footer></div>'
+    document.body.appendChild(ov)
+    var ta = ov.querySelector("textarea")
+    var status = ov.querySelector(".status")
+    var sha = null
+    function close() { ov.remove() }
+    ov.querySelector(".ax-cancel").addEventListener("click", close)
+    ov.addEventListener("click", function (e) { if (e.target === ov) close() })
+
+    if (isNew) { ta.value = "---\ntitle: " + path.split("/").pop().replace(/\.md$/, "") + "\n---\n\n"; ta.placeholder = "" }
+    else {
+      fetch("/api/page?path=" + encodeURIComponent(path), { credentials: "same-origin" })
+        .then(function (r) { return r.json() })
+        .then(function (d) { if (d.error) { status.textContent = "Load error: " + d.error; return } sha = d.sha; ta.value = d.content || ""; ta.placeholder = "" })
+        .catch(function () { status.textContent = "Failed to load source." })
+    }
+
+    ov.querySelector(".ax-save").addEventListener("click", function () {
+      status.textContent = "Saving…"
+      fetch("/api/page", {
+        method: "PUT", credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path: path, content: ta.value, sha: sha, message: (isNew ? "create " : "edit ") + path }),
+      }).then(function (r) { return r.json() }).then(function (d) {
+        if (d.ok) { status.textContent = "✓ Committed — site rebuilds in ~1–2 min."; setTimeout(close, 1800) }
+        else { status.textContent = "Save failed: " + (d.error || "unknown") + (d.detail ? " — " + d.detail : "") }
+      }).catch(function () { status.textContent = "Save request failed." })
+    })
+
+    var del = ov.querySelector(".ax-del")
+    if (del) del.addEventListener("click", function () {
+      if (!confirm("Delete this page permanently?")) return
+      status.textContent = "Deleting…"
+      fetch("/api/page", {
+        method: "DELETE", credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path: path, sha: sha, message: "delete " + path }),
+      }).then(function (r) { return r.json() }).then(function (d) {
+        if (d.ok) { status.textContent = "✓ Deleted — rebuilding."; setTimeout(close, 1500) }
+        else { status.textContent = "Delete failed: " + (d.error || "unknown") }
+      }).catch(function () { status.textContent = "Delete request failed." })
+    })
+  }
+
   function init() {
     injectStyles()
     renderBanner()
     trackView()
     addBookmarkButton()
     renderHome()
+    adminInit()
   }
   if (document.readyState !== "loading") init()
   else document.addEventListener("DOMContentLoaded", init)
