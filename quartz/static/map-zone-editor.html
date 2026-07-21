@@ -38,7 +38,8 @@
 
   <div class="bar">
     <button id="add">＋ Add zone</button>
-    <button id="copy">Copy HTML for Brindelvik.md</button>
+    <button id="savewiki">💾 Save to wiki</button>
+    <button id="copy" class="ghost">Copy HTML</button>
     <button id="reset" class="ghost">Reset to defaults</button>
     <span class="hint" id="status"></span>
   </div>
@@ -147,6 +148,38 @@
     renderExport();
   });
   document.addEventListener('mouseup', function(){ if(drag){ drag=null; save(); } });
+
+  // ---- Save directly to Brindelvik.md via the admin editing API -----------
+  var SAVE_PATH = 'content/01 - World/Cities & Locations/Brindelvik.md';
+  var savewiki = document.getElementById('savewiki');
+  savewiki.addEventListener('click', function(){
+    savewiki.disabled = true; status.textContent = 'Loading Brindelvik.md…';
+    fetch('/api/page?path=' + encodeURIComponent(SAVE_PATH), { credentials:'same-origin' })
+      .then(function(res){ return res.json(); })
+      .then(function(g){
+        if (g.error) throw new Error(g.error);
+        var anchors = zones.map(anchorHTML).join('\n');
+        var re = /(<div class="brindelvik-map"[^>]*>\s*<img[^>]*>)([\s\S]*?)(<\/div>)/;
+        if (!re.test(g.content)) throw new Error('map block not found in Brindelvik.md');
+        var updated = g.content.replace(re, function(m, a, mid, c){ return a + '\n' + anchors + '\n' + c; });
+        return fetch('/api/page', {
+          method:'PUT', credentials:'same-origin', headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify({ path: SAVE_PATH, content: updated, sha: g.sha, message: 'update Brindelvik map zones' })
+        }).then(function(res){ return res.json(); });
+      })
+      .then(function(p){
+        status.textContent = (p && p.ok)
+          ? '✓ Saved — the map updates when the wiki rebuilds (~1–2 min).'
+          : 'Save failed: ' + ((p && p.error) || 'unknown') + ((p && p.detail) ? ' — ' + p.detail : '');
+      })
+      .catch(function(err){ status.textContent = 'Save failed: ' + err.message + ' — use Copy HTML instead.'; })
+      .then(function(){ savewiki.disabled = false; });
+  });
+  // Direct save is admin-only; others fall back to Copy HTML.
+  fetch('/whoami', { credentials:'same-origin' })
+    .then(function(res){ return res.ok ? res.json() : null; })
+    .then(function(w){ if (!(w && w.canEdit)) { savewiki.disabled = true; savewiki.style.opacity = .5; savewiki.title = 'Admin login required to save directly'; } })
+    .catch(function(){ savewiki.disabled = true; savewiki.style.opacity = .5; });
 
   render();
 })();
