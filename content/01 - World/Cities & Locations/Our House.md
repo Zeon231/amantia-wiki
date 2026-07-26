@@ -4,7 +4,7 @@ town: Brindelvik
 modified: 2026-07-26T11:26:27.113Z
 ---
 
-# Our House
+# Master Velrik's house
 
 > [!note] Player knowledge only
 > Facts recorded as revealed in play. No speculation.
