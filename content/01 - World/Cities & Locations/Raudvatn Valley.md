@@ -9,7 +9,7 @@ modified: 2026-07-18T16:07:39.192Z
 > [!note] Player knowledge only
 > Facts recorded as revealed in play.
 
-The region around **[[Brindelvik]]** — the campaign's starting area. Named for the **Raudvatn** river running through it. The broader region label on the map reads **Askarsoeng**.
+The region around **[[Brindelvik.md]]** — the campaign's starting area. Named for the **Raudvatn** river running through it. The broader region label on the map reads **Askarsoeng**.
 
 ![[Raudvatn_Valley.png]]
 
