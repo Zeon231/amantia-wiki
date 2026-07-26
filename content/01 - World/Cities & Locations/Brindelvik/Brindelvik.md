@@ -7,7 +7,7 @@ modified: 2026-07-26T16:07:03.019Z
 # Brindelvik
 
 > [!note] Player knowledge only
-> Facts recorded as revealed in play. No speculation.
+> Facts recorded as revealed in play.
 
 Starting town of the campaign (Session 1, Fall 1681). Sits in the **[[Raudvatn Valley]]**, in the region of Askarsoeng.
 
