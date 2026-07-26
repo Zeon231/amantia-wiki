@@ -8,7 +8,7 @@ modified: 2026-07-18T16:45:52.314Z
 # Alderman's Hall
 
 > [!note] Player knowledge only
-> Facts recorded as revealed in play. No speculation.
+> Facts recorded as revealed in play.
 
 The seat of **[[Brindelvik]]**'s **Alderman**. Where the party first heard the news of the stolen taxes ([[Session 1]]).
 
