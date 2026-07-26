@@ -64,6 +64,7 @@ async function copyPrivateDir(srcDir, destDir) {
     let content = await readFile(s, 'utf8')
     if (content.includes('## DM Notes')) content = stripDmNotes(content)
     content = stripSharedFrontmatterFields(content)
+    content = sanitizeFrontmatterPlaceholders(content)
     content = stampModified(content, (await stat(s)).mtime.toISOString())
     await writeFile(d, content, 'utf8')
     copied++
@@ -85,6 +86,22 @@ function stripSharedFrontmatterFields(content) {
     (l) => !/^(tags|aliases|description|socialDescription):/.test(l),
   ).join('\n')
   return '---\n' + body + content.slice(end)
+}
+
+// Guard against `[?]` (the campaign UI's "unknown" placeholder) accidentally
+// appearing as a raw frontmatter VALUE. In YAML that opens a flow sequence with
+// a `?` explicit-key marker → parse error → whole site build fails.
+// Body uses of `[?]` are fine (they render as text). This only touches
+// unquoted frontmatter values on the field lines.
+function sanitizeFrontmatterPlaceholders(content) {
+  if (!content.startsWith('---\n')) return content
+  const end = content.indexOf('\n---', 4)
+  if (end === -1) return content
+  const head = content.slice(4, end).split('\n').map((l) => {
+    // Match "key: [?]" (with optional trailing whitespace) → "key:" (blank value)
+    return l.replace(/^(\s*[A-Za-z_][\w-]*\s*:)\s*\[\?\]\s*$/, '$1')
+  }).join('\n')
+  return '---\n' + head + content.slice(end)
 }
 
 // Stamp `modified:` in frontmatter from the vault file's mtime, so the wiki's
@@ -179,6 +196,7 @@ async function syncDir(srcDir, destDir) {
         stripped++
       }
       const srcStat = await stat(srcPath)
+      content = sanitizeFrontmatterPlaceholders(content)
       content = stampModified(content, srcStat.mtime.toISOString())
 
       await writeFile(destPath, content, 'utf8')

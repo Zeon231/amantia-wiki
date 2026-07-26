@@ -4,13 +4,13 @@ tags: [npc, question-knight, campaign]
 status: alive
 first-appeared: Session 1
 
-species: [?]
+species:
 gender: Female
 occupation: Question Knight
 faction: "[[Question Knights]]"
 
 editLevel: 1
-modified: 2026-07-26T11:27:29.168Z
+modified: 2026-07-26T12:31:30.837Z
 ---
 
 # Dame Ysabet Rosenvard
