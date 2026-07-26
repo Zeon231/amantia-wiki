@@ -11,6 +11,8 @@ modified: 2026-07-18T16:07:39.192Z
 
 The region around **[[Brindelvik/Brindelvik]]** — the campaign's starting area. Named for the **Raudvatn** river running through it. The broader region label on the map reads **Askarsoeng**.
 
+**[[Brindelvik/Brindelvik]]** **[[Brindelvik/Brindelvik.md]]** **[[Brindelvik/Brindelvik|townname]]**
+
 ![[Raudvatn_Valley.png]]
 
 ## Places on the Map
