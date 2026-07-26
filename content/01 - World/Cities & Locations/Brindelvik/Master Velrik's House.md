@@ -7,7 +7,7 @@ modified: 2026-07-26T16:08:07.445Z
 # Master Velrik's House
 
 > [!note] Player knowledge only
-> Facts recorded as revealed in play. No speculation.
+> Facts recorded as revealed in play.
 
 **[[Master Velrik Thorn]]'s house** in **[[Brindelvik]]** — **building 21** on the town map, set apart on the northwest edge. The party is currently **staying here** (Velrik is their mentor).
 
