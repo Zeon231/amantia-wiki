@@ -8,7 +8,7 @@ modified: 2026-07-26T16:07:00.805Z
 # Master Velrik Thorn
 
 > [!note] Player knowledge only
-> Facts recorded as revealed in play. No speculation.
+> Facts recorded as revealed in play.
 
 The mentor and teacher who **drew the party together**. [[Vesper Crowe]], [[Aphelia]], and [[Alexander]] each came under Master Velrik Thorn's teachings and guidance while pursuing their own personal goals.
 
