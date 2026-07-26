@@ -140,9 +140,17 @@ function canAccessTier(auth, path) {
 }
 
 // ---- Editing API ----------------------------------------------------------
-// Reads/commits page files in the GitHub `content/` tree (the source of truth).
-// A commit to `main` triggers Cloudflare's build, so edits go live in ~1–2 min.
+// Web edits commit to STAGING_BRANCH. They do NOT deploy automatically.
+// An admin must POST /api/deploy to merge staging → main, which triggers the
+// Cloudflare build. Meanwhile /api/changes reports what's pending vs deployed.
+//
+// (Local edits via sync-vault.mjs continue to push to main directly — that is
+//  a separate console flow owned by the site owner.)
+//
 // Requires secret GITHUB_TOKEN (fine-grained, Contents: read+write on the repo).
+const MAIN_BRANCH = "main"
+const STAGING_BRANCH = "staging"
+
 async function handleApi(path, request, env, auth) {
   if (!isAdminRole(auth.role)) return json({ error: "forbidden — admin only" }, 403)
   if (!env.GITHUB_TOKEN) return json({ error: "editing not configured (GITHUB_TOKEN not set)" }, 501)
@@ -150,14 +158,18 @@ async function handleApi(path, request, env, auth) {
   const url = new URL(request.url)
   const m = request.method
 
+  // ---- Page CRUD (writes go to staging) ----
   if (path === "/api/page" && m === "GET") {
     const p = normPath(url.searchParams.get("path"))
     if (!p) return json({ error: "bad path" }, 400)
-    const r = await gh(env, "GET", p)
+    // Read from staging so the editor sees pending edits too. If staging doesn't
+    // exist yet, the API falls back to main (until first write creates staging).
+    const branch = (await stagingExists(env)) ? STAGING_BRANCH : MAIN_BRANCH
+    const r = await ghContents(env, "GET", p, null, branch)
     if (r.status === 404) return json({ exists: false, path: p, content: "", sha: null })
     if (!r.ok) return json({ error: "github " + r.status }, 502)
     const data = await r.json()
-    return json({ exists: true, path: p, sha: data.sha, content: b64decode(data.content) })
+    return json({ exists: true, path: p, sha: data.sha, content: b64decode(data.content), branch })
   }
 
   if (path === "/api/page" && (m === "PUT" || m === "POST")) {
@@ -165,16 +177,23 @@ async function handleApi(path, request, env, auth) {
     if (!body) return json({ error: "bad json" }, 400)
     const p = normPath(body.path)
     if (!p) return json({ error: "bad path (must be content/…/*.md)" }, 400)
+    const err = await ensureStagingExists(env)
+    if (err) return err
     const payload = {
       message: (body.message || "web edit: " + p).slice(0, 200) + " (by " + auth.user + ")",
       content: b64encode(body.content == null ? "" : String(body.content)),
-      branch: "main",
+      branch: STAGING_BRANCH,
     }
     if (body.sha) payload.sha = body.sha
-    const r = await gh(env, "PUT", p, payload)
+    const r = await ghContents(env, "PUT", p, payload)
     if (!r.ok) return json({ error: "github " + r.status, detail: (await r.text()).slice(0, 200) }, 502)
     const data = await r.json()
-    return json({ ok: true, path: p, sha: data.content && data.content.sha, commit: data.commit && data.commit.sha })
+    return json({
+      ok: true, staged: true, path: p,
+      sha: data.content && data.content.sha,
+      commit: data.commit && data.commit.sha,
+      note: "Staged — click Deploy in Admin Settings to publish.",
+    })
   }
 
   if (path === "/api/page" && m === "DELETE") {
@@ -182,16 +201,83 @@ async function handleApi(path, request, env, auth) {
     if (!body || !body.sha) return json({ error: "sha required to delete" }, 400)
     const p = normPath(body.path)
     if (!p) return json({ error: "bad path" }, 400)
-    const r = await gh(env, "DELETE", p, {
+    const err = await ensureStagingExists(env)
+    if (err) return err
+    const r = await ghContents(env, "DELETE", p, {
       message: ("web delete: " + p + " (by " + auth.user + ")").slice(0, 200),
       sha: body.sha,
-      branch: "main",
+      branch: STAGING_BRANCH,
     })
     if (!r.ok) return json({ error: "github " + r.status, detail: (await r.text()).slice(0, 200) }, 502)
-    return json({ ok: true, deleted: p })
+    return json({ ok: true, staged: true, deleted: p })
+  }
+
+  // ---- Changes log — pending (staging ahead of main) + recently deployed ----
+  if (path === "/api/changes" && m === "GET") {
+    const pending = { commits: [], files: [], ahead: 0, behind: 0 }
+    if (await stagingExists(env)) {
+      const cmpR = await ghApi(env, "GET", "/compare/" + MAIN_BRANCH + "..." + STAGING_BRANCH)
+      if (cmpR.ok) {
+        const cmp = await cmpR.json()
+        pending.ahead = cmp.ahead_by || 0
+        pending.behind = cmp.behind_by || 0
+        pending.commits = (cmp.commits || []).slice(-30).reverse().map(compactCommit)
+        pending.files = (cmp.files || []).map(compactFile)
+      }
+    }
+    // Recently deployed = last commits on main
+    const recentR = await ghApi(env, "GET", "/commits?sha=" + MAIN_BRANCH + "&per_page=10")
+    const recent_deployed = recentR.ok ? (await recentR.json()).map(compactCommit) : []
+    return json({ pending, recent_deployed, staging_exists: await stagingExists(env) })
+  }
+
+  // ---- Deploy — merge staging into main ----
+  if (path === "/api/deploy" && (m === "POST" || m === "PUT")) {
+    if (!(await stagingExists(env))) return json({ error: "no staging branch — nothing to deploy" }, 400)
+    // Check there's something to deploy
+    const cmpR = await ghApi(env, "GET", "/compare/" + MAIN_BRANCH + "..." + STAGING_BRANCH)
+    if (!cmpR.ok) return json({ error: "compare failed: github " + cmpR.status }, 502)
+    const cmp = await cmpR.json()
+    if (!cmp.ahead_by) return json({ ok: false, error: "nothing to deploy (staging is not ahead of main)" }, 400)
+    // Perform merge
+    const mergeR = await ghApi(env, "POST", "/merges", null, {
+      base: MAIN_BRANCH,
+      head: STAGING_BRANCH,
+      commit_message: "deploy: merge " + STAGING_BRANCH + " -> " + MAIN_BRANCH + " (by " + auth.user + ", " + cmp.ahead_by + " commit" + (cmp.ahead_by === 1 ? "" : "s") + ")",
+    })
+    if (mergeR.status === 204) return json({ ok: true, note: "Nothing new to merge (already up-to-date)." })
+    if (mergeR.status === 409) return json({ error: "merge conflict — resolve on GitHub or in Obsidian" }, 409)
+    if (!mergeR.ok) return json({ error: "merge failed: github " + mergeR.status, detail: (await mergeR.text()).slice(0, 200) }, 502)
+    const merge = await mergeR.json()
+    return json({
+      ok: true,
+      deployed_commit: merge.sha,
+      count: cmp.ahead_by,
+      note: "Deploy commit made. Cloudflare rebuild starts within seconds (~1–2 min to live).",
+    })
   }
 
   return json({ error: "unknown endpoint" }, 404)
+}
+
+// -- helpers ----------------------------------------------------------------
+
+function compactCommit(c) {
+  return {
+    sha: (c.sha || "").slice(0, 7),
+    message: (c.commit && c.commit.message || "").split("\n")[0].slice(0, 140),
+    author: (c.commit && c.commit.author && c.commit.author.name) || (c.author && c.author.login) || "?",
+    date: c.commit && c.commit.author && c.commit.author.date,
+  }
+}
+function compactFile(f) {
+  return {
+    filename: f.filename,
+    status: f.status, // "added" | "modified" | "removed" | "renamed"
+    additions: f.additions || 0,
+    deletions: f.deletions || 0,
+    previous_filename: f.previous_filename,
+  }
 }
 
 function normPath(p) {
@@ -202,10 +288,17 @@ function normPath(p) {
   return p
 }
 
-function gh(env, method, repoPath, body) {
-  const repo = env.GITHUB_REPO || "Zeon231/amantia-wiki"
+// Contents-API request (path is repo-relative like "content/foo.md")
+function ghContents(env, method, repoPath, body, branch) {
   const encoded = repoPath.split("/").map(encodeURIComponent).join("/")
-  return fetch("https://api.github.com/repos/" + repo + "/contents/" + encoded, {
+  const qs = method === "GET" && branch ? "?ref=" + encodeURIComponent(branch) : ""
+  return ghApi(env, method, "/contents/" + encoded + qs, null, body)
+}
+
+// Generic GitHub-API request (subpath is repo-relative like "/compare/..." or "/git/refs")
+function ghApi(env, method, subpath, _unused, body) {
+  const repo = env.GITHUB_REPO || "Zeon231/amantia-wiki"
+  return fetch("https://api.github.com/repos/" + repo + subpath, {
     method,
     headers: {
       Authorization: "Bearer " + env.GITHUB_TOKEN,
@@ -215,6 +308,35 @@ function gh(env, method, repoPath, body) {
     },
     body: body ? JSON.stringify(body) : undefined,
   })
+}
+
+let _stagingCached = null
+async function stagingExists(env) {
+  if (_stagingCached === true) return true
+  const r = await ghApi(env, "GET", "/git/ref/heads/" + STAGING_BRANCH)
+  if (r.status === 200) { _stagingCached = true; return true }
+  return false
+}
+// Create staging from main if it doesn't exist. Returns null on success, or
+// a JSON error Response if creation failed (so callers can early-return).
+async function ensureStagingExists(env) {
+  if (await stagingExists(env)) return null
+  // Get main's HEAD SHA
+  const headR = await ghApi(env, "GET", "/git/ref/heads/" + MAIN_BRANCH)
+  if (!headR.ok) return json({ error: "cannot read main ref: github " + headR.status }, 502)
+  const headData = await headR.json()
+  const sha = headData.object && headData.object.sha
+  if (!sha) return json({ error: "main ref has no sha" }, 502)
+  // Create staging ref pointing at main's HEAD
+  const createR = await ghApi(env, "POST", "/git/refs", null, {
+    ref: "refs/heads/" + STAGING_BRANCH,
+    sha,
+  })
+  if (!createR.ok && createR.status !== 422) {
+    return json({ error: "cannot create staging branch: github " + createR.status, detail: (await createR.text()).slice(0, 200) }, 502)
+  }
+  _stagingCached = true
+  return null
 }
 
 function b64decode(b64) {

@@ -54,6 +54,30 @@
       "#amantia-session-bar .role{opacity:.55;font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-left:.2rem}",
       "#amantia-session-bar button{background:#3a3a44;color:#eee;border:0;border-radius:5px;padding:4px 9px;cursor:pointer;font-size:12px}",
       "#amantia-session-bar button:hover{background:#4b4b58}",
+      "#amantia-admin-menu{position:fixed;right:16px;bottom:60px;z-index:950;background:var(--light);border:1px solid var(--gray);border-radius:8px;padding:5px;display:flex;flex-direction:column;gap:4px;min-width:190px;box-shadow:0 4px 14px rgba(0,0,0,.35)}",
+      "#amantia-admin-menu button{background:transparent;color:var(--darkgray);border:0;text-align:left;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:14px}",
+      "#amantia-admin-menu button:hover{background:var(--lightgray)}",
+      ".ax-admin .ax-body{padding:1rem 1.2rem;overflow-y:auto;max-height:60vh}",
+      ".ax-admin .ax-body p{margin:.4rem 0}",
+      ".ax-admin .ax-body h4{margin:1rem 0 .4rem;font-size:14px;color:var(--secondary)}",
+      ".ax-admin .ax-body h4.sub{color:var(--gray);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px}",
+      ".ax-admin .ax-body hr{border:0;border-top:1px solid var(--lightgray);margin:1rem 0}",
+      ".ax-admin .ax-body .hint{color:var(--gray);font-size:.85rem}",
+      ".ax-admin .ax-body .empty{color:var(--gray);font-size:.85rem;font-style:italic}",
+      ".ax-admin .ax-body code{background:var(--lightgray);padding:0 4px;border-radius:3px;font-size:12px}",
+      ".ax-admin .ax-body ul.ax-commits,.ax-admin .ax-body ul.ax-files{list-style:none;padding:0;margin:.4rem 0;font-size:13px}",
+      ".ax-admin .ax-body ul.ax-commits li{padding:4px 0;border-bottom:1px solid var(--lightgray);line-height:1.4}",
+      ".ax-admin .ax-body ul.ax-commits small{color:var(--gray);display:block;font-size:11px}",
+      ".ax-admin .ax-body ul.ax-files li{padding:3px 0;display:flex;gap:.5rem;align-items:baseline}",
+      ".ax-admin .ax-body ul.ax-files .sym{display:inline-block;width:1.2em;text-align:center;font-weight:700}",
+      ".ax-admin .ax-body ul.ax-files .sym.added{color:#3a8f3a}",
+      ".ax-admin .ax-body ul.ax-files .sym.modified{color:#b0902a}",
+      ".ax-admin .ax-body ul.ax-files .sym.removed{color:#a33}",
+      ".ax-admin .ax-body ul.ax-files .sym.renamed{color:#5a7ab8}",
+      ".ax-admin .ax-body .pm{font-family:ui-monospace,monospace;font-size:11px;color:var(--gray)}",
+      ".ax-admin details{margin:.6rem 0}",
+      ".ax-admin details summary{cursor:pointer;color:var(--secondary);font-size:13px}",
+      ".ax-admin pre{background:#0d0d12;color:#eee;padding:8px;border-radius:6px;font-size:11px;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow:auto}",
     ].join("\n")
     document.head.appendChild(s)
   }
@@ -206,7 +230,8 @@
     bar.id = "amantia-admin-bar"
     var edit = document.createElement("button"); edit.textContent = "✏️ Edit page"
     var add = document.createElement("button"); add.textContent = "＋ New"
-    bar.appendChild(edit); bar.appendChild(add)
+    var settings = document.createElement("button"); settings.textContent = "⚙ Admin"; settings.title = "Admin settings"
+    bar.appendChild(edit); bar.appendChild(add); bar.appendChild(settings)
     document.body.appendChild(bar)
     edit.addEventListener("click", function () {
       var sp = (document.querySelector('meta[name="source-path"]') || {}).content
@@ -218,6 +243,133 @@
       if (p && /\.md$/.test(p)) openEditor(p, true)
       else if (p) alert("Path must end in .md")
     })
+    settings.addEventListener("click", openAdminMenu)
+  }
+
+  // ---- Admin settings menu (deploy + changes log) ------------------------
+  function openAdminMenu() {
+    // If a menu is already open, toggle it off.
+    var existing = document.getElementById("amantia-admin-menu")
+    if (existing) { existing.remove(); return }
+    var m = document.createElement("div")
+    m.id = "amantia-admin-menu"
+    m.innerHTML =
+      '<button data-act="deploy">🚀 Deploy Changes</button>' +
+      '<button data-act="log">📜 Changes Log</button>'
+    document.body.appendChild(m)
+    m.addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (!b) return
+      m.remove()
+      if (b.dataset.act === "deploy") openDeployModal()
+      else if (b.dataset.act === "log") openChangesModal()
+    })
+    // click-outside dismisses
+    setTimeout(function () {
+      document.addEventListener("mousedown", function once(ev) {
+        if (!m.contains(ev.target)) { m.remove(); document.removeEventListener("mousedown", once) }
+      })
+    }, 0)
+  }
+
+  function openDeployModal() {
+    var ov = mkOverlay("Deploy Changes")
+    var body = ov.querySelector(".ax-body")
+    body.innerHTML = '<p class="ax-status">Checking for pending changes…</p>'
+    var footer = ov.querySelector("footer")
+    footer.innerHTML =
+      '<span class="status"></span>' +
+      '<button class="ax-btn ax-cancel">Close</button>' +
+      '<button class="ax-btn ax-save" disabled>Deploy</button>'
+    ov.querySelector(".ax-cancel").addEventListener("click", function () { ov.remove() })
+
+    fetch("/api/changes", { credentials: "same-origin" })
+      .then(function (r) { return r.json() })
+      .then(function (d) {
+        if (d.error) { body.innerHTML = '<p>Error: ' + esc(d.error) + '</p>'; return }
+        var p = d.pending || {}
+        if (!p.ahead) {
+          body.innerHTML = '<p><b>Nothing to deploy.</b><br><small>Staging is not ahead of main. The live site already reflects the latest changes.</small></p>'
+          return
+        }
+        body.innerHTML =
+          '<p><b>' + p.ahead + ' commit' + (p.ahead === 1 ? "" : "s") + '</b> pending across <b>' + (p.files ? p.files.length : 0) + '</b> file' + (p.files && p.files.length === 1 ? "" : "s") + '.</p>' +
+          '<p class="hint">Deploying will merge <code>staging</code> → <code>main</code> and trigger a Cloudflare rebuild (~1–2 min to go live).</p>' +
+          '<details><summary>Preview</summary>' + renderFileList(p.files || []) + '</details>'
+        var btn = ov.querySelector(".ax-save")
+        btn.disabled = false
+        btn.addEventListener("click", function () {
+          btn.disabled = true; body.querySelector(".hint") && body.querySelector(".hint").remove()
+          ov.querySelector(".status").textContent = "Deploying…"
+          fetch("/api/deploy", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: "{}" })
+            .then(function (r) { return r.json() })
+            .then(function (d) {
+              if (d.ok) {
+                ov.querySelector(".status").textContent = "✓ Deployed — Cloudflare rebuild starting."
+                body.innerHTML = '<p>✓ <b>Deployed</b> ' + (d.count || "?") + ' commit(s).</p><p class="hint">The live site will reflect changes in ~1–2 minutes.</p>'
+                setTimeout(function () { ov.remove() }, 3200)
+              } else {
+                ov.querySelector(".status").textContent = "Deploy failed."
+                body.innerHTML = '<p>Deploy failed: <b>' + esc(d.error || "unknown") + '</b></p>' + (d.detail ? '<pre>' + esc(d.detail) + '</pre>' : "")
+                btn.disabled = false
+              }
+            })
+            .catch(function (e) { ov.querySelector(".status").textContent = "Deploy request failed: " + e.message; btn.disabled = false })
+        })
+      })
+      .catch(function (e) { body.innerHTML = '<p>Load failed: ' + esc(e.message) + '</p>' })
+  }
+
+  function openChangesModal() {
+    var ov = mkOverlay("Changes Log")
+    var body = ov.querySelector(".ax-body")
+    body.innerHTML = '<p class="ax-status">Loading…</p>'
+    ov.querySelector("footer").innerHTML = '<span class="status"></span><button class="ax-btn ax-cancel">Close</button>'
+    ov.querySelector(".ax-cancel").addEventListener("click", function () { ov.remove() })
+
+    fetch("/api/changes", { credentials: "same-origin" })
+      .then(function (r) { return r.json() })
+      .then(function (d) {
+        if (d.error) { body.innerHTML = '<p>Error: ' + esc(d.error) + '</p>'; return }
+        var p = d.pending || {}
+        var pendingHtml = p.ahead
+          ? '<h4>🟠 Pending — not yet deployed (' + p.ahead + ')</h4>' + renderCommitList(p.commits) + '<h4 class="sub">Files changed since last deploy</h4>' + renderFileList(p.files || [])
+          : '<h4>🟢 Pending — none</h4><p class="empty">Staging matches the deployed version. No web edits waiting.</p>'
+        var recentHtml = '<h4>✅ Recently deployed (last ' + ((d.recent_deployed || []).length) + ')</h4>' + renderCommitList(d.recent_deployed || [])
+        body.innerHTML = pendingHtml + '<hr>' + recentHtml
+      })
+      .catch(function (e) { body.innerHTML = '<p>Load failed: ' + esc(e.message) + '</p>' })
+  }
+
+  function renderCommitList(commits) {
+    if (!commits || !commits.length) return '<p class="empty">(none)</p>'
+    return '<ul class="ax-commits">' + commits.map(function (c) {
+      var when = c.date ? new Date(c.date).toLocaleString() : ""
+      return '<li><code>' + esc(c.sha) + '</code> — ' + esc(c.message) + ' <small>' + esc(c.author) + (when ? " · " + esc(when) : "") + '</small></li>'
+    }).join("") + '</ul>'
+  }
+  function renderFileList(files) {
+    if (!files || !files.length) return '<p class="empty">(no file diffs)</p>'
+    var symbols = { added: "＋", modified: "✎", removed: "－", renamed: "↦" }
+    return '<ul class="ax-files">' + files.map(function (f) {
+      var sym = symbols[f.status] || "·"
+      var name = f.filename.replace(/^content\//, "")
+      var line = '<code>' + esc(name) + '</code>'
+      if (f.status === "renamed" && f.previous_filename) line = '<code>' + esc(f.previous_filename.replace(/^content\//, "")) + '</code> → ' + line
+      var diffs = (f.additions || f.deletions) ? ' <span class="pm">+' + f.additions + '/-' + f.deletions + '</span>' : ""
+      return '<li><span class="sym ' + esc(f.status) + '">' + sym + '</span> ' + line + diffs + '</li>'
+    }).join("") + '</ul>'
+  }
+
+  function mkOverlay(title) {
+    var ov = document.createElement("div")
+    ov.className = "ax-overlay"
+    ov.innerHTML =
+      '<div class="ax-modal ax-admin"><header><b>' + esc(title) + '</b></header>' +
+      '<div class="ax-body"></div>' +
+      '<footer></footer></div>'
+    document.body.appendChild(ov)
+    ov.addEventListener("click", function (e) { if (e.target === ov) ov.remove() })
+    return ov
   }
   function openEditor(path, isNew) {
     var ov = document.createElement("div")
@@ -252,21 +404,21 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ path: path, content: ta.value, sha: sha, message: (isNew ? "create " : "edit ") + path }),
       }).then(function (r) { return r.json() }).then(function (d) {
-        if (d.ok) { status.textContent = "✓ Committed — site rebuilds in ~1–2 min."; setTimeout(close, 1800) }
+        if (d.ok) { status.textContent = "✓ Staged — click ⚙ Admin → Deploy Changes to publish."; setTimeout(close, 2400) }
         else { status.textContent = "Save failed: " + (d.error || "unknown") + (d.detail ? " — " + d.detail : "") }
       }).catch(function () { status.textContent = "Save request failed." })
     })
 
     var del = ov.querySelector(".ax-del")
     if (del) del.addEventListener("click", function () {
-      if (!confirm("Delete this page permanently?")) return
+      if (!confirm("Delete this page? (Staged — takes effect on next deploy.)")) return
       status.textContent = "Deleting…"
       fetch("/api/page", {
         method: "DELETE", credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ path: path, sha: sha, message: "delete " + path }),
       }).then(function (r) { return r.json() }).then(function (d) {
-        if (d.ok) { status.textContent = "✓ Deleted — rebuilding."; setTimeout(close, 1500) }
+        if (d.ok) { status.textContent = "✓ Deletion staged — deploy from ⚙ Admin."; setTimeout(close, 2200) }
         else { status.textContent = "Delete failed: " + (d.error || "unknown") }
       }).catch(function () { status.textContent = "Delete request failed." })
     })

@@ -169,7 +169,7 @@
       })
       .then(function(p){
         status.textContent = (p && p.ok)
-          ? '✓ Saved — the map updates when the wiki rebuilds (~1–2 min).'
+          ? '✓ Staged — deploy from the wiki\'s ⚙ Admin menu to publish.'
           : 'Save failed: ' + ((p && p.error) || 'unknown') + ((p && p.detail) ? ' — ' + p.detail : '');
       })
       .catch(function(err){ status.textContent = 'Save failed: ' + err.message + ' — use Copy HTML instead.'; })
