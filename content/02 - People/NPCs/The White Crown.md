@@ -9,7 +9,7 @@ modified: 2026-07-26T11:29:19.249Z
 # The White Crown
 
 > [!note] Player knowledge only
-> Facts recorded as revealed in play. No speculation.
+> Facts recorded as revealed in play. 
 
 A **White Dragon Wyrmling** who goes by the title **"The White Crown."**
 
