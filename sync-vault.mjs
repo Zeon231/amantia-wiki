@@ -63,6 +63,7 @@ async function copyPrivateDir(srcDir, destDir) {
     await mkdir(dirname(d), { recursive: true })
     let content = await readFile(s, 'utf8')
     if (content.includes('## DM Notes')) content = stripDmNotes(content)
+    content = stripSharedFrontmatterFields(content)
     content = stampModified(content, (await stat(s)).mtime.toISOString())
     await writeFile(d, content, 'utf8')
     copied++
@@ -70,6 +71,21 @@ async function copyPrivateDir(srcDir, destDir) {
 }
 
 // ── DM NOTES STRIPPING ─────────────────────────────────────────────────────
+
+// Remove fields from a note's frontmatter that would leak the note's existence
+// into shared indexes (tag pages, aliases, description snippets).
+// Used for private-tier notes so their titles/tags don't surface on public tag
+// pages or in contentIndex previews — even the Worker-side index filter benefits
+// from these being absent as defense-in-depth.
+function stripSharedFrontmatterFields(content) {
+  if (!content.startsWith('---\n')) return content
+  const end = content.indexOf('\n---', 4)
+  if (end === -1) return content
+  const body = content.slice(4, end).split('\n').filter(
+    (l) => !/^(tags|aliases|description|socialDescription):/.test(l),
+  ).join('\n')
+  return '---\n' + body + content.slice(end)
+}
 
 // Stamp `modified:` in frontmatter from the vault file's mtime, so the wiki's
 // "Most Recent" ordering survives git (which does not preserve file mtimes).

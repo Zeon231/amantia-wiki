@@ -1,5 +1,4 @@
 ---
-tags: [pc, rogue, hexblood, player-trent]
 player: Trent Brazil
 species: "Hexblood (transformed from Human; creature type: Fae)"
 class: Rogue

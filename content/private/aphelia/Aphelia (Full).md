@@ -1,5 +1,4 @@
 ---
-tags: [pc, ranger, medusa, player-daryl]
 player: Daryl
 species: "Medusa (Lesser)"
 class: Ranger

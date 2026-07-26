@@ -1,5 +1,4 @@
 ---
-tags: [location, village, cursed, player-backstory]
 type: village
 country: Holy Rose Empire
 region: "Holy Rose Empire — specific sub-region TBD with DM"

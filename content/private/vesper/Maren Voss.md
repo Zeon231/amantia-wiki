@@ -1,5 +1,4 @@
 ---
-tags: [npc, hag, antagonist, hexblood, player-backstory]
 species: Hag (true form unknown — presented as Human)
 gender: Female
 age: Unknown

@@ -5,10 +5,10 @@ species: TBD
 class: Cleric
 level: 1
 status: active
-modified: 2026-07-18T16:09:31.338Z
+modified: 2026-07-26T11:26:27.003Z
 ---
 
-# Blondadis
+# Blanottdis
 
 > [!info] Character Info
 > **Run by:** Billy (DM) — party NPC
@@ -22,7 +22,7 @@ modified: 2026-07-18T16:09:31.338Z
 ## Known Abilities *(observed in play)*
 - **Bless** — buffs the party's attacks and saves
 - Wields a **war hammer** and a **shield** (the party's front-line "tank")
-- Carries a **holy symbol**; the shield often bears [[Alexander]]'s **Light** cantrip, making Blondadis the obvious target
+- Carries a **holy symbol**; the shield often bears [[Alexander]]'s **Light** cantrip, making Blanottdis the obvious target
 - Has a **poultice** (healing item)
 
 ## Appearance
@@ -32,7 +32,7 @@ modified: 2026-07-18T16:09:31.338Z
 - **[[Session 1]]** — Held the front line against [[The White Crown]]; cast Bless on the party. Took the dragon's **full frost breath** and dropped to 0, then was stabilized.
 
 ## Connections
-- Travels with the party; drawn together with them under **[[Master Belric]]**'s teachings.
+- Travels with the party; drawn together with them under **[[Master Velrik Thorn]]**'s teachings.
 
 ---
 

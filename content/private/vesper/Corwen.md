@@ -1,5 +1,4 @@
 ---
-tags: [npc, elder, ashveil, player-backstory]
 species: Human
 gender: Female
 age: Elderly

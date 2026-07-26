@@ -1,7 +1,7 @@
 ---
 tags: [location, town, campaign]
 discovered: Session 1
-modified: 2026-07-19T03:43:17.925Z
+modified: 2026-07-26T11:28:56.877Z
 ---
 
 # Brindelvik
@@ -30,30 +30,28 @@ Starting town of the campaign (Session 1, Fall 1681). Sits in the **[[Raudvatn V
 .bmap-ui textarea{width:100%;height:120px;background:#0d0d12;color:#9fe0a0;font-family:ui-monospace,monospace;font-size:11px;border:1px solid #444;border-radius:6px;padding:8px;margin-top:6px;box-sizing:border-box;}
 </style>
 
-<div class="brindelvik-map" id="bmap"><img src="/01---world/maps/brindelvik.png" alt="Map of Brindelvik" />
-  <a class="zone" href="/01---world/cities--and--locations/aldermans-hall" style="position:absolute;left:46.5%;top:43.6%;width:7%;height:9.5%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">Alderman's Hall (12)</span></a>
-  <a class="zone" href="/01---world/cities--and--locations/our-house" style="position:absolute;left:6.7%;top:16.3%;width:6.5%;height:9%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">Our House (21)</span></a>
-  <a class="zone" href="/01---world/cities--and--locations/butcher" style="position:absolute;left:80.9%;top:32.9%;width:6.5%;height:9%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">Butcher (4)</span></a>
-  <a class="zone" href="/01---world/cities--and--locations/" style="position:absolute;left:16.1%;top:51.4%;width:8%;height:10%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">Test (17)</span></a>
-</div>
+<div class="brindelvik-map" id="bmap"><img src="/01---world/maps/brindelvik.png" alt="Map of Brindelvik" /><a class="zone" href="/01---world/cities--and--locations/aldermans-hall" style="position:absolute;left:45.5%;top:44.5%;width:7%;height:9.5%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">Alderman's Hall (12)</span></a><a class="zone" href="/01---world/cities--and--locations/our-house" style="position:absolute;left:4.5%;top:17.5%;width:6.5%;height:9%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">Our House (21)</span></a><a class="zone" href="/01---world/cities--and--locations/butcher" style="position:absolute;left:78.5%;top:31%;width:6.5%;height:9%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">Butcher (4)</span></a></div>
 
 
 Town map — 21 numbered locations; the highlighted boxes are clickable quicklinks. <a href="/static/map-zone-editor.html" target="_blank" rel="noopener"><strong>✏️ Edit map zones →</strong></a> (opens a full editor in a new tab — copy its HTML back into this note to save changes). The **Herb Keeper's** building isn't identified yet.
 
 ## Known Facts
 
-- Sent its taxes by caravan; the taxes were **stolen** in an attack ([[Session 1]]).
+- Sent its taxes by caravan; the caravan was **attacked overnight**, tax goods stolen; one wounded courier returned in the early morning ([[Session 1]]).
+- The **east bank** was where **[[Nim]]** was last seen before he was taken.
 - Several months ago, a **traveler** passed through and asked about the road toward [[Aldgrind]] *(per the herb keeper)*.
-- Has an **Alderman** *(name not yet learned)* who announced the news of the theft.
+- Its **Alderman** is **[[Sigrun Vark]]** (Hobgoblin), who summoned the party after the caravan attack.
 - Has an **herb keeper**, who cared for the lone survivor of the caravan attack.
 - A **group of travelers** arrived in town around the time the news broke.
 - An ongoing local problem: **livestock** have been turning up **killed** — and occasionally a **child**, too.
 
 ## People
 
-- The Alderman *(name unknown)*
+- **[[Sigrun Vark]]** — Alderman (Hobgoblin)
+- **[[Nim]]** — an 11-year-old kobold, a shepherd's son (rescued in [[Session 1]])
 - The herb keeper *(name unknown)*
-- The lone survivor of the caravan attack *(name unknown)*
+- The lone wounded courier from the tax caravan *(name unknown)*
+- The **butcher** — [[Butcher|see note]] — has been examining butchered livestock
 
 ---
 

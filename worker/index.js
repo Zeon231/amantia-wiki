@@ -51,8 +51,27 @@ export default {
     const shareGate = env.PUBLIC_SHARED !== "true"
 
     // Shared content, only when explicitly made public.
-    if (!isPrivate && !shareGate && path !== "/whoami") {
+    if (!isPrivate && !shareGate && path !== "/whoami" && path !== "/logout") {
       return env.ASSETS.fetch(request)
+    }
+
+    // Logout: always 401 so the browser drops its cached Basic-Auth credentials.
+    // Any subsequent request re-prompts. The URL is documented as the logout
+    // trigger; nothing to protect here.
+    if (path === "/logout") {
+      return new Response(
+        "<!doctype html><meta charset=utf-8><title>Logged out</title>" +
+        "<style>body{font:15px/1.5 system-ui;background:#15151a;color:#eee;text-align:center;padding:20vh 1rem}a{color:#e8b04b}</style>" +
+        "<h2>Signed out.</h2><p><a href=\"/\">Sign back in →</a></p>",
+        {
+          status: 401,
+          headers: {
+            "Content-Type": "text/html; charset=utf-8",
+            "WWW-Authenticate": 'Basic realm="Amantia Wiki — logged out", charset="UTF-8"',
+            "Cache-Control": "no-store",
+          },
+        },
+      )
     }
 
     const auth = await authenticate(request, env)
@@ -74,6 +93,33 @@ export default {
     // ---- Editing API (admin-only) ------------------------------------------
     if (path.startsWith("/api/")) {
       return handleApi(path, request, env, auth)
+    }
+
+    // Filter the shared contentIndex so private pages the user can't read
+    // are also not enumerable via search / sidebar / home widgets.
+    // (The index otherwise lists titles for every page in the build, including
+    // private tiers, which would leak the existence of e.g. "Maren Voss" to any
+    // authenticated player.)
+    if (path === "/static/contentIndex.json") {
+      const asset = await env.ASSETS.fetch(request)
+      if (!asset.ok) return asset
+      let data
+      try {
+        data = await asset.json()
+      } catch {
+        return asset
+      }
+      const out = {}
+      for (const slug of Object.keys(data)) {
+        if (!slug.startsWith("private/")) { out[slug] = data[slug]; continue }
+        const tier = slug.split("/")[1]
+        if (isAdminRole(auth.role) || (auth.tier && auth.tier === tier)) {
+          out[slug] = data[slug]
+        }
+      }
+      return new Response(JSON.stringify(out), {
+        headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+      })
     }
 
     if (isPrivate && !canAccessTier(auth, path)) {

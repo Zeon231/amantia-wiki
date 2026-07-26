@@ -1,7 +1,7 @@
 ---
 tags: [location, building, brindelvik, campaign]
 town: Brindelvik
-modified: 2026-07-19T03:23:52.765Z
+modified: 2026-07-26T11:26:27.113Z
 ---
 
 # Our House
@@ -9,11 +9,11 @@ modified: 2026-07-19T03:23:52.765Z
 > [!note] Player knowledge only
 > Facts recorded as revealed in play. No speculation.
 
-**[[Master Belric]]'s house** in **[[Brindelvik]]** — **building 21** on the town map, set apart on the northwest edge. The party is currently **staying here**.
+**[[Master Velrik Thorn]]'s house** in **[[Brindelvik]]** — **building 21** on the town map, set apart on the northwest edge. The party is currently **staying here**.
 
 ## Known Facts
-- Belongs to **[[Master Belric]]**, the party's mentor. The party is lodging here — it is not their own property.
+- Belongs to **[[Master Velrik Thorn]]**, the party's mentor. The party is lodging here — it is not their own property.
 
 ---
 
-*See also:* [[Brindelvik]] | [[Master Belric]] | [[Session 1]]
+*See also:* [[Brindelvik]] | [[Master Velrik Thorn]] | [[Session 1]]

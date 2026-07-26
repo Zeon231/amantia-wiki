@@ -49,6 +49,11 @@
       ".ax-modal footer .status{flex:1;font-size:.82rem;color:var(--gray)}",
       ".ax-btn{border:0;border-radius:7px;padding:7px 14px;font-weight:600;cursor:pointer}",
       ".ax-save{background:var(--secondary);color:#fff}.ax-cancel{background:var(--lightgray);color:var(--darkgray)}.ax-del{background:#8a2020;color:#fff;margin-right:auto}",
+      "#amantia-session-bar{position:fixed;left:14px;bottom:14px;z-index:900;display:flex;gap:8px;align-items:center;background:rgba(20,20,25,.85);color:#eee;padding:6px 10px;border-radius:8px;font:12px/1.2 system-ui,sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.35)}",
+      "#amantia-session-bar .who{opacity:.85}",
+      "#amantia-session-bar .role{opacity:.55;font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-left:.2rem}",
+      "#amantia-session-bar button{background:#3a3a44;color:#eee;border:0;border-radius:5px;padding:4px 9px;cursor:pointer;font-size:12px}",
+      "#amantia-session-bar button:hover{background:#4b4b58}",
     ].join("\n")
     document.head.appendChild(s)
   }
@@ -162,15 +167,36 @@
     })
   }
 
-  // ---- Admin editor (Phase 1: text) --------------------------------------
-  var ADMIN = null
-  function adminInit() {
-    if (ADMIN === true) { addAdminTools(); return }
-    if (ADMIN === false) return
+  // ---- Session (logout) + admin editor -----------------------------------
+  var WHO = null
+  function sessionInit() {
+    if (WHO !== null) { paintSession(); return }
     fetch("/whoami", { credentials: "same-origin" })
       .then(function (r) { return r.ok ? r.json() : null })
-      .then(function (w) { ADMIN = !!(w && w.canEdit); if (ADMIN) addAdminTools() })
-      .catch(function () { ADMIN = false })
+      .then(function (w) { WHO = w || false; paintSession() })
+      .catch(function () { WHO = false })
+  }
+  function logout() {
+    // 1) Force-invalidate the browser's cached Basic-Auth by making a request
+    //    with intentionally-bad credentials (browser caches the last-used pair).
+    // 2) Then send the tab to /logout which always returns 401 — user cancels
+    //    the prompt (or the "you're signed out" page renders under the 401).
+    fetch("/whoami", {
+      headers: { Authorization: "Basic " + btoa("logout:" + Date.now()) },
+      credentials: "omit",
+    }).catch(function () {}).then(function () { location.href = "/logout" })
+  }
+  function paintSession() {
+    if (document.getElementById("amantia-session-bar")) return
+    if (!WHO || !WHO.user) return
+    var bar = document.createElement("div")
+    bar.id = "amantia-session-bar"
+    bar.innerHTML =
+      '<span class="who">' + esc(WHO.user) + ' <span class="role">' + esc(WHO.role) + '</span></span>' +
+      '<button type="button" id="ax-logout">Sign out</button>'
+    document.body.appendChild(bar)
+    document.getElementById("ax-logout").addEventListener("click", logout)
+    if (WHO.canEdit) addAdminTools()
   }
   function addAdminTools() {
     if (document.getElementById("amantia-admin-bar")) return
@@ -270,7 +296,7 @@
     addBookmarkButton()
     renderHome()
     tidyPlaceholders()
-    adminInit()
+    sessionInit()
   }
   if (document.readyState !== "loading") init()
   else document.addEventListener("DOMContentLoaded", init)

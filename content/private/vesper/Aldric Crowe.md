@@ -1,5 +1,4 @@
 ---
-tags: [npc, ashveil, player-backstory, vesper-family]
 species: Human
 gender: Male
 age: Middle-aged to older

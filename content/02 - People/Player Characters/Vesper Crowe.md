@@ -6,7 +6,7 @@ class: Rogue
 background: Soldier (Ex-Soldier)
 level: 1
 status: active
-modified: 2026-07-18T15:40:32.393Z
+modified: 2026-07-26T11:40:17.825Z
 ---
 
 # Vesper Crowe
@@ -40,7 +40,7 @@ Practical clothing: charcoal, deep green, black. Nothing that catches light. Get
 - **Phantom** — death-touched, hag-adjacent themes
 
 ## Notable Moments
-*(append shared, in-party events as sessions happen)*
+- **[[Session 1]]** — At the [[Shepherd's Retreat]], when a greased-up kobold slipped its ropes and bolted, **shot it in the back** as it fled — the 3rd kobold kill of the fight.
 
 ---
 
