@@ -177,14 +177,16 @@
       .catch(function () { WHO = false })
   }
   function logout() {
-    // 1) Force-invalidate the browser's cached Basic-Auth by making a request
-    //    with intentionally-bad credentials (browser caches the last-used pair).
-    // 2) Then send the tab to /logout which always returns 401 — user cancels
-    //    the prompt (or the "you're signed out" page renders under the 401).
-    fetch("/whoami", {
-      headers: { Authorization: "Basic " + btoa("logout:" + Date.now()) },
-      credentials: "omit",
-    }).catch(function () {}).then(function () { location.href = "/logout" })
+    // HTTP Basic Auth has no true logout — the browser caches credentials per
+    // origin/realm. All we can safely do is navigate to /logout, which returns
+    // 401 in a NEW realm ("logged out"). The browser has no cached creds for
+    // that realm, so it prompts; the user cancels the prompt and sees the
+    // "signed out" page. To fully sign out they must close the tab.
+    //
+    // (An earlier version poked the auth cache with a bogus-creds fetch to try
+    // to force invalidation — but modern browsers cache those bogus creds
+    // instead, breaking subsequent login attempts. Never do that.)
+    location.href = "/logout"
   }
   function paintSession() {
     if (document.getElementById("amantia-session-bar")) return

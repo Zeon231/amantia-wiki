@@ -55,50 +55,21 @@ export default {
       return env.ASSETS.fetch(request)
     }
 
-    // TEMPORARY diagnostic — reports only the SHAPE of WIKI_USERS (no usernames,
-    // no hashes, no passwords). Remove once login is confirmed working again.
-    if (path === "/diag/secret") {
-      const raw = env.WIKI_USERS
-      const out = {
-        secret_defined: raw !== undefined && raw !== null,
-        secret_length: typeof raw === "string" ? raw.length : 0,
-        secret_first_char: typeof raw === "string" && raw.length ? raw.charCodeAt(0) : null,
-        secret_last_char: typeof raw === "string" && raw.length ? raw.charCodeAt(raw.length - 1) : null,
-        parses_as_json: false,
-        parsed_type: null,
-        user_count: 0,
-        entries_with_valid_hash: 0,
-      }
-      try {
-        const users = JSON.parse(raw || "{}")
-        out.parses_as_json = true
-        out.parsed_type = typeof users
-        if (users && typeof users === "object") {
-          const keys = Object.keys(users)
-          out.user_count = keys.length
-          out.entries_with_valid_hash = keys.filter(
-            (k) => users[k] && typeof users[k].hash === "string" && /^[0-9a-f]{64}$/i.test(users[k].hash),
-          ).length
-        }
-      } catch (e) {
-        out.parse_error = String(e).slice(0, 120)
-      }
-      return json(out)
-    }
-
     // Logout: always 401 so the browser drops its cached Basic-Auth credentials.
     // Any subsequent request re-prompts. The URL is documented as the logout
     // trigger; nothing to protect here.
     if (path === "/logout") {
       return new Response(
-        "<!doctype html><meta charset=utf-8><title>Logged out</title>" +
-        "<style>body{font:15px/1.5 system-ui;background:#15151a;color:#eee;text-align:center;padding:20vh 1rem}a{color:#e8b04b}</style>" +
-        "<h2>Signed out.</h2><p><a href=\"/\">Sign back in →</a></p>",
+        "<!doctype html><meta charset=utf-8><title>Signed out</title>" +
+        "<style>body{font:15px/1.6 system-ui;background:#15151a;color:#eee;text-align:center;padding:15vh 1rem;max-width:520px;margin:0 auto}a{color:#e8b04b}small{color:#888;display:block;margin-top:2rem;line-height:1.5}</style>" +
+        "<h2>Signed out.</h2>" +
+        "<p><a href=\"/\">Sign back in →</a></p>" +
+        "<small>For a full sign-out, close this browser tab. HTTP Basic Auth is cached by your browser and can only be fully cleared by closing the tab or restarting your browser.</small>",
         {
           status: 401,
           headers: {
             "Content-Type": "text/html; charset=utf-8",
-            "WWW-Authenticate": 'Basic realm="Amantia Wiki — logged out", charset="UTF-8"',
+            "WWW-Authenticate": 'Basic realm="Amantia Wiki — signed out", charset="UTF-8"',
             "Cache-Control": "no-store",
           },
         },
