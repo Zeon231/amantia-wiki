@@ -7,7 +7,7 @@ modified: 2026-07-26T11:29:16.338Z
 # Butcher
 
 > [!note] Player knowledge only
-> Facts recorded as revealed in play. No speculation.
+> Facts recorded as revealed in play.
 
 Brindelvik's **butcher** — **building 4** on the town map *(tentative — identification not fully confirmed)*.
 
