@@ -55,6 +55,37 @@ export default {
       return env.ASSETS.fetch(request)
     }
 
+    // TEMPORARY diagnostic — reports only the SHAPE of WIKI_USERS (no usernames,
+    // no hashes, no passwords). Remove once login is confirmed working again.
+    if (path === "/diag/secret") {
+      const raw = env.WIKI_USERS
+      const out = {
+        secret_defined: raw !== undefined && raw !== null,
+        secret_length: typeof raw === "string" ? raw.length : 0,
+        secret_first_char: typeof raw === "string" && raw.length ? raw.charCodeAt(0) : null,
+        secret_last_char: typeof raw === "string" && raw.length ? raw.charCodeAt(raw.length - 1) : null,
+        parses_as_json: false,
+        parsed_type: null,
+        user_count: 0,
+        entries_with_valid_hash: 0,
+      }
+      try {
+        const users = JSON.parse(raw || "{}")
+        out.parses_as_json = true
+        out.parsed_type = typeof users
+        if (users && typeof users === "object") {
+          const keys = Object.keys(users)
+          out.user_count = keys.length
+          out.entries_with_valid_hash = keys.filter(
+            (k) => users[k] && typeof users[k].hash === "string" && /^[0-9a-f]{64}$/i.test(users[k].hash),
+          ).length
+        }
+      } catch (e) {
+        out.parse_error = String(e).slice(0, 120)
+      }
+      return json(out)
+    }
+
     // Logout: always 401 so the browser drops its cached Basic-Auth credentials.
     // Any subsequent request re-prompts. The URL is documented as the logout
     // trigger; nothing to protect here.
