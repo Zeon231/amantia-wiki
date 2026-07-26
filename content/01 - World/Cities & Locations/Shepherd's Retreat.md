@@ -9,7 +9,7 @@ modified: 2026-07-26T11:28:30.791Z
 # Shepherd's Retreat
 
 > [!note] Player knowledge only
-> Facts recorded as revealed in play. No speculation.
+> Facts recorded as revealed in play.
 
 A hideaway on the **northern face of the Aelbrak-Haugr** near [[Brindelvik]]. Party encountered it in [[Session 1]].
 
