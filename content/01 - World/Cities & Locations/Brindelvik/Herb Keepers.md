@@ -8,7 +8,7 @@ modified: 2026-07-19T02:57:03.269Z
 # Herb Keeper's
 
 > [!note] Player knowledge only
-> Facts recorded as revealed in play. No speculation.
+> Facts recorded as revealed in play.
 
 The home/workshop of **[[Brindelvik]]**'s **herb keeper**. *(Building not yet identified on the town map — no quicklink zone placed yet.)*
 
