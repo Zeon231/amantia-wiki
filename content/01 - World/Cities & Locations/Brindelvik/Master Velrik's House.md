@@ -1,6 +1,7 @@
 ---
 tags: [location, building, brindelvik, campaign]
 town: Brindelvik
+modified: 2026-07-26T16:08:07.445Z
 ---
 
 # Master Velrik's House

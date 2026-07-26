@@ -2,7 +2,7 @@
 tags: [npc, mentor, campaign]
 status: missing
 first-appeared: Session 1 (referenced)
-modified: 2026-07-26T16:00:13.231Z
+modified: 2026-07-26T16:07:00.805Z
 ---
 
 # Master Velrik Thorn
@@ -14,7 +14,7 @@ The mentor and teacher who **drew the party together**. [[Vesper Crowe]], [[Aphe
 
 ## Known Facts
 
-- Keeps a **house in [[Brindelvik]]** ([[Master Velrik Thorn's House|building 21]]) — where the party is currently **staying**.
+- Keeps a **house in [[Brindelvik]]** ([[Master Velrik's House|building 21]]) — where the party is currently **staying**.
 - Kept **travel books, a sword, field journals, and specimens** (his adventuring gear).
 - **Day of [[Session 1]] (Aestara Gold 21):** had been **tense and agitated** all morning, pouring all his attention into his work. Was reading a **book about fungus** and **hid it** when [[Alexander]] glanced over his shoulder.
 - The **[[Question Knights]]** — led by **[[Dame Ysabet Rosenvard]]** — asked after him at the Alderman's; they are hunting a **prohibited funerary relic**.
