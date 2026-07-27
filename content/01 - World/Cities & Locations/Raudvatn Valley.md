@@ -30,6 +30,8 @@ The region around **[[Brindelvik]]** — the campaign's starting area. Named for
 .bmap-ui textarea{width:100%;height:120px;background:#0d0d12;color:#9fe0a0;font-family:ui-monospace,monospace;font-size:11px;border:1px solid #444;border-radius:6px;padding:8px;margin-top:6px;box-sizing:border-box;}
 </style>
 
+<div class="Raudvatn_Valley-map" id="bmap"><img src="/01---world/maps/Raudvatn_Valley.png" alt="Map of Raudvatn Valley" />
+
 ![[Raudvatn_Valley.png]]
 
 ## Places on the Map
