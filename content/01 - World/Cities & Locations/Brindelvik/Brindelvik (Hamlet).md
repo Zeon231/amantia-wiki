@@ -4,11 +4,6 @@ discovered: Session 1
 modified: 2026-07-26T16:07:03.019Z
 ---
 
----
-aliases:
-  - Brindelvik
----
-
 # Brindelvik
 
 > [!note] Player knowledge only
