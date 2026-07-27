@@ -3,7 +3,7 @@ tags: [location, cave, campaign]
 discovered: Session 1
 
 editLevel: 1
-modified: 2026-07-26T11:28:30.791Z
+modified: 2026-07-27T14:15:03.222Z
 ---
 
 # Shepherd's Retreat

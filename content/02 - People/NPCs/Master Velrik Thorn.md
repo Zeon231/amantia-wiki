@@ -2,7 +2,7 @@
 tags: [npc, mentor, campaign]
 status: missing
 first-appeared: Session 1 (referenced)
-modified: 2026-07-26T16:07:00.805Z
+modified: 2026-07-27T14:15:03.279Z
 ---
 
 # Master Velrik Thorn
