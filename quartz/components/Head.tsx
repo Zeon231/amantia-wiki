@@ -105,6 +105,9 @@ export default (() => {
         {fileData.filePath && (
           <meta name="source-path" content={String(fileData.filePath)} />
         )}
+        {fileData.frontmatter?.portrait && (
+          <meta name="portrait" content={String(fileData.frontmatter.portrait)} />
+        )}
         <script src={joinSegments(baseDir, "static/campaign-ui.js")} defer></script>
 
         {css.map((resource) => CSSResourceToStyleElement(resource, true))}

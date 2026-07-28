@@ -10,7 +10,8 @@ occupation: Question Knight
 faction: "[[Question Knights]]"
 
 editLevel: 1
-modified: 2026-07-26T12:31:30.837Z
+portrait: 
+modified: 2026-07-28T12:53:40.594Z
 ---
 
 # Dame Ysabet Rosenvard

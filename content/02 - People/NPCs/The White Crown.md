@@ -3,7 +3,8 @@ tags: [npc, dragon, antagonist, campaign]
 species: White Dragon (young)
 status: alive
 first-appeared: Session 1
-modified: 2026-07-27T14:15:03.325Z
+portrait: 
+modified: 2026-07-28T12:53:41.474Z
 ---
 
 # The White Crown

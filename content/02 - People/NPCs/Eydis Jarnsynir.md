@@ -8,7 +8,8 @@ species: Iljarnskarn Human
 faction: "[[Question Knights]]"
 
 editLevel: 1
-modified: 2026-07-26T11:27:39.785Z
+portrait: 
+modified: 2026-07-28T12:53:40.711Z
 ---
 
 # Eydis Jarnsynir

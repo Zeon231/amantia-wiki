@@ -1,5 +1,4 @@
 ---
-tags: [dashboard, home]
 banner: "00 - Dashboard/banner-dashboard.jpg"
 banner-y: 0.4
 modified: 2026-05-10T20:05:10.321Z

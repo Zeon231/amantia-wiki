@@ -9,7 +9,8 @@ occupation: Alderman of [[Brindelvik]]
 location: Brindelvik
 
 editLevel: 1
-modified: 2026-07-26T11:27:16.847Z
+portrait: 
+modified: 2026-07-28T12:53:41.361Z
 ---
 
 # Sigrun Vark

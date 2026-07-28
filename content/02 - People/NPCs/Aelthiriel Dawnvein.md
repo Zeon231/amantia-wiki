@@ -8,7 +8,8 @@ species: Elf
 faction: "[[Question Knights]]"
 
 editLevel: 1
-modified: 2026-07-26T11:27:33.076Z
+portrait: 
+modified: 2026-07-28T12:53:40.478Z
 ---
 
 # Aelthiriel Dawnvein

@@ -10,7 +10,8 @@ occupation: Shepherd's son
 location: Brindelvik
 
 editLevel: 1
-modified: 2026-07-26T11:27:22.448Z
+portrait: "test-path.jpg"
+modified: 2026-07-28T12:55:27.542Z
 ---
 
 # Nim

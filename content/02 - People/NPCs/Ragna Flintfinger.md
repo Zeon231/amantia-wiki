@@ -8,7 +8,8 @@ species: Dwarf
 faction: "[[Question Knights]]"
 
 editLevel: 1
-modified: 2026-07-26T11:27:36.592Z
+portrait: 
+modified: 2026-07-28T12:53:41.250Z
 ---
 
 # Ragna Flintfinger

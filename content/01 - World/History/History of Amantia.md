@@ -1,6 +1,6 @@
 ---
 tags: [world, history, lore]
-modified: 2026-06-07T15:55:02.724Z
+modified: 2026-07-28T12:40:29.234Z
 ---
 
 # History of Amantia
@@ -17,11 +17,11 @@ In the oldest strata of the mythic record there is no beginning in any mortal se
 |-------------|---------|--------|
 | [[Thariz-Endorath]] | The Dreaming Maw | Entropy; the birth of the stars |
 | [[Ghyllasha]] | Mother of All Wombs | Primal life — forests, seas, beasts, spores |
-| [[Zush'thulqua]] | The Drowned Echo | Oceans; psionic beings; krakens, aboleths, mind flayers |
+| [[Zush’thulqua]] | The Drowned Echo | Oceans; psionic beings; krakens, aboleths, mind flayers |
 | [[Orr-Ygnometh]] | The Key of All Ways | Portals; dimensional travel; time-threads |
-| [[Na'rak-Vuul]] | The Shrieking Herald | Pain, madness, and the first atrocities |
+| [[Na’rak-Vuul]] | The Shrieking Herald | Pain, madness, and the first atrocities |
 | [[Ulgoz-Reth]] | The Maw Beneath | Decay, ooze, and underworld corruption |
-| [[Hhalek'tuun]] | The Veiled Harp | Hidden knowledge; dangerous revelation |
+| [[Hhalek’tuun]] | The Veiled Harp | Hidden knowledge; dangerous revelation |
 | [[Thulemma-Kaarn]] | The One Who Burns Without Flame | Prophecy and madness in equal measure |
 
 From the elder turbulence emerged the **Primordial Elemental Gods**, who imposed workable relationships upon the chaos and shaped Amantia into a realm of enduring form:
@@ -29,7 +29,7 @@ From the elder turbulence emerged the **Primordial Elemental Gods**, who imposed
 | Primordial | Domain |
 |------------|--------|
 | [[Sylaethra-Vuul]] | Air; the sky; the winds |
-| [[Dor-Melkhûn]] | Earth; stone; stability |
+| [[Dor-Melkun]] | Earth; stone; stability |
 | [[Thal-Ygaron]] | Water; oceans; tides |
 | [[Inzharra-Keth]] | Fire; volcanoes; rebirth |
 
@@ -46,9 +46,9 @@ As the Primordial Gods moved from emergence to deliberate work, Amantia gained c
 | **Dao of Stoneheart** | Earth/Crystal | Deep-earth empires; pressure and patience |
 | **Marids of Deepflow** | Water | Abyssal sovereigns; coral and pearl strongholds |
 
-The Jinn Courts gathered related peoples — myrmidons, salamanders, and other elemental descendants — forming the earliest large-scale settlements. Rivalry between courts eventually erupted into war. The most destructive conflict pitted Inzhaara-Keth's fire legions against Thal-Ygaron's cold leviathans, producing alternating waves of heat and ice. The long-term effects were geological and arcane: ley lines fractured, coastlines shifted, and a **permanent rift** opened linking Amantia to the Elemental Chaos.
+The Jinn Courts gathered related peoples — myrmidons, salamanders, and other elemental descendants — forming the earliest large-scale settlements. Rivalry between courts eventually erupted into war. The most destructive conflict pitted Inzharra-Keth's fire legions against Thal-Ygaron's cold leviathans, producing alternating waves of heat and ice. The long-term effects were geological and arcane: ley lines fractured, coastlines shifted, and a **permanent rift** opened linking Amantia to the Elemental Chaos.
 
-The rift's instability disturbed fragments of Zush'thulqua's dreaming mind embedded in the oceans, triggering **psionic storms** through the ley networks — mass hallucination, memory collapse, and widespread mental breakdown. The Primordial Gods withdrew to distant planes, leaving their intermediaries to manage the consequences.
+The rift's instability disturbed fragments of Zush’thulqua's dreaming mind embedded in the oceans, triggering **psionic storms** through the ley networks — mass hallucination, memory collapse, and widespread mental breakdown. The Primordial Gods withdrew to distant planes, leaving their intermediaries to manage the consequences.
 
 By c. 40,000 BA, the Elemental Dominion had fractured. Its courts were scattered, its great settlements abandoned, and large regions permanently altered. The world remained powerful, but the older order had weakened enough to be replaced.
 
@@ -80,7 +80,7 @@ Where dragons claimed the heights as thrones, giants claimed the mountains as an
 
 **c. 35,000 – 32,000 BA — The Coming of the Fae**
 
-Amid the contest of wyrm and titan, the **Fae** entered Amantia not by banner or siege but as water enters a crack. Where war had thinned the veil, they seeped through. The **Summer Court**, led by [[Caelysyr Aelwë]], entered with wild glamour and the mending of wounded ley lines; groves became sanctuaries, standing stones were awakened as anchors. The **Winter Court** followed with different purpose.
+Amid the contest of wyrm and titan, the **Fae** entered Amantia not by banner or siege but as water enters a crack. Where war had thinned the veil, they seeped through. The **Summer Court**, led by [[Caelysyr Aelwe]], entered with wild glamour and the mending of wounded ley lines; groves became sanctuaries, standing stones were awakened as anchors. The **Winter Court** followed with different purpose.
 
 ---
 

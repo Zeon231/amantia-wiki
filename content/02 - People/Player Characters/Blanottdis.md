@@ -5,7 +5,8 @@ species: TBD
 class: Cleric
 level: 1
 status: active
-modified: 2026-07-26T11:26:27.003Z
+portrait: 
+modified: 2026-07-28T12:53:41.809Z
 ---
 
 # Blanottdis

@@ -87,6 +87,9 @@
       ".location-map a.zone:hover .lbl{opacity:1;}",
       ".location-map .map-edit-btn{position:absolute;top:10px;right:10px;background:rgba(20,20,25,.85);color:#fff;text-decoration:none;padding:5px 10px;border-radius:6px;font:600 12px system-ui,sans-serif;line-height:1.2;opacity:.6;transition:opacity .12s;z-index:5;}",
       ".location-map:hover .map-edit-btn{opacity:1;}",
+      /* -- portrait: floated headshot rendered from frontmatter -- */
+      ".ax-portrait{float:right;max-width:220px;width:35%;margin:0 0 1rem 1.2rem;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.25);object-fit:cover;}",
+      "@media (max-width:640px){.ax-portrait{float:none;display:block;width:100%;max-width:none;margin:0 0 1rem;}}",
     ].join("\n")
     document.head.appendChild(s)
   }
@@ -436,6 +439,29 @@
     })
   }
 
+  // ---- Portrait: render <img> from the note's `portrait:` frontmatter field.
+  //      Zero-config in the note itself — Head.tsx surfaces it as <meta name="portrait">.
+  //      Missing/empty portrait -> nothing renders (no broken image).
+  function renderPortrait() {
+    var meta = document.querySelector('meta[name="portrait"]')
+    if (!meta) return
+    var raw = (meta.getAttribute("content") || "").trim()
+    if (!raw) return
+    // Vault path -> served URL: lowercase, spaces -> hyphens, absolute from root
+    var url = "/" + raw.toLowerCase().replace(/ /g, "-").replace(/^\/+/, "")
+    var article = document.querySelector("article")
+    if (!article || article.querySelector(".ax-portrait")) return
+    var img = document.createElement("img")
+    img.className = "ax-portrait"
+    img.src = encodeURI(url)
+    img.alt = document.title.replace(/\s—.*$/, "")
+    img.onerror = function () { img.remove() }
+    // Insert before the first h1 or at the top of the article body
+    var h1 = article.querySelector("h1")
+    var target = h1 && h1.parentNode ? h1.parentNode : article
+    ;(h1 || article.firstChild).parentNode.insertBefore(img, (h1 || article.firstChild).nextSibling)
+  }
+
   // ---- Location maps: admin gets an "Edit zones" overlay on any .location-map
   function decorateMaps() {
     var maps = document.querySelectorAll(".location-map:not([data-ax-decorated])")
@@ -481,6 +507,7 @@
     addBookmarkButton()
     renderHome()
     tidyPlaceholders()
+    renderPortrait()
     decorateMaps()
     sessionInit()
   }

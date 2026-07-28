@@ -9,14 +9,14 @@ creature-type: Humanoid (Elemental)
 size: Medium
 speed: 30 ft
 common: false
-modified: 2026-05-28T05:34:39.619Z
+modified: 2026-07-28T12:40:29.234Z
 ---
 
 # Genasi
 
 Genasi are mortals with elemental blood — descendants of unions between humans and genies (Djinn, Dao, Efreet, or Marids) or touched by powerful elemental magic. Each Genasi embodies one of the four elements, and their physical appearance and innate abilities reflect this.
 
-In Amantia, the Genasi trace their spiritual lineage to the **Primordial Gods** — Sylaethra-Vuul (Air), Dor-Melkhûn (Earth), Inzhaara-Keth (Fire), and Thal-Ygaron (Water). Many Genasi feel a deep pull toward these ancient powers.
+In Amantia, the Genasi trace their spiritual lineage to the **Primordial Gods** — Sylaethra-Vuul (Air), Dor-Melkun (Earth), Inzharra-Keth (Fire), and Thal-Ygaron (Water). Many Genasi feel a deep pull toward these ancient powers.
 
 > [!info] All Genasi
 > **Size:** Medium | **Speed:** 30 ft | **Age:** Same as humans
@@ -41,7 +41,7 @@ In Amantia, the Genasi trace their spiritual lineage to the **Primordial Gods** 
 ---
 
 ## Earth Genasi
-*Linked to: [[Dor-Melkhûn]], Dao*
+*Linked to: [[Dor-Melkun]], Dao*
 
 ![[04 - Species/Species Images/earth-genasi.jpg]]
 
@@ -56,7 +56,7 @@ In Amantia, the Genasi trace their spiritual lineage to the **Primordial Gods** 
 ---
 
 ## Fire Genasi
-*Linked to: [[Inzhaara-Keth]], Efreet*
+*Linked to: [[Inzharra-Keth]], Efreet*
 
 ![[04 - Species/Species Images/fire-genasi.jpg]]
 
@@ -87,7 +87,7 @@ In Amantia, the Genasi trace their spiritual lineage to the **Primordial Gods** 
 
 ## Genasi & The Primordial Gods
 
-The Genasi are not merely descended from genies — in Amantia's cosmology, they carry a spark of the **Primordial Gods** themselves. A Fire Genasi lighting candles in a temple of Inzhaara-Keth may feel something ancient stir. An Earth Genasi standing on sacred stone may hear, very faintly, the voice of Dor-Melkhûn.
+The Genasi are not merely descended from genies — in Amantia's cosmology, they carry a spark of the **Primordial Gods** themselves. A Fire Genasi lighting candles in a temple of Inzharra-Keth may feel something ancient stir. An Earth Genasi standing on sacred stone may hear, very faintly, the voice of Dor-Melkun.
 
 This elemental heritage is not always welcome. In some regions, Genasi are seen as touched by alien powers — feared or revered depending on local theology.
 
