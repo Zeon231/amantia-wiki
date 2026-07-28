@@ -79,14 +79,22 @@
       ".ax-admin details summary{cursor:pointer;color:var(--secondary);font-size:13px}",
       ".ax-admin pre{background:#0d0d12;color:#eee;padding:8px;border-radius:6px;font-size:11px;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow:auto}",
       /* -- .location-map (generic map with clickable zone overlays; used by Map Snippet template) -- */
-      ".location-map{position:relative;max-width:900px;margin:1rem auto;line-height:0;}",
-      ".location-map img{width:100%;height:auto;display:block;border-radius:8px;}",
+      ".location-map{position:relative;max-width:900px;margin:1rem auto;line-height:0;overflow:hidden;border-radius:8px;}",
+      ".location-map-inner{position:relative;transform-origin:center center;will-change:transform;}",
+      ".location-map img{width:100%;height:auto;display:block;border-radius:8px;user-select:none;-webkit-user-drag:none;}",
+      ".location-map.map-zoomed{cursor:grab;}",
       ".location-map a.zone{box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;}",
       ".location-map a.zone .lbl{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:5px;white-space:nowrap;font-size:12px;background:rgba(20,20,25,.88);color:#fff;padding:2px 7px;border-radius:4px;opacity:0;transition:opacity .12s;pointer-events:none;line-height:1.3;}",
       ".location-map a.zone:hover{background:rgba(232,176,75,.25)!important;border-color:#e8b04b!important;}",
       ".location-map a.zone:hover .lbl{opacity:1;}",
       ".location-map .map-edit-btn{position:absolute;top:10px;right:10px;background:rgba(20,20,25,.85);color:#fff;text-decoration:none;padding:5px 10px;border-radius:6px;font:600 12px system-ui,sans-serif;line-height:1.2;opacity:.6;transition:opacity .12s;z-index:5;}",
       ".location-map:hover .map-edit-btn{opacity:1;}",
+      ".location-map .map-reset-btn{position:absolute;bottom:10px;right:10px;background:rgba(20,20,25,.85);color:#fff;border:none;width:32px;height:32px;border-radius:50%;font:600 18px system-ui,sans-serif;line-height:1;cursor:pointer;opacity:0;transition:opacity .12s;z-index:5;padding:0;}",
+      ".location-map.map-zoomed .map-reset-btn{opacity:.9;}",
+      ".location-map .map-hint{position:absolute;bottom:10px;left:10px;background:rgba(20,20,25,.75);color:#fff;font:500 11px system-ui,sans-serif;padding:3px 8px;border-radius:4px;pointer-events:none;opacity:0;transition:opacity .12s;z-index:5;}",
+      ".location-map:hover .map-hint{opacity:.7;}",
+      ".location-map.map-zoomed .map-hint{opacity:0;}",
+      "@media (hover:none){.location-map .map-hint{content:'pinch to zoom · drag to pan';}}",
       /* -- portrait: floated headshot rendered from frontmatter -- */
       /* -- image uploader modal -- */
       ".ax-upload .tabs{display:flex;gap:6px;margin-bottom:12px;border-bottom:1px solid var(--lightgray)}",
@@ -663,7 +671,7 @@
     ;(h1 || article.firstChild).parentNode.insertBefore(img, (h1 || article.firstChild).nextSibling)
   }
 
-  // ---- Location maps: admin gets an "Edit zones" overlay on any .location-map
+  // ---- Location maps: pan/zoom + admin "Edit zones" overlay on .location-map -
   function decorateMaps() {
     var maps = document.querySelectorAll(".location-map:not([data-ax-decorated])")
     if (!maps.length) return
@@ -671,15 +679,117 @@
     var isAdmin = WHO && WHO.canEdit
     maps.forEach(function (m) {
       m.setAttribute("data-ax-decorated", "1")
-      if (!isAdmin || !sp) return
-      var btn = document.createElement("a")
-      btn.className = "map-edit-btn"
-      btn.href = "/static/map-zone-editor?" + new URLSearchParams({ target: sp })
-      btn.target = "_blank"
-      btn.rel = "noopener"
-      btn.textContent = "✏️ Edit zones"
-      m.appendChild(btn)
+      // Wrap children (img + zones) in an inner div we can transform for zoom.
+      var inner = document.createElement("div")
+      inner.className = "location-map-inner"
+      while (m.firstChild) inner.appendChild(m.firstChild)
+      m.appendChild(inner)
+      attachPanZoom(m, inner)
+      // Reset-zoom control (visible on hover; hidden on touch via CSS)
+      var reset = document.createElement("button")
+      reset.className = "map-reset-btn"
+      reset.type = "button"
+      reset.title = "Reset zoom (or double-click the map)"
+      reset.textContent = "⟲"
+      reset.addEventListener("click", function (e) { e.stopPropagation(); resetZoom(m) })
+      m.appendChild(reset)
+      // Hint text (fades in on hover, hides on first zoom)
+      var hint = document.createElement("div")
+      hint.className = "map-hint"
+      hint.textContent = "Ctrl + scroll to zoom · drag to pan"
+      m.appendChild(hint)
+      // Admin edit-zones button
+      if (isAdmin && sp) {
+        var btn = document.createElement("a")
+        btn.className = "map-edit-btn"
+        btn.href = "/static/map-zone-editor?" + new URLSearchParams({ target: sp })
+        btn.target = "_blank"
+        btn.rel = "noopener"
+        btn.textContent = "✏️ Edit zones"
+        m.appendChild(btn)
+      }
     })
+  }
+  function attachPanZoom(container, inner) {
+    var s = { scale: 1, x: 0, y: 0, min: 1, max: 8 }
+    container._panzoom = { state: s, inner: inner }
+    function apply() {
+      inner.style.transform = "translate(" + s.x + "px," + s.y + "px) scale(" + s.scale + ")"
+      container.classList.toggle("map-zoomed", s.scale > 1.01)
+    }
+    function clamp() {
+      var rect = container.getBoundingClientRect()
+      var mx = rect.width * (s.scale - 1) / 2
+      var my = rect.height * (s.scale - 1) / 2
+      s.x = Math.max(-mx, Math.min(mx, s.x))
+      s.y = Math.max(-my, Math.min(my, s.y))
+    }
+    // Wheel zoom (Ctrl/Cmd+wheel only, so plain page scroll still works)
+    container.addEventListener("wheel", function (e) {
+      if (!(e.ctrlKey || e.metaKey)) return
+      e.preventDefault()
+      var rect = container.getBoundingClientRect()
+      var cx = e.clientX - rect.left - rect.width / 2
+      var cy = e.clientY - rect.top - rect.height / 2
+      var delta = -e.deltaY * 0.003
+      var next = Math.max(s.min, Math.min(s.max, s.scale * (1 + delta)))
+      var f = next / s.scale
+      s.x = cx + (s.x - cx) * f
+      s.y = cy + (s.y - cy) * f
+      s.scale = next
+      if (s.scale <= 1.01) { s.scale = 1; s.x = 0; s.y = 0 }
+      clamp(); apply()
+    }, { passive: false })
+    // Mouse drag pan (only when zoomed in)
+    var drag = null
+    container.addEventListener("mousedown", function (e) {
+      if (e.target.closest("a, button")) return
+      if (s.scale <= 1) return
+      drag = { sx: e.clientX, sy: e.clientY, ox: s.x, oy: s.y }
+      container.style.cursor = "grabbing"
+      e.preventDefault()
+    })
+    window.addEventListener("mousemove", function (e) {
+      if (!drag) return
+      s.x = drag.ox + (e.clientX - drag.sx)
+      s.y = drag.oy + (e.clientY - drag.sy)
+      clamp(); apply()
+    })
+    window.addEventListener("mouseup", function () {
+      if (!drag) return
+      drag = null; container.style.cursor = ""
+    })
+    // Touch: 1-finger pan, 2-finger pinch
+    var t = null
+    function td(a, b) { return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY) }
+    container.addEventListener("touchstart", function (e) { t = e.touches }, { passive: true })
+    container.addEventListener("touchmove", function (e) {
+      if (!t) return
+      if (e.touches.length === 1 && t.length === 1 && s.scale > 1) {
+        s.x += e.touches[0].clientX - t[0].clientX
+        s.y += e.touches[0].clientY - t[0].clientY
+        clamp(); apply(); e.preventDefault()
+      } else if (e.touches.length === 2 && t.length === 2) {
+        var next = Math.max(s.min, Math.min(s.max, s.scale * td(e.touches[0], e.touches[1]) / td(t[0], t[1])))
+        s.scale = next
+        if (s.scale <= 1.02) { s.scale = 1; s.x = 0; s.y = 0 }
+        clamp(); apply(); e.preventDefault()
+      }
+      t = e.touches
+    }, { passive: false })
+    container.addEventListener("touchend", function () { t = null })
+    // Double-click resets
+    container.addEventListener("dblclick", function (e) {
+      if (e.target.closest("a, button")) return
+      e.preventDefault(); resetZoom(container)
+    })
+  }
+  function resetZoom(container) {
+    var pz = container._panzoom
+    if (!pz) return
+    pz.state.scale = 1; pz.state.x = 0; pz.state.y = 0
+    pz.inner.style.transform = ""
+    container.classList.remove("map-zoomed")
   }
 
   // ---- Explorer sidebar: Home button + hide duplicate folder-note entries ---
