@@ -8,9 +8,7 @@ modified: 2026-07-28T12:50:06.434Z
 
 Welcome, travelers. This is the living wiki for our campaign — everything the party has learned about the world, its people, and its gods lives here.
 
-<div class="location-map"><img src="/01---world/maps/Amantia.jpg" alt="Map of Amantia" />
-  <a class="zone" href="/01---world/countries/the-untamed-marches" style="position:absolute;left:38.6%;top:24.5%;width:8%;height:20%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">The Untamed Marshes</span></a>
-</div>
+<div class="location-map"><img src="/01---world/maps/Amantia.jpg" alt="Map of Amantia" /></div>
 
 <div id="campaign-home"></div>
 
