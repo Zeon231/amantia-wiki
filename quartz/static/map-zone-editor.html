@@ -7,25 +7,47 @@
 <style>
   :root { color-scheme: dark; }
   body { margin:0; background:#15151a; color:#eee; font:14px/1.5 system-ui, sans-serif; }
-  .wrap { max-width:1000px; margin:0 auto; padding:16px; }
+  .wrap { max-width:1100px; margin:0 auto; padding:16px; }
   h1 { color:#e8b04b; font-size:20px; margin:.2rem 0; }
   h1 small { color:#aaa; font-size:13px; font-weight:400; margin-left:.6rem; }
   .hint { color:#aaa; font-size:13px; }
   .mapbox { position:relative; user-select:none; line-height:0; border-radius:8px; margin-top:12px; }
   .mapbox img { width:100%; height:auto; display:block; border-radius:8px; cursor:crosshair; }
+  .mapbox.mode-poly img { cursor:copy; }
+  /* Rectangle zone box */
   .zbox { position:absolute; box-sizing:border-box; border:2px solid #e8b04b; background:rgba(232,176,75,.18); border-radius:6px; cursor:move; }
   .zbox .ztag { position:absolute; left:0; top:-19px; font-size:11px; line-height:1.4; background:rgba(0,0,0,.82); color:#fff; padding:0 5px; border-radius:3px; white-space:nowrap; pointer-events:none; }
-  .zbox .zdel { position:absolute; right:-9px; top:-9px; width:18px; height:18px; border-radius:50%; background:#c0392b; color:#fff; font:bold 12px/18px sans-serif; text-align:center; cursor:pointer; }
+  .zbox .zdel { position:absolute; right:-9px; top:-9px; width:18px; height:18px; border-radius:50%; background:#c0392b; color:#fff; font:bold 12px/18px sans-serif; text-align:center; cursor:pointer; z-index:3; }
   .zbox .zres { position:absolute; right:-6px; bottom:-6px; width:13px; height:13px; background:#e8b04b; border:2px solid #fff; border-radius:2px; cursor:se-resize; }
+  /* Polygon SVG overlay */
+  .zpoly-svg { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
+  .zpoly-svg polygon { fill:rgba(232,176,75,.18); stroke:#e8b04b; stroke-width:.4; pointer-events:all; cursor:move; }
+  .zpoly-svg .vhandle { fill:#e8b04b; stroke:#fff; stroke-width:.3; cursor:grab; pointer-events:all; }
+  .zpoly-svg .vhandle.dragging { cursor:grabbing; }
+  .zpoly-svg .vmid { fill:#fff; stroke:#e8b04b; stroke-width:.3; cursor:crosshair; pointer-events:all; opacity:.55; }
+  .zpoly-svg .vmid:hover { opacity:1; r:1.1; }
+  .zpoly-svg text { fill:#fff; font:600 3px system-ui,sans-serif; text-anchor:middle; pointer-events:none; paint-order:stroke; stroke:rgba(0,0,0,.7); stroke-width:.8; }
+  .zpoly-controls { position:absolute; box-sizing:border-box; pointer-events:none; }
+  .zpoly-controls .zdel { position:absolute; width:18px; height:18px; border-radius:50%; background:#c0392b; color:#fff; font:bold 12px/18px sans-serif; text-align:center; cursor:pointer; z-index:3; pointer-events:all; transform:translate(-50%,-50%); }
+  /* In-progress polygon while drawing */
+  #polydraw { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; overflow:visible; display:none; }
+  #polydraw polyline { fill:rgba(232,176,75,.14); stroke:#e8b04b; stroke-width:.5; stroke-dasharray:1,1; }
+  #polydraw circle { fill:#e8b04b; stroke:#fff; stroke-width:.3; }
+  #polydraw circle.first { fill:#fff; stroke:#e8b04b; stroke-width:.5; }
+  /* Rect draw preview */
   #draw{ position:absolute; box-sizing:border-box; background:rgba(232,176,75,.22); border:2px dashed #e8b04b; border-radius:6px; display:none; pointer-events:none; }
   .bar { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
   button { background:#e8b04b; color:#111; border:0; border-radius:6px; padding:6px 12px; font-weight:600; cursor:pointer; }
   button.ghost { background:#2a2a33; color:#eee; }
+  button.active { background:#7cc47a; color:#111; }
   button:disabled { opacity:.5; cursor:not-allowed; }
   .row { display:flex; gap:6px; align-items:center; margin:5px 0; }
   input { background:#0d0d12; color:#eee; border:1px solid #444; border-radius:4px; padding:4px 7px; font-size:12px; }
   .lbl-in { width:170px; } .href-in { flex:1; min-width:160px; }
-  .row button { background:#3a2a2a; color:#f0b0b0; padding:3px 9px; }
+  .row .badge { background:#2a2a33; color:#aaa; padding:2px 6px; border-radius:3px; font-size:11px; }
+  .row .to-poly, .row .del { padding:3px 9px; font-size:11px; }
+  .row .to-poly { background:#3a3a2a; color:#e8b04b; }
+  .row .del { background:#3a2a2a; color:#f0b0b0; }
   textarea { width:100%; height:120px; background:#0d0d12; color:#9fe0a0; font-family:ui-monospace,monospace; font-size:12px; border:1px solid #444; border-radius:6px; padding:10px; margin-top:8px; box-sizing:border-box; }
   code { background:#0d0d12; padding:1px 5px; border-radius:4px; color:#e8b04b; }
   .err { color:#f0b0b0; background:#3a2a2a; padding:10px 14px; border-radius:8px; }
@@ -35,11 +57,9 @@
 <div class="wrap">
   <h1>Map Zone Editor <small id="target-label">— loading…</small></h1>
   <p class="hint">
-    Drag a box to <b>move</b>, drag its corner to <b>resize</b>, click <b>×</b> to delete,
-    <b>click-drag</b> on empty map to draw a new zone, or use <b>＋ Add zone</b>.
-    Set each zone's label and link below.
-    <b>Save to wiki</b> commits back to this page (staged — deploy from ⚙ Admin).
-    <b>Copy HTML</b> gives you the raw block if you'd rather paste manually.
+    <b>Rectangle:</b> click-drag on empty map to draw · drag box to move, corner to resize.<br/>
+    <b>Polygon:</b> click <b>Add polygon</b>, then click each vertex on the map. <b>Enter</b> or <b>double-click</b> to close · <b>Esc</b> to cancel · drag vertices to reshape · click a small "+" on any edge to add a vertex · right-click a vertex to delete it (min&nbsp;3).<br/>
+    Any zone: click "→ poly" to convert a rectangle to a 4-vertex polygon. <b>Save to wiki</b> commits back to this page (staged — deploy from ⚙ Admin).
   </p>
 
   <div id="loader" class="hint" style="margin-top:14px">Loading map…</div>
@@ -47,10 +67,11 @@
     <div class="mapbox" id="mapbox">
       <img id="map" alt="Map" draggable="false" />
       <div id="draw"></div>
+      <svg id="polydraw" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
     </div>
 
     <div class="bar">
-      <button id="add">＋ Add zone</button>
+      <button id="addpoly" class="ghost">◆ Add polygon</button>
       <button id="savewiki">💾 Save to wiki</button>
       <button id="copy" class="ghost">Copy HTML</button>
       <button id="reload" class="ghost">Reload from wiki</button>
@@ -65,74 +86,144 @@
 <script>
 (function(){
   var params = new URLSearchParams(location.search);
-  var TARGET = params.get('target'); // e.g. "content/01 - World/🗺 Cities & Locations/🏘 Brindelvik/Brindelvik.md"
+  var TARGET = params.get('target');
 
   var loader = document.getElementById('loader');
   var editor = document.getElementById('editor');
   var mapbox = document.getElementById('mapbox');
   var img = document.getElementById('map');
   var drawEl = document.getElementById('draw');
+  var polydrawEl = document.getElementById('polydraw');
   var listEl = document.getElementById('list');
   var out = document.getElementById('out');
   var status = document.getElementById('status');
   var savewiki = document.getElementById('savewiki');
+  var addpolyBtn = document.getElementById('addpoly');
   var targetLabel = document.getElementById('target-label');
 
   function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
   function r(n){return Math.round(n*10)/10;}
   function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
   function err(msg){ loader.innerHTML = '<div class="err">' + esc(msg) + '</div>'; }
+  function centroid(pts){ var sx=0,sy=0; for(var i=0;i<pts.length;i++){sx+=pts[i].x;sy+=pts[i].y;} return {x:sx/pts.length,y:sy/pts.length}; }
+  function pct(e){ var rct = img.getBoundingClientRect(); return { x: clamp((e.clientX - rct.left) / rct.width * 100, 0, 100), y: clamp((e.clientY - rct.top) / rct.height * 100, 0, 100) }; }
 
   if (!TARGET) { err('Open this editor from a wiki page: it needs a ?target=<content path> query parameter.'); return; }
   targetLabel.textContent = '— ' + TARGET.replace(/^content\//, '');
 
   var noteContent = null, noteSha = null, zones = [];
+  var mode = 'edit'; // 'edit' | 'draw-poly'
+  var polyInProgress = null; // { points: [{x,y},...] }
 
-  // Regex to isolate the map block in the note. Captures: (opening_div_img)(zones)(closing_div)
   var MAP_BLOCK_RE = /(<div class="location-map"[^>]*>\s*<img[^>]*>)([\s\S]*?)(<\/div>)/;
+  // Matches BOTH class="zone" and class="zone zone-poly" — group 1 tells us which.
+  var ZONE_RE = /<a class="zone( zone-poly)?"[^>]*href="([^"]+)"[^>]*style="([^"]+)"[^>]*>\s*<span class="lbl"[^>]*>([\s\S]*?)<\/span>\s*<\/a>/g;
+
+  function parseStyleRect(style) {
+    var pos = {};
+    ['left','top','width','height'].forEach(function(k){
+      var pm = new RegExp(k + ':([0-9.]+)%').exec(style);
+      pos[k] = pm ? parseFloat(pm[1]) : 0;
+    });
+    return { type:'rect', left:pos.left, top:pos.top, width:pos.width, height:pos.height };
+  }
+  function parseStylePoly(style) {
+    var m = /polygon\(([^)]+)\)/.exec(style);
+    if (!m) return null;
+    var pts = m[1].split(',').map(function(p){
+      var xy = p.trim().split(/\s+/);
+      return { x: parseFloat(xy[0]), y: parseFloat(xy[1]) };
+    }).filter(function(p){ return !isNaN(p.x) && !isNaN(p.y); });
+    if (pts.length < 3) return null;
+    return { type:'poly', points: pts };
+  }
 
   function parseMap(md) {
     var m = md.match(MAP_BLOCK_RE);
     if (!m) return null;
-    // Extract image src
     var srcM = m[1].match(/<img[^>]*src="([^"]+)"/);
-    // Extract zones from the middle segment
-    var zoneRe = /<a class="zone"[^>]*href="([^"]+)"[^>]*style="([^"]+)"[^>]*>\s*<span class="lbl">([\s\S]*?)<\/span>\s*<\/a>/g;
     var zs = [], zm;
-    while ((zm = zoneRe.exec(m[2])) !== null) {
-      var style = zm[2];
-      var pos = {};
-      ['left','top','width','height'].forEach(function(k){
-        var pm = new RegExp(k + ':([0-9.]+)%').exec(style);
-        pos[k] = pm ? parseFloat(pm[1]) : 0;
-      });
-      zs.push({
-        href: zm[1],
-        label: zm[3].replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"'),
-        left: pos.left, top: pos.top, width: pos.width, height: pos.height,
-      });
+    ZONE_RE.lastIndex = 0;
+    while ((zm = ZONE_RE.exec(m[2])) !== null) {
+      var isPoly = !!zm[1];
+      var href = zm[2], style = zm[3], label = zm[4].replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"');
+      var geom = isPoly ? parseStylePoly(style) : parseStyleRect(style);
+      if (!geom) continue;
+      geom.href = href; geom.label = label;
+      zs.push(geom);
     }
     return { imgSrc: srcM ? srcM[1] : null, zones: zs };
   }
 
   function anchorHTML(z){
-    return '  <a class="zone" href="'+esc(z.href)+'" style="position:absolute;left:'+r(z.left)+'%;top:'+r(z.top)+'%;width:'+r(z.width)+'%;height:'+r(z.height)+'%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">'+esc(z.label)+'</span></a>';
+    if (z.type === 'poly') {
+      var pts = z.points.map(function(p){ return r(p.x)+'% '+r(p.y)+'%'; }).join(', ');
+      var c = centroid(z.points);
+      return '  <a class="zone zone-poly" href="'+esc(z.href)+'" style="position:absolute;left:0;top:0;width:100%;height:100%;clip-path:polygon('+pts+');"><span class="lbl" style="left:'+r(c.x)+'%;top:'+r(c.y)+'%;transform:translate(-50%,-50%);margin:0;">'+esc(z.label)+'</span></a>';
+    }
+    return '  <a class="zone" href="'+esc(z.href)+'" style="position:absolute;left:'+r(z.left)+'%;top:'+r(z.top)+'%;width:'+r(z.width)+'%;height:'+r(z.height)+'%;border-radius:6px;"><span class="lbl">'+esc(z.label)+'</span></a>';
   }
   function renderExport(){ out.value = zones.map(anchorHTML).join('\n'); }
 
-  function render(){
-    Array.prototype.forEach.call(mapbox.querySelectorAll('.zbox'), function(e){ e.remove(); });
-    zones.forEach(function(z, i){
-      var b = document.createElement('div');
-      b.className = 'zbox'; b.dataset.i = i;
-      b.style.cssText = 'left:'+z.left+'%;top:'+z.top+'%;width:'+z.width+'%;height:'+z.height+'%;';
-      b.innerHTML = '<span class="ztag">'+esc(z.label || ('zone '+(i+1)))+'</span><span class="zdel">×</span><span class="zres"></span>';
-      mapbox.appendChild(b);
+  function renderRectHandles(z, i){
+    var b = document.createElement('div');
+    b.className = 'zbox'; b.dataset.i = i;
+    b.style.cssText = 'left:'+z.left+'%;top:'+z.top+'%;width:'+z.width+'%;height:'+z.height+'%;';
+    b.innerHTML = '<span class="ztag">'+esc(z.label || ('zone '+(i+1)))+'</span><span class="zdel">×</span><span class="zres"></span>';
+    mapbox.appendChild(b);
+  }
+  function renderPolyHandles(z, i){
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'zpoly-svg'); svg.setAttribute('viewBox', '0 0 100 100'); svg.setAttribute('preserveAspectRatio', 'none');
+    svg.dataset.i = i;
+    // Polygon
+    var pg = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    pg.setAttribute('points', z.points.map(function(p){return p.x+','+p.y;}).join(' '));
+    pg.dataset.role = 'body';
+    svg.appendChild(pg);
+    // Midpoint handles (add-vertex)
+    for (var j = 0; j < z.points.length; j++) {
+      var a = z.points[j], b = z.points[(j+1) % z.points.length];
+      var mid = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      mid.setAttribute('class', 'vmid'); mid.setAttribute('r', '.8');
+      mid.setAttribute('cx', (a.x+b.x)/2); mid.setAttribute('cy', (a.y+b.y)/2);
+      mid.dataset.role = 'vmid'; mid.dataset.at = (j+1);
+      svg.appendChild(mid);
+    }
+    // Vertex handles
+    z.points.forEach(function(p, vi){
+      var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('class', 'vhandle'); c.setAttribute('r', '1.4');
+      c.setAttribute('cx', p.x); c.setAttribute('cy', p.y);
+      c.dataset.role = 'vhandle'; c.dataset.vi = vi;
+      svg.appendChild(c);
     });
+    // Label
+    var cn = centroid(z.points);
+    var tx = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    tx.setAttribute('x', cn.x); tx.setAttribute('y', cn.y + 1);
+    tx.textContent = z.label || ('zone '+(i+1));
+    svg.appendChild(tx);
+    mapbox.appendChild(svg);
+    // Delete button (HTML, positioned at centroid)
+    var ctrl = document.createElement('div');
+    ctrl.className = 'zpoly-controls'; ctrl.dataset.i = i;
+    ctrl.style.cssText = 'left:0;top:0;width:100%;height:100%;';
+    ctrl.innerHTML = '<span class="zdel" style="left:'+r(cn.x)+'%;top:'+r(cn.y-6)+'%;" data-i="'+i+'">×</span>';
+    mapbox.appendChild(ctrl);
+  }
+
+  function render(){
+    Array.prototype.forEach.call(mapbox.querySelectorAll('.zbox, .zpoly-svg, .zpoly-controls'), function(e){ e.remove(); });
+    zones.forEach(function(z, i){ (z.type === 'poly' ? renderPolyHandles : renderRectHandles)(z, i); });
     listEl.innerHTML = zones.map(function(z,i){
-      return '<div class="row" data-i="'+i+'"><input class="lbl-in" value="'+esc(z.label)+'" placeholder="label"/>'+
-             '<input class="href-in" value="'+esc(z.href)+'" placeholder="/01---world/🗺-cities--and--locations/..."/>'+
-             '<button class="del">delete</button></div>';
+      var badge = z.type === 'poly'
+        ? '<span class="badge">◆ polygon ('+z.points.length+' pts)</span>'
+        : '<span class="badge">▭ rectangle</span><button class="to-poly" data-i="'+i+'">→ poly</button>';
+      return '<div class="row" data-i="'+i+'">'+badge+
+             '<input class="lbl-in" value="'+esc(z.label)+'" placeholder="label"/>'+
+             '<input class="href-in" value="'+esc(z.href)+'" placeholder="/01---world/..."/>'+
+             '<button class="del" data-i="'+i+'">delete</button></div>';
     }).join('');
     renderExport();
   }
@@ -157,10 +248,45 @@
       .catch(function(e){ err(e.message); });
   }
 
-  document.getElementById('add').addEventListener('click', function(){
-    zones.push({ href:'/', label:'New zone', left:45, top:45, width:8, height:10 });
+  // ---- polygon drawing (draw-poly mode) --------------------------------
+  function setMode(m) {
+    mode = m;
+    addpolyBtn.classList.toggle('active', m === 'draw-poly');
+    addpolyBtn.textContent = m === 'draw-poly' ? '✓ Click vertices · Enter to finish' : '◆ Add polygon';
+    mapbox.classList.toggle('mode-poly', m === 'draw-poly');
+    if (m !== 'draw-poly') { polyInProgress = null; polydrawEl.style.display = 'none'; polydrawEl.innerHTML = ''; }
+  }
+  function renderPolyInProgress() {
+    if (!polyInProgress) { polydrawEl.style.display = 'none'; return; }
+    polydrawEl.style.display = 'block';
+    polydrawEl.innerHTML = '';
+    var pts = polyInProgress.points;
+    if (pts.length >= 2) {
+      var pl = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+      pl.setAttribute('points', pts.map(function(p){return p.x+','+p.y;}).join(' '));
+      polydrawEl.appendChild(pl);
+    }
+    pts.forEach(function(p, i){
+      var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', p.x); c.setAttribute('cy', p.y); c.setAttribute('r', i === 0 ? '1.6' : '1');
+      if (i === 0) c.setAttribute('class', 'first');
+      polydrawEl.appendChild(c);
+    });
+  }
+  function finishPolyInProgress() {
+    if (!polyInProgress || polyInProgress.points.length < 3) return;
+    zones.push({ type:'poly', href:'/', label:'New zone', points: polyInProgress.points.slice() });
+    setMode('edit');
     render();
+  }
+
+  addpolyBtn.addEventListener('click', function(){ setMode(mode === 'draw-poly' ? 'edit' : 'draw-poly'); });
+  document.addEventListener('keydown', function(e){
+    if (mode !== 'draw-poly') return;
+    if (e.key === 'Enter') { e.preventDefault(); finishPolyInProgress(); }
+    else if (e.key === 'Escape') { e.preventDefault(); setMode('edit'); }
   });
+
   document.getElementById('copy').addEventListener('click', function(){
     out.select(); try{ navigator.clipboard.writeText(out.value); }catch(e){ document.execCommand('copy'); }
     status.textContent = 'HTML copied. Paste between <img> and </div> in the target note.';
@@ -174,66 +300,153 @@
     var row = e.target.closest('.row'); if(!row) return; var i = +row.dataset.i;
     if (e.target.classList.contains('lbl-in')) zones[i].label = e.target.value;
     if (e.target.classList.contains('href-in')) zones[i].href = e.target.value;
-    var tag = mapbox.querySelector('.zbox[data-i="'+i+'"] .ztag'); if(tag) tag.textContent = zones[i].label || ('zone '+(i+1));
-    renderExport();
+    render();
   });
   listEl.addEventListener('click', function(e){
-    if (!e.target.classList.contains('del')) return;
-    var i = +e.target.closest('.row').dataset.i; zones.splice(i,1); render();
+    if (e.target.classList.contains('del')) { zones.splice(+e.target.dataset.i, 1); render(); return; }
+    if (e.target.classList.contains('to-poly')) {
+      var i = +e.target.dataset.i, z = zones[i];
+      if (z.type !== 'rect') return;
+      zones[i] = { type:'poly', href:z.href, label:z.label, points:[
+        {x:z.left, y:z.top}, {x:z.left+z.width, y:z.top},
+        {x:z.left+z.width, y:z.top+z.height}, {x:z.left, y:z.top+z.height}
+      ]};
+      render();
+    }
   });
 
+  // ---- pointer interactions -------------------------------------------
   var drag = null, drawing = null;
-
-  function pct(e){
-    var rct = img.getBoundingClientRect();
-    return { x: clamp((e.clientX - rct.left) / rct.width * 100, 0, 100), y: clamp((e.clientY - rct.top) / rct.height * 100, 0, 100) };
-  }
-
   mapbox.addEventListener('mousedown', function(e){
+    // Delete polygon via × control
+    if (e.target.classList.contains('zdel') && e.target.dataset.i) {
+      zones.splice(+e.target.dataset.i, 1); render(); e.preventDefault(); return;
+    }
+    // Polygon SVG interactions
+    var svg = e.target.closest('.zpoly-svg');
+    if (svg) {
+      var i = +svg.dataset.i, z = zones[i];
+      var role = e.target.dataset.role;
+      if (role === 'vhandle') {
+        if (e.button === 2 || e.shiftKey) return; // handled on contextmenu / mouseup shift
+        drag = { kind:'poly-vertex', i:i, vi:+e.target.dataset.vi, rect:img.getBoundingClientRect() };
+        e.target.classList.add('dragging');
+        e.preventDefault(); return;
+      }
+      if (role === 'vmid') {
+        var at = +e.target.dataset.at;
+        var p = pct(e);
+        z.points.splice(at, 0, { x:p.x, y:p.y });
+        render();
+        // start dragging the new vertex immediately for better UX
+        drag = { kind:'poly-vertex', i:i, vi:at, rect:img.getBoundingClientRect() };
+        e.preventDefault(); return;
+      }
+      if (role === 'body') {
+        drag = { kind:'poly-move', i:i, rect:img.getBoundingClientRect(), sx:e.clientX, sy:e.clientY, orig:z.points.map(function(p){return {x:p.x,y:p.y};}) };
+        e.preventDefault(); return;
+      }
+      return;
+    }
+    // Rectangle interactions
     var box = e.target.closest('.zbox');
     if (box) {
-      var i = +box.dataset.i;
-      if (e.target.classList.contains('zdel')) { zones.splice(i,1); render(); return; }
-      drag = { i:i, box:box, rect:img.getBoundingClientRect(),
-        mode: e.target.classList.contains('zres') ? 'resize' : 'move',
-        sx:e.clientX, sy:e.clientY, z:Object.assign({}, zones[i]) };
-      e.preventDefault();
-    } else if (e.target === img) {
-      var p = pct(e);
-      drawing = { sx:p.x, sy:p.y };
-      drawEl.style.cssText = 'left:'+p.x+'%;top:'+p.y+'%;width:0%;height:0%;display:block;';
+      var i2 = +box.dataset.i;
+      if (e.target.classList.contains('zdel')) { zones.splice(i2,1); render(); e.preventDefault(); return; }
+      drag = { kind: e.target.classList.contains('zres') ? 'rect-resize' : 'rect-move',
+        i:i2, box:box, rect:img.getBoundingClientRect(),
+        sx:e.clientX, sy:e.clientY, z:Object.assign({}, zones[i2]) };
+      e.preventDefault(); return;
+    }
+    // Clicks on the img itself
+    if (e.target === img) {
+      if (mode === 'draw-poly') {
+        var p = pct(e);
+        if (!polyInProgress) polyInProgress = { points: [] };
+        // Click on first vertex closes the polygon
+        if (polyInProgress.points.length >= 3) {
+          var f = polyInProgress.points[0];
+          var dx = (p.x-f.x), dy = (p.y-f.y);
+          if (Math.sqrt(dx*dx+dy*dy) < 2.5) { finishPolyInProgress(); return; }
+        }
+        polyInProgress.points.push({ x:p.x, y:p.y });
+        renderPolyInProgress();
+        e.preventDefault(); return;
+      }
+      // Rectangle click-drag draw
+      var p2 = pct(e);
+      drawing = { sx:p2.x, sy:p2.y };
+      drawEl.style.cssText = 'left:'+p2.x+'%;top:'+p2.y+'%;width:0%;height:0%;display:block;';
       e.preventDefault();
     }
   });
+
   document.addEventListener('mousemove', function(e){
-    if (drag) {
+    if (!drag && !drawing) return;
+    if (drag && drag.kind === 'poly-vertex') {
+      var p = pct(e), z = zones[drag.i];
+      z.points[drag.vi] = { x:p.x, y:p.y };
+      var svg = mapbox.querySelector('.zpoly-svg[data-i="'+drag.i+'"]');
+      if (svg) {
+        var pg = svg.querySelector('polygon');
+        pg.setAttribute('points', z.points.map(function(p){return p.x+','+p.y;}).join(' '));
+        var vh = svg.querySelector('.vhandle[data-vi="'+drag.vi+'"]');
+        if (vh) { vh.setAttribute('cx', p.x); vh.setAttribute('cy', p.y); }
+        // update the two adjacent midpoints
+        var pts = z.points, n = pts.length;
+        [(drag.vi - 1 + n) % n, drag.vi].forEach(function(vi){
+          var a = pts[vi], b = pts[(vi+1)%n];
+          var mid = svg.querySelector('.vmid[data-at="'+((vi+1)%n === 0 ? n : (vi+1))+'"]');
+          if (mid) { mid.setAttribute('cx', (a.x+b.x)/2); mid.setAttribute('cy', (a.y+b.y)/2); }
+        });
+      }
+      renderExport();
+      return;
+    }
+    if (drag && drag.kind === 'poly-move') {
       var dx = (e.clientX - drag.sx) / drag.rect.width * 100;
       var dy = (e.clientY - drag.sy) / drag.rect.height * 100;
       var z = zones[drag.i];
-      if (drag.mode === 'move') {
-        z.left = clamp(drag.z.left + dx, 0, 100 - z.width);
-        z.top  = clamp(drag.z.top + dy, 0, 100 - z.height);
+      z.points = drag.orig.map(function(p){ return { x: clamp(p.x + dx, 0, 100), y: clamp(p.y + dy, 0, 100) }; });
+      render(); // full re-render is simplest for translation
+      return;
+    }
+    if (drag && (drag.kind === 'rect-move' || drag.kind === 'rect-resize')) {
+      var dx2 = (e.clientX - drag.sx) / drag.rect.width * 100;
+      var dy2 = (e.clientY - drag.sy) / drag.rect.height * 100;
+      var z2 = zones[drag.i];
+      if (drag.kind === 'rect-move') {
+        z2.left = clamp(drag.z.left + dx2, 0, 100 - z2.width);
+        z2.top  = clamp(drag.z.top + dy2, 0, 100 - z2.height);
       } else {
-        z.width  = clamp(drag.z.width + dx, 2, 100 - z.left);
-        z.height = clamp(drag.z.height + dy, 2, 100 - z.top);
+        z2.width  = clamp(drag.z.width + dx2, 2, 100 - z2.left);
+        z2.height = clamp(drag.z.height + dy2, 2, 100 - z2.top);
       }
-      drag.box.style.left = z.left+'%'; drag.box.style.top = z.top+'%';
-      drag.box.style.width = z.width+'%'; drag.box.style.height = z.height+'%';
+      drag.box.style.left = z2.left+'%'; drag.box.style.top = z2.top+'%';
+      drag.box.style.width = z2.width+'%'; drag.box.style.height = z2.height+'%';
       renderExport();
-    } else if (drawing) {
-      var p = pct(e);
-      var l = Math.min(drawing.sx, p.x), t = Math.min(drawing.sy, p.y);
-      var w = Math.abs(p.x - drawing.sx), h = Math.abs(p.y - drawing.sy);
+      return;
+    }
+    if (drawing) {
+      var p3 = pct(e);
+      var l = Math.min(drawing.sx, p3.x), t = Math.min(drawing.sy, p3.y);
+      var w = Math.abs(p3.x - drawing.sx), h = Math.abs(p3.y - drawing.sy);
       drawEl.style.cssText = 'left:'+l+'%;top:'+t+'%;width:'+w+'%;height:'+h+'%;display:block;';
     }
   });
+
   document.addEventListener('mouseup', function(){
-    if (drag) { drag = null; }
-    else if (drawing) {
+    if (drag) {
+      if (drag.kind === 'poly-vertex') {
+        var svg = mapbox.querySelector('.zpoly-svg[data-i="'+drag.i+'"] .vhandle[data-vi="'+drag.vi+'"]');
+        if (svg) svg.classList.remove('dragging');
+      }
+      drag = null;
+    } else if (drawing) {
       var s = drawEl.style;
       var w = parseFloat(s.width), h = parseFloat(s.height);
       if (w >= 2 && h >= 2) {
-        zones.push({ href:'/', label:'New zone', left:parseFloat(s.left), top:parseFloat(s.top), width:w, height:h });
+        zones.push({ type:'rect', href:'/', label:'New zone', left:parseFloat(s.left), top:parseFloat(s.top), width:w, height:h });
         render();
       }
       drawEl.style.display = 'none';
@@ -241,16 +454,28 @@
     }
   });
 
+  // Right-click / shift-click a polygon vertex to delete it (min 3 vertices)
+  mapbox.addEventListener('contextmenu', function(e){
+    var svg = e.target.closest('.zpoly-svg'); if (!svg) return;
+    if (e.target.dataset.role !== 'vhandle') return;
+    e.preventDefault();
+    var i = +svg.dataset.i, vi = +e.target.dataset.vi, z = zones[i];
+    if (z.points.length <= 3) { status.textContent = 'Polygon must keep at least 3 vertices.'; setTimeout(function(){status.textContent='';},2000); return; }
+    z.points.splice(vi, 1); render();
+  });
+
+  // Double-click on the map or first vertex marker to finish polygon
+  mapbox.addEventListener('dblclick', function(e){
+    if (mode === 'draw-poly') { e.preventDefault(); finishPolyInProgress(); }
+  });
+
   savewiki.addEventListener('click', function(){
     savewiki.disabled = true; status.textContent = 'Saving…';
-    // Rebuild the map block with new zones
     var anchors = zones.map(anchorHTML).join('\n');
     var updated = noteContent.replace(MAP_BLOCK_RE, function(_, a, _mid, c){
       return a + '\n' + anchors + '\n' + c;
     });
-    if (updated === noteContent) {
-      status.textContent = 'Nothing changed.'; savewiki.disabled = false; return;
-    }
+    if (updated === noteContent) { status.textContent = 'Nothing changed.'; savewiki.disabled = false; return; }
     fetch('/api/page', {
       method:'PUT', credentials:'same-origin',
       headers:{ 'Content-Type':'application/json' },
