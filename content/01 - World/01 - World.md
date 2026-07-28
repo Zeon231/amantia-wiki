@@ -1,6 +1,6 @@
 ---
 tags: [world, index]
-modified: 2026-05-10T20:04:29.143Z
+modified: 2026-07-28T13:07:58.155Z
 ---
 
 # World of Amantia

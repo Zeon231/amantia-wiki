@@ -1,9 +1,6 @@
 ---
-modified: 2026-06-10T16:10:08.455Z
----
-
----
 tags: [equipment, gear, rules-reference]
+modified: 2026-07-28T13:04:37.332Z
 ---
 
 # Adventuring Gear
@@ -389,4 +386,4 @@ tags: [equipment, gear, rules-reference]
 
 ---
 
-*See also:* [[07 - Items & Equipment]] | [[Weapons]] | [[Tools]] | [[Currency & Wealth]]
+*See also:* [[07 - Items & Equipment/07 - Items & Equipment|07 - Items & Equipment]] | [[Weapons]] | [[Tools]] | [[Currency & Wealth]]

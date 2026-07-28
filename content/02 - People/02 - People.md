@@ -1,11 +1,11 @@
 ---
 tags: [people, index]
-modified: 2026-05-10T20:04:29.148Z
+modified: 2026-07-28T13:07:58.058Z
 ---
 
 # People of Amantia
 
-All the people who populate the world — player characters, NPCs, factions, and organisations.\n\n- [[02 - People/Player Characters/Player Characters|Player Characters]] — The party\n- [[02 - People/NPCs/NPCs|NPCs]] — Named characters of note\n- [[02 - People/Factions & Organizations/Factions & Organizations|Factions & Organizations]] — Powers and groups
+All the people who populate the world — player characters, NPCs, factions, and organisations.\n\n- [[02 - People/🎲 Player Characters/Player Characters|Player Characters]] — The party\n- [[02 - People/👥 NPCs/NPCs|NPCs]] — Named characters of note\n- [[02 - People/⚜ Factions & Organizations/Factions & Organizations|Factions & Organizations]] — Powers and groups
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 tags: [equipment, armor, rules-reference]
-modified: 2026-06-08T13:41:21.217Z
+modified: 2026-07-28T13:04:37.490Z
 ---
 
 # Armor
@@ -232,4 +232,4 @@ Armor designed for a mount. Any armor type can be purchased as barding.
 
 ---
 
-*See also:* [[07 - Items & Equipment]] | [[Weapons]] | [[Mounts & Vehicles]]
+*See also:* [[07 - Items & Equipment/07 - Items & Equipment|07 - Items & Equipment]] | [[Weapons]] | [[Mounts & Vehicles]]

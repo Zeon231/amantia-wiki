@@ -1,11 +1,11 @@
 ---
 tags: [session, index]
-modified: 2026-05-10T20:04:29.156Z
+modified: 2026-07-28T13:07:58.109Z
 ---
 
 # Sessions
 
-Session notes, recaps, and the living record of the campaign.\n\n- [[05 - Sessions/Session Notes/Session Notes|Session Notes]] — Notes written during play\n- [[05 - Sessions/Recaps/Recaps|Recaps]] — Post-session summaries
+Session notes, recaps, and the living record of the campaign.\n\n- [[05 - Sessions/📖 Session Notes/Session Notes|Session Notes]] — Notes written during play\n- [[05 - Sessions/🎬 Recaps/Recaps|Recaps]] — Post-session summaries
 
 ---
 

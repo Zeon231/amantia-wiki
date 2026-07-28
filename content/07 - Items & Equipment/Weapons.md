@@ -1,6 +1,6 @@
 ---
 tags: [equipment, weapons, rules-reference]
-modified: 2026-06-08T13:54:25.346Z
+modified: 2026-07-28T13:10:38.496Z
 ---
 
 # Weapons
@@ -626,4 +626,4 @@ A flexible braided leather or cord weapon. Pain with a long shadow: theatrical, 
 
 ---
 
-*See also:* [[07 - Items & Equipment]] | [[Armor]] | [[Currency & Wealth]]
+*See also:* [[07 - Items & Equipment/07 - Items & Equipment|07 - Items & Equipment]] | [[Armor]] | [[Currency & Wealth]]

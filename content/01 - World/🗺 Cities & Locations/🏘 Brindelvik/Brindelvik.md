@@ -1,7 +1,7 @@
 ---
 tags: [location, town, campaign]
 discovered: Session 1
-modified: 2026-07-28T12:36:57.400Z
+modified: 2026-07-28T13:05:13.017Z
 ---
 
 # Brindelvik
@@ -12,9 +12,9 @@ modified: 2026-07-28T12:36:57.400Z
 Starting town of the campaign (Session 1, Fall 1681). Sits in the **[[Raudvatn Valley]]**, in the region of Askarsoeng.
 
 <div class="location-map"><img src="/01---world/maps/brindelvik.png" alt="Map of Brindelvik" />
-  <a class="zone" href="/01---world/cities--and--locations/🏘-brindelvik/aldermans-hall" style="position:absolute;left:45.5%;top:44.5%;width:7%;height:9.5%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">Alderman's Hall (12)</span></a>
-  <a class="zone" href="/01---world/cities--and--locations/🏘-brindelvik/master-velriks-house" style="position:absolute;left:4.5%;top:17.5%;width:6.5%;height:9%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">Master Velriks House (21)</span></a>
-  <a class="zone" href="/01---world/cities--and--locations/🏘-brindelvik/butcher" style="position:absolute;left:78.5%;top:31%;width:6.5%;height:9%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">Butcher (4)</span></a>
+  <a class="zone" href="/01---world/🗺-cities--and--locations/🏘-brindelvik/aldermans-hall" style="position:absolute;left:45.5%;top:44.5%;width:7%;height:9.5%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">Alderman's Hall (12)</span></a>
+  <a class="zone" href="/01---world/🗺-cities--and--locations/🏘-brindelvik/master-velriks-house" style="position:absolute;left:4.5%;top:17.5%;width:6.5%;height:9%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">Master Velriks House (21)</span></a>
+  <a class="zone" href="/01---world/🗺-cities--and--locations/🏘-brindelvik/butcher" style="position:absolute;left:78.5%;top:31%;width:6.5%;height:9%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">Butcher (4)</span></a>
 </div>
 
 *Town map — 21 numbered locations; the highlighted boxes are clickable quicklinks. Hover the map (as an admin) to reveal the edit button. The **Herb Keeper's** building isn't identified yet.*

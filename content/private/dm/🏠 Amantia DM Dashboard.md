@@ -1,7 +1,7 @@
 ---
 banner: "00 - Dashboard/banner-dashboard.jpg"
 banner-y: 0.4
-modified: 2026-05-10T20:05:10.321Z
+modified: 2026-07-28T13:12:35.169Z
 ---
 
 # ⚔️ Amantia Campaign — DM Dashboard
@@ -14,7 +14,7 @@ modified: 2026-05-10T20:05:10.321Z
 ## 📋 Next Session
 
 > [!todo] Prep Checklist
-> - [ ] Review last session recap in [[05 - Sessions/Recaps/Recaps|Recaps]]
+> - [ ] Review last session recap in [[05 - Sessions/🎬 Recaps/Recaps|Recaps]]
 > - [ ] Set in-game date using [[Amantian Calendar]]
 > - [ ] Prep at least one encounter in [[06 - Encounters/06 - Encounters|Encounters]]
 > - [ ] Review active plot threads in [[Campaign Tracker]]

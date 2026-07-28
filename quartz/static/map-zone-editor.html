@@ -65,7 +65,7 @@
 <script>
 (function(){
   var params = new URLSearchParams(location.search);
-  var TARGET = params.get('target'); // e.g. "content/01 - World/Cities & Locations/🏘 Brindelvik/Brindelvik.md"
+  var TARGET = params.get('target'); // e.g. "content/01 - World/🗺 Cities & Locations/🏘 Brindelvik/Brindelvik.md"
 
   var loader = document.getElementById('loader');
   var editor = document.getElementById('editor');
@@ -131,7 +131,7 @@
     });
     listEl.innerHTML = zones.map(function(z,i){
       return '<div class="row" data-i="'+i+'"><input class="lbl-in" value="'+esc(z.label)+'" placeholder="label"/>'+
-             '<input class="href-in" value="'+esc(z.href)+'" placeholder="/01---world/cities--and--locations/..."/>'+
+             '<input class="href-in" value="'+esc(z.href)+'" placeholder="/01---world/🗺-cities--and--locations/..."/>'+
              '<button class="del">delete</button></div>';
     }).join('');
     renderExport();

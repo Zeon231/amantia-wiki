@@ -1,6 +1,6 @@
 ---
 tags: [equipment, currency, rules-reference]
-modified: 2026-06-07T21:54:42.582Z
+modified: 2026-07-28T13:04:37.653Z
 ---
 
 # Currency & Wealth
@@ -50,4 +50,4 @@ modified: 2026-06-07T21:54:42.582Z
 
 ---
 
-*See also:* [[07 - Items & Equipment]] | [[Adventuring Gear]] | [[Weapons]]
+*See also:* [[07 - Items & Equipment/07 - Items & Equipment|07 - Items & Equipment]] | [[Adventuring Gear]] | [[Weapons]]

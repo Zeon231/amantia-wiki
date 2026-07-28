@@ -1,6 +1,6 @@
 ---
 tags: [equipment, tools, rules-reference]
-modified: 2026-06-08T14:28:43.502Z
+modified: 2026-07-28T13:10:38.350Z
 ---
 
 # Tools
@@ -160,4 +160,4 @@ modified: 2026-06-08T14:28:43.502Z
 
 ---
 
-*See also:* [[07 - Items & Equipment]] | [[Adventuring Gear]] | [[Weapons]]
+*See also:* [[07 - Items & Equipment/07 - Items & Equipment|07 - Items & Equipment]] | [[Adventuring Gear]] | [[Weapons]]

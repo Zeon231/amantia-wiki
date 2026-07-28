@@ -1,6 +1,6 @@
 ---
 tags: [equipment, mounts, vehicles, rules-reference]
-modified: 2026-06-10T15:42:11.212Z
+modified: 2026-07-28T13:10:38.193Z
 ---
 
 # Mounts & Vehicles
@@ -155,4 +155,4 @@ A small bronze cannon inlaid with arcane runes, mounted on a heavy tripod. Launc
 
 ---
 
-*See also:* [[07 - Items & Equipment]] | [[Armor]] | [[Adventuring Gear]]
+*See also:* [[07 - Items & Equipment/07 - Items & Equipment|07 - Items & Equipment]] | [[Armor]] | [[Adventuring Gear]]
