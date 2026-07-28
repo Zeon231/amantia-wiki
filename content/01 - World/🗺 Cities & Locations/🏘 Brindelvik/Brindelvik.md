@@ -1,7 +1,7 @@
 ---
 tags: [location, town, campaign]
 discovered: Session 1
-modified: 2026-07-28T13:05:13.017Z
+modified: 2026-07-28T20:23:00.900Z
 ---
 
 # Brindelvik
@@ -9,7 +9,7 @@ modified: 2026-07-28T13:05:13.017Z
 > [!note] Player knowledge only
 > Facts recorded as revealed in play.
 
-Starting town of the campaign (Session 1, Fall 1681). Sits in the **[[Raudvatn Valley]]**, in the region of Askarsoeng.
+Starting **hamlet** of the campaign (Session 1, Fall 1681). Sits in the **[[Raudvatn Valley]]**, in the region of Askarsoeng — roughly **25–30 miles SE** of the town of **[[Gran'ar Luv]]** in [[The Untamed Marches]]. The party has been living here for at least a year prior to Session 1.
 
 <div class="location-map"><img src="/01---world/maps/brindelvik.png" alt="Map of Brindelvik" />
   <a class="zone" href="/01---world/🗺-cities--and--locations/🏘-brindelvik/aldermans-hall" style="position:absolute;left:45.5%;top:44.5%;width:7%;height:9.5%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">Alderman's Hall (12)</span></a>
@@ -23,7 +23,7 @@ Starting town of the campaign (Session 1, Fall 1681). Sits in the **[[Raudvatn V
 
 - Sent its taxes by caravan; the caravan was **attacked overnight**, tax goods stolen; one wounded courier returned in the early morning ([[Session 1]]).
 - The **east bank** was where **[[Nim]]** was last seen before he was taken.
-- Several months ago, a **traveler** passed through and asked about the road toward [[Aldgrind]] *(per the herb keeper)*.
+- Several months ago, a **traveler** passed through and asked about the road toward [[Ardgrind|Aldgrind]] *(per the herb keeper)*.
 - Its **Alderman** is **[[Sigrun Vark]]** (Hobgoblin), who summoned the party after the caravan attack.
 - Has an **herb keeper**, who cared for the lone survivor of the caravan attack.
 - A **group of travelers** arrived in town around the time the news broke.

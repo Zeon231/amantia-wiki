@@ -4,7 +4,7 @@ session-number: 1
 date-played: 2026-07-17
 in-game-date: Aestara Gold 21
 players-present: Trent (Vesper Crowe), Daryl (Aphelia), Lucas (Alexander), Billy (DM — runs [[Blanottdis]])
-modified: 2026-07-26T11:39:21.561Z
+modified: 2026-07-28T20:20:25.271Z
 ---
 
 # Session 1
@@ -39,7 +39,7 @@ modified: 2026-07-26T11:39:21.561Z
 
 ### Investigation
 - **The wounded courier** — the party questions him at the **herb keeper's** house, where he is convalescing. He describes **high-pitched voices** and an **eerie cold**.
-  - The herb keeper mentioned a **traveler** who had passed through months earlier asking about the **road toward [[Aldgrind]]**.
+  - The herb keeper mentioned a **traveler** who had passed through months earlier asking about the **road toward [[Ardgrind|Aldgrind]]**.
   - The herb keeper also shared something **privately with [[Vesper Crowe]]** — *recorded in Vesper's own notes.*
 - **The butcher** — has been examining the remains of **butchered animals**; a local livestock issue.
 - **The east bank** — **[[Nim]]** was last seen there before disappearing.
@@ -135,7 +135,7 @@ modified: 2026-07-26T11:39:21.561Z
 - [x] The kobolds are the **tax thieves** (whitish-gray scales; one can fly)
 - [x] **[[Nim]]** rescued from the [[Shepherd's Retreat]] and returned home
 - [ ] The wounded courier's account (**high-pitched voices**, **eerie cold**)
-- [ ] The traveler who passed through Brindelvik months ago asking about the road to **[[Aldgrind]]**
+- [ ] The traveler who passed through Brindelvik months ago asking about the road to **[[Ardgrind|Aldgrind]]**
 - [ ] **[[The White Crown]]** — young white dragon wyrmling; escaped at 1 HP toward the mines; a rematch is expected
 - [ ] **Jeb's promised back door** into the mines where [[The White Crown]] lairs
 - [ ] The **[[Question Knights]]** — Dame **[[Dame Ysabet Rosenvard|Ysabet Rosenvard]]** and her three companions — hunting a **prohibited funerary relic**; asking after **[[Master Velrik Thorn]]**

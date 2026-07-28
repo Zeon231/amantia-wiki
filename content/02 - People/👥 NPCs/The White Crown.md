@@ -4,7 +4,7 @@ species: White Dragon (young)
 status: alive
 first-appeared: Session 1
 portrait: "02 - People/Portraits/the-white-crown.png"
-modified: 2026-07-28T12:53:41.474Z
+modified: 2026-07-28T20:07:33.670Z
 ---
 
 # The White Crown
