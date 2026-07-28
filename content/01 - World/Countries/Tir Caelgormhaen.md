@@ -3,7 +3,7 @@ tags: [country]
 government: "Hereditary monarchy advised by the Council of the Watchfires, a conclave of drui"
 ruler: "Rí Thalen Maerwyn"
 population: 804000
-modified: 2026-05-10T20:09:53.395Z
+modified: 2026-07-28T20:21:54.054Z
 ---
 
 # Tir Caelgormhaen
@@ -14,6 +14,9 @@ modified: 2026-05-10T20:09:53.395Z
 > **Ruler:** Rí Thalen Maerwyn
 > **Government:** Hereditary monarchy advised by the Council of the Watchfires, a conclave of druids, jarls, and sea-lords who guard the frontier against the Iljarskarn and the Wild Lands
 > **Population:** 804,000
+
+## Cultural Flavor
+Medieval-Scotland-inspired: clan-based highland kingdoms, druidic tradition, sea-lords, watchfires on the frontier, and a strong bardic culture. Sits directly west of [[The Untamed Marches]] on the [[North Rose Subcontinent]].
 
 ## Racial Composition
 53% Siorthara, 19% Iljarnskarn, 5% Faenari Elves, 5% Sylvalûn Elves, 5% Gnomes, 5% Fae, 4% Firbolg, 1% Goliaths, 3% Other

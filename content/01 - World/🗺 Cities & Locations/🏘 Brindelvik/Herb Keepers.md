@@ -2,7 +2,7 @@
 tags: [location, building, brindelvik, campaign]
 town: Brindelvik
 discovered: Session 1
-modified: 2026-07-27T14:15:03.087Z
+modified: 2026-07-28T20:20:25.133Z
 ---
 
 # Herb Keeper's
@@ -14,7 +14,7 @@ The home/workshop of **[[Brindelvik]]**'s **herb keeper**. *(Building not yet id
 
 ## Known Facts
 - The herb keeper cared for the **lone survivor** of the tax-caravan attack.
-- Relayed that a **traveler** had passed through months earlier asking about the road toward [[Aldgrind]].
+- Relayed that a **traveler** had passed through months earlier asking about the road toward [[Ardgrind|Aldgrind]].
 
 ---
 

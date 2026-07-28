@@ -1,6 +1,6 @@
 ---
 tags: [location, region, subcontinent]
-modified: 2026-07-28T20:01:47.131Z
+modified: 2026-07-28T20:21:41.935Z
 ---
 
 # North Rose Subcontinent
@@ -12,10 +12,16 @@ modified: 2026-07-28T20:01:47.131Z
 
 The northern portion of the **Rose Subcontinent**, dominated by the mountainous [[Tir Caelgormhaen]] and the wilderness of [[The Untamed Marches]]. Home to the [[Elves#Fanari|Fanari Elves]], Siórtharan human kingdoms, and the Ruzvarkun dwarven halls.
 
-## Regions on the map
+## Climate
+The North Rose sits only about **150 miles south of the arctic circle** — climate roughly analogous to **central Sweden**. Long cold winters, brief green summers, mountains snow-capped year-round, coastal winters ice-locking the northern harbours.
 
-- **[[The Untamed Marches]]** — central lowlands, unclaimed wilderness
-- **Tir Caelgormhaen** — the mountainous heart *(no page yet)*
+## Regions on the map (west → east)
+
+- **[[Tir Caelgormhaen]]** — Siórtharan kingdom to the west; medieval-Scotland-inspired highlands, druidic councils, sea-lords, and frontier watchfires
+- **[[The Untamed Marches]]** — central lowlands, unclaimed wilderness where the campaign is set
+- **Northern Realms of the [[Holy Rose Empire]]** to the south, including:
+  - **[[Ruzvakholl]]** — a dwarven kingdom that borders the play area
+  - **[[Hraesveil Morka|Hraesveil]]** — a margravine of the empire, also bordering the play area
 - **Cuan Rósach** — the Rose Bay
 - **Elddreká Haf** — the sea to the east
 - Various small island principalities and city-states scattered through the northern isles
@@ -23,7 +29,8 @@ The northern portion of the **Rose Subcontinent**, dominated by the mountainous 
 ## Notable places within
 
 - **[[Raudvatn Valley]]** — starting region for the campaign, within the Untamed Marches
-- **[[Brindelvik]]** — party's home town
+- **[[Brindelvik]]** — party's home hamlet
+- **[[Gran'ar Luv]]** — nearest town of any size (in the southwestern Untamed Marches, ~25–30 miles NW of Brindelvik)
 
 ---
 

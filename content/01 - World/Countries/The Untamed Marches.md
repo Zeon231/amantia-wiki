@@ -3,7 +3,7 @@ tags: [country]
 government: "Unclaimed wilderness on the Rose subcontinent"
 ruler: "None officially; governed only by clan law, druidic tradition, and Fae caprice"
 population: 469000
-modified: 2026-07-28T20:01:32.299Z
+modified: 2026-07-28T20:21:23.191Z
 ---
 
 # The Untamed Marches
@@ -11,7 +11,7 @@ modified: 2026-07-28T20:01:32.299Z
 <div class="location-map"><img src="/01---world/maps/untamed-marches---regional.png" alt="Regional map of The Untamed Marches" />
 </div>
 
-*Regional map of The Untamed Marches. Hover (as an admin) to reveal the edit button and add clickable zones for [[Raudvatn Valley]], [[Brindelvik]], and other landmarks.*
+*Regional map of The Untamed Marches. In the southwest sits **[[Gran'ar Luv]]**; the [[Raudvatn Valley]] lies roughly 25–30 miles SE of that town. To the west is **[[Tir Caelgormhaen]]** (Siórtharan kingdom, Medieval-Scotland-inspired); to the south the Northern Realms of the **[[Holy Rose Empire]]**, where **[[Ruzvakholl]]** (a dwarven kingdom) and **[[Hraesveil Morka|Hraesveil]]** both border the play area.*
 
 > [!info] Nation Info
 > **Nickname:** The Wild  Lands
