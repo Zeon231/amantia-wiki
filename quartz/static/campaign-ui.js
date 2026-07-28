@@ -682,6 +682,50 @@
     })
   }
 
+  // ---- Explorer sidebar: Home button + hide duplicate folder-note entries ---
+  // Rule: any file entry whose displayed name matches its parent folder's name
+  // is a "folder-note stub" — hide it. Whitelist real folder-note pages that
+  // carry meaningful content (Brindelvik.md is a full location page, not a stub).
+  var EXPLORER_KEEP = /brindelvik|raudvatn|aldgrind/i
+  function decorateExplorer() {
+    var explorer = document.querySelector(".explorer")
+    if (!explorer) return
+    var ul = explorer.querySelector(".explorer-ul") || explorer.querySelector(".explorer-content ul")
+    if (!ul) return
+    // 1. Home link at the very top (idempotent)
+    if (!ul.querySelector(".ax-home-link")) {
+      var homeLi = document.createElement("li")
+      homeLi.className = "ax-home-link"
+      homeLi.innerHTML = '<a href="/" class="nav-file-title tree-item-self" style="font-weight:600">🏠 Home</a>'
+      ul.insertBefore(homeLi, ul.firstChild)
+    }
+    // 2. Hide stub folder-note entries (displayed name == parent folder name)
+    var folders = ul.querySelectorAll("li")
+    folders.forEach(function (li) {
+      var folderTitle = li.querySelector(":scope > .folder-container .folder-title, :scope > .nav-folder-title .folder-title")
+      if (!folderTitle) return
+      var folderName = (folderTitle.textContent || "").trim()
+      if (!folderName) return
+      var childAnchors = li.querySelectorAll(":scope > .folder-outer .nav-file-title, :scope > ul .nav-file-title")
+      childAnchors.forEach(function (a) {
+        var name = (a.textContent || "").trim()
+        if (name !== folderName) return
+        if (EXPLORER_KEEP.test(a.getAttribute("href") || "")) return
+        var wrap = a.closest("li")
+        if (wrap) wrap.style.display = "none"
+      })
+    })
+  }
+  // The explorer plugin populates its list from a client-side script, so the
+  // list items may not exist when init() runs. Watch for the first population.
+  function watchExplorer() {
+    var explorer = document.querySelector(".explorer")
+    if (!explorer) return
+    decorateExplorer()
+    var mo = new MutationObserver(function () { decorateExplorer() })
+    mo.observe(explorer, { childList: true, subtree: true })
+  }
+
   // ---- Template placeholders: hide "[?]" tokens so partial notes look clean --
   function tidyPlaceholders() {
     var mount = document.querySelector("article")
@@ -710,6 +754,7 @@
     tidyPlaceholders()
     renderPortrait()
     decorateMaps()
+    watchExplorer()
     sessionInit()
   }
   if (document.readyState !== "loading") init()
