@@ -19,7 +19,7 @@
     "test": "tsx --test",
     "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1",
     "install-plugins": "npx tsx ./quartz/plugins/loader/install-plugins.ts",
-    "prebuild": "npm run install-plugins",
+    "prebuild": "node -e \"require('fs').existsSync('.quartz/plugins')||process.exit(1)\" || npm run install-plugins",
     "sync": "node sync-vault.mjs",
     "publish": "node sync-vault.mjs && git add content/ && git diff --cached --quiet || git commit -m \"sync vault $(date +%Y-%m-%d)\" && git push"
   },

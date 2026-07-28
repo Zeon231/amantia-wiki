@@ -10,7 +10,13 @@ tsconfig.tsbuildinfo
 /private/
 .replit
 replit.nix
-.quartz/
+# .quartz/ plugins are VENDORED into the repo to skip the ~3-5 min
+# install-plugins step on every Cloudflare Pages build. Nested build
+# artifacts stay ignored; the disabled `latex` plugin (29 MB) is skipped
+# so it doesn't bloat the commit.
+.quartz/plugins/*/node_modules/
+.quartz/plugins/*/.git/
+.quartz/plugins/latex/
 quartz/cli/tui/dist/
 Thumbs.db
 *.log
