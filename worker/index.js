@@ -196,6 +196,89 @@ async function handleApi(path, request, env, auth) {
     })
   }
 
+  // ---- Image/asset upload (admin-only, staged) ----
+  // Accepts:
+  //   POST /api/upload   Content-Type: multipart/form-data
+  //     fields: file (binary), path (content-relative dir), name (filename), overwrite ("true"|"false")
+  //   POST /api/upload   Content-Type: application/json
+  //     body: { url, path, name?, overwrite? }
+  // Returns { ok, path, url, existed, sha } on success, { error, existing_sha } on conflict.
+  if (path === "/api/upload" && m === "POST") {
+    const ctype = (request.headers.get("Content-Type") || "").toLowerCase()
+    let bytes, filename, targetDir, overwrite, fromUrl = null
+    if (ctype.startsWith("multipart/form-data")) {
+      const form = await request.formData().catch(() => null)
+      if (!form) return json({ error: "bad multipart body" }, 400)
+      const file = form.get("file")
+      if (!file || typeof file === "string") return json({ error: "no file uploaded" }, 400)
+      bytes = new Uint8Array(await file.arrayBuffer())
+      filename = String(form.get("name") || file.name || "image").trim()
+      targetDir = String(form.get("path") || "").trim()
+      overwrite = String(form.get("overwrite") || "") === "true"
+    } else if (ctype.startsWith("application/json")) {
+      const body = await request.json().catch(() => null)
+      if (!body || !body.url) return json({ error: "missing url in JSON body" }, 400)
+      try {
+        const u = new URL(body.url)
+        if (u.protocol !== "https:" && u.protocol !== "http:") return json({ error: "url must be http(s)" }, 400)
+      } catch { return json({ error: "invalid url" }, 400) }
+      const upstream = await fetch(body.url, { redirect: "follow" })
+      if (!upstream.ok) return json({ error: "fetch failed: " + upstream.status }, 502)
+      const uct = (upstream.headers.get("Content-Type") || "").toLowerCase()
+      if (!uct.startsWith("image/")) return json({ error: "URL did not return an image (Content-Type: " + uct + ")" }, 400)
+      bytes = new Uint8Array(await upstream.arrayBuffer())
+      filename = String(body.name || body.url.split("/").pop().split("?")[0] || "image").trim()
+      targetDir = String(body.path || "").trim()
+      overwrite = !!body.overwrite
+      fromUrl = body.url
+    } else {
+      return json({ error: "expected multipart/form-data or application/json" }, 415)
+    }
+    // Validate extension
+    const m2 = /\.(jpg|jpeg|png|gif|webp|svg|avif)$/i.exec(filename)
+    if (!m2) return json({ error: "unsupported image format (allowed: jpg, jpeg, png, gif, webp, svg, avif)" }, 400)
+    const ext = m2[1].toLowerCase()
+    // Slugify filename (keep extension)
+    const stem = filename.slice(0, filename.length - m2[0].length)
+    const slug = stem.toLowerCase().replace(/['"]+/g, "").replace(/[^a-z0-9._-]+/g, "-").replace(/^-+|-+$/g, "").replace(/-{2,}/g, "-") || "image"
+    const safeName = slug + "." + ext
+    // Validate/normalize target directory
+    let dir = targetDir.replace(/^\/+|\/+$/g, "")
+    if (!dir.startsWith("content/")) dir = "content/" + dir
+    if (dir.indexOf("..") !== -1) return json({ error: "path traversal not allowed" }, 400)
+    const fullPath = dir + "/" + safeName
+    // Size sanity — reject > 25MB
+    if (bytes.length > 25 * 1024 * 1024) return json({ error: "file too large (" + Math.round(bytes.length/1024/1024) + " MB > 25 MB max)" }, 400)
+    // Check existence to detect conflict
+    await ensureStagingExists(env).catch(() => null)
+    const existingR = await ghContents(env, "GET", fullPath, null, STAGING_BRANCH)
+    let existingSha = null
+    if (existingR.status === 200) {
+      const j = await existingR.json()
+      existingSha = j.sha
+      if (!overwrite) {
+        return json({ error: "exists", path: fullPath, existing_sha: existingSha,
+          message: "A file already exists at " + fullPath + ". Overwrite it or upload with a different name." }, 409)
+      }
+    } else if (existingR.status !== 404) {
+      return json({ error: "github check: " + existingR.status }, 502)
+    }
+    // Base64-encode and commit via Contents API
+    const b64 = bytesToBase64(bytes)
+    const commitMsg = (fromUrl ? "web upload (url): " : "web upload: ") + fullPath + " (by " + auth.user + ")"
+    const payload = { message: commitMsg.slice(0, 200), content: b64, branch: STAGING_BRANCH }
+    if (existingSha) payload.sha = existingSha
+    const putR = await ghContents(env, "PUT", fullPath, payload)
+    if (!putR.ok) return json({ error: "github " + putR.status, detail: (await putR.text()).slice(0, 200) }, 502)
+    const data = await putR.json()
+    return json({
+      ok: true, staged: true, existed: !!existingSha, path: fullPath,
+      // Slugified public URL: content/foo/bar.png → /foo/bar.png (lowercased, spaces → -)
+      url: "/" + dir.replace(/^content\//, "").toLowerCase().replace(/ /g, "-") + "/" + safeName,
+      sha: data.content && data.content.sha,
+    })
+  }
+
   if (path === "/api/page" && m === "DELETE") {
     const body = await request.json().catch(() => null)
     if (!body || !body.sha) return json({ error: "sha required to delete" }, 400)
@@ -348,6 +431,17 @@ function b64encode(str) {
   const bytes = new TextEncoder().encode(str)
   let bin = ""
   for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i])
+  return btoa(bin)
+}
+
+// Encode a Uint8Array to base64. Chunked to avoid "Maximum call stack" on
+// String.fromCharCode(...bytes) for large binaries (25MB uploads).
+function bytesToBase64(bytes) {
+  let bin = ""
+  const chunk = 0x8000 // 32KB per chunk
+  for (let i = 0; i < bytes.length; i += chunk) {
+    bin += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk))
+  }
   return btoa(bin)
 }
 

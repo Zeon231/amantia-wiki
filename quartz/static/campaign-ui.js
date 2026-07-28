@@ -88,6 +88,23 @@
       ".location-map .map-edit-btn{position:absolute;top:10px;right:10px;background:rgba(20,20,25,.85);color:#fff;text-decoration:none;padding:5px 10px;border-radius:6px;font:600 12px system-ui,sans-serif;line-height:1.2;opacity:.6;transition:opacity .12s;z-index:5;}",
       ".location-map:hover .map-edit-btn{opacity:1;}",
       /* -- portrait: floated headshot rendered from frontmatter -- */
+      /* -- image uploader modal -- */
+      ".ax-upload .tabs{display:flex;gap:6px;margin-bottom:12px;border-bottom:1px solid var(--lightgray)}",
+      ".ax-upload .tab{background:transparent;border:0;padding:8px 12px;cursor:pointer;color:var(--gray);font-size:13px;border-bottom:2px solid transparent;margin-bottom:-1px}",
+      ".ax-upload .tab.on{color:var(--secondary);border-bottom-color:var(--secondary);font-weight:600}",
+      ".ax-upload .row-mode{margin:8px 0}",
+      ".ax-upload .row-mode input[type='url']{background:#0d0d12;color:#eee;border:1px solid #444;border-radius:6px;padding:8px 10px;font-size:13px}",
+      ".ax-upload .row-mode input[type='file']{color:var(--darkgray);font-size:13px}",
+      ".ax-upload #ax-preview{margin:12px 0;min-height:60px;display:flex;flex-direction:column;align-items:center;gap:6px}",
+      ".ax-upload #ax-preview img{max-width:280px;max-height:180px;border-radius:6px;border:1px solid var(--lightgray)}",
+      ".ax-upload #ax-preview .meta{color:var(--gray);font-size:12px;text-align:center}",
+      ".ax-upload .fields{display:flex;flex-direction:column;gap:8px;margin-top:10px}",
+      ".ax-upload .fields label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:.4px}",
+      ".ax-upload .fields label small{text-transform:none;color:var(--gray);opacity:.7;font-weight:400}",
+      ".ax-upload .fields input[type='text'],.ax-upload .fields input:not([type]){background:#0d0d12;color:#eee;border:1px solid #444;border-radius:6px;padding:6px 9px;font:400 13px ui-monospace,monospace}",
+      ".ax-upload .fields label.alt-row{flex-direction:row;align-items:flex-start;gap:8px;font-size:12px;text-transform:none;letter-spacing:normal;color:var(--darkgray);font-weight:400}",
+      ".ax-upload .fields label.alt-row input{margin-top:2px}",
+      ".ax-upload .fields label.alt-row code{background:var(--lightgray);padding:0 4px;border-radius:3px;font-size:11px}",
       ".ax-portrait{float:right;max-width:220px;width:35%;margin:0 0 1rem 1.2rem;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.25);object-fit:cover;}",
       "@media (max-width:640px){.ax-portrait{float:none;display:block;width:100%;max-width:none;margin:0 0 1rem;}}",
     ].join("\n")
@@ -394,6 +411,7 @@
       '<span class="path">' + esc(path) + '</span></header>' +
       '<textarea spellcheck="false" placeholder="Loading…"></textarea>' +
       '<footer>' + (isNew ? "" : '<button class="ax-btn ax-del">Delete</button>') +
+      '<button class="ax-btn ax-img">🖼 Insert image</button>' +
       '<span class="status"></span><button class="ax-btn ax-cancel">Cancel</button>' +
       '<button class="ax-btn ax-save">Save</button></footer></div>'
     document.body.appendChild(ov)
@@ -424,6 +442,17 @@
       }).catch(function () { status.textContent = "Save request failed." })
     })
 
+    // 🖼 Insert image — opens upload modal, inserts markdown at cursor on success
+    ov.querySelector(".ax-img").addEventListener("click", function () {
+      openImageUploader(path, function (mdSnippet) {
+        var start = ta.selectionStart, end = ta.selectionEnd
+        ta.value = ta.value.slice(0, start) + mdSnippet + ta.value.slice(end)
+        ta.selectionStart = ta.selectionEnd = start + mdSnippet.length
+        ta.focus()
+        status.textContent = "✓ Image inserted at cursor. Save the page to commit both."
+      })
+    })
+
     var del = ov.querySelector(".ax-del")
     if (del) del.addEventListener("click", function () {
       if (!confirm("Delete this page? (Staged — takes effect on next deploy.)")) return
@@ -437,6 +466,179 @@
         else { status.textContent = "Delete failed: " + (d.error || "unknown") }
       }).catch(function () { status.textContent = "Delete request failed." })
     })
+  }
+
+  // ---- Image uploader ------------------------------------------------------
+  // Guess a sensible default destination folder based on the current note's path.
+  function guessImageDir(notePath) {
+    var p = (notePath || "").replace(/^content\//, "")
+    if (/^02 - People\//i.test(p)) return "02 - People/Portraits"
+    if (/^04 - Species\//i.test(p)) return "04 - Species/Species Images"
+    if (/^07 - Items & Equipment\//i.test(p)) return "07 - Items & Equipment/Item Images"
+    if (/Cities & Locations\//i.test(p) || /01 - World\//i.test(p)) return "01 - World/Maps"
+    // Fallback: alongside the note, in an /images/ subfolder
+    var dir = p.split("/").slice(0, -1).join("/") || "_media"
+    return dir + "/images"
+  }
+  function slugifyName(filename) {
+    var m = /\.(jpg|jpeg|png|gif|webp|svg|avif)$/i.exec(filename || "")
+    if (!m) return filename || ""
+    var stem = filename.slice(0, filename.length - m[0].length)
+    var slug = stem.toLowerCase().replace(/['"]+/g, "").replace(/[^a-z0-9._-]+/g, "-").replace(/^-+|-+$/g, "").replace(/-{2,}/g, "-") || "image"
+    return slug + "." + m[1].toLowerCase()
+  }
+
+  function openImageUploader(notePath, onInsert) {
+    var ov = document.createElement("div")
+    ov.className = "ax-overlay"
+    ov.innerHTML =
+      '<div class="ax-modal ax-admin ax-upload"><header><b>🖼 Insert image</b></header>' +
+      '<div class="ax-body">' +
+        '<div class="tabs"><button class="tab tab-file on" data-mode="file">📁 From PC</button>' +
+        '<button class="tab tab-url" data-mode="url">🔗 From URL</button></div>' +
+        '<div class="row-mode row-mode-file"><input type="file" id="ax-file" accept="image/*"/></div>' +
+        '<div class="row-mode row-mode-url" style="display:none"><input type="url" id="ax-url" placeholder="https://example.com/image.jpg" style="width:100%"/></div>' +
+        '<div class="preview" id="ax-preview"></div>' +
+        '<div class="fields">' +
+          '<label>Destination folder<input id="ax-dir" placeholder="content-relative folder"/></label>' +
+          '<label>File name <small>(auto-slugified)</small><input id="ax-name" placeholder="picture.jpg"/></label>' +
+          '<label class="alt-row"><input type="checkbox" id="ax-portrait-set"/> Set as this page\'s portrait (updates <code>portrait:</code> frontmatter — for NPC/character/monster pages)</label>' +
+        '</div>' +
+        '<p class="hint">The upload commits to the <code>staging</code> branch. Deploy from ⚙ Admin → Deploy Changes to publish. Max 25 MB. Formats: jpg, png, gif, webp, svg, avif.</p>' +
+      '</div>' +
+      '<footer><span class="status"></span>' +
+        '<button class="ax-btn ax-cancel">Cancel</button>' +
+        '<button class="ax-btn ax-save" disabled>Upload</button>' +
+      '</footer></div>'
+    document.body.appendChild(ov)
+    var body = ov.querySelector(".ax-body")
+    var status = ov.querySelector(".status")
+    var uploadBtn = ov.querySelector(".ax-save")
+    var fileIn = body.querySelector("#ax-file")
+    var urlIn = body.querySelector("#ax-url")
+    var dirIn = body.querySelector("#ax-dir")
+    var nameIn = body.querySelector("#ax-name")
+    var portraitCk = body.querySelector("#ax-portrait-set")
+    var preview = body.querySelector("#ax-preview")
+    var mode = "file"
+
+    dirIn.value = guessImageDir(notePath)
+
+    function close() { ov.remove() }
+    ov.querySelector(".ax-cancel").addEventListener("click", close)
+    ov.addEventListener("click", function (e) { if (e.target === ov) close() })
+
+    // Tab switching
+    body.querySelectorAll(".tab").forEach(function (t) {
+      t.addEventListener("click", function () {
+        mode = t.dataset.mode
+        body.querySelectorAll(".tab").forEach(function (x) { x.classList.toggle("on", x === t) })
+        body.querySelector(".row-mode-file").style.display = mode === "file" ? "" : "none"
+        body.querySelector(".row-mode-url").style.display = mode === "url" ? "" : "none"
+        refreshReady()
+      })
+    })
+
+    // File-picker preview
+    fileIn.addEventListener("change", function () {
+      var f = fileIn.files && fileIn.files[0]
+      preview.innerHTML = ""
+      if (f) {
+        nameIn.value = f.name
+        nameIn.placeholder = slugifyName(f.name)
+        var img = document.createElement("img")
+        img.src = URL.createObjectURL(f)
+        preview.appendChild(img)
+        var meta = document.createElement("div"); meta.className = "meta"
+        meta.textContent = f.name + " · " + (f.size / 1024 < 1024 ? Math.round(f.size / 1024) + " KB" : (f.size / 1024 / 1024).toFixed(1) + " MB")
+        preview.appendChild(meta)
+      }
+      refreshReady()
+    })
+    // URL preview (best-effort — will fail silently on CORS)
+    urlIn.addEventListener("change", function () {
+      preview.innerHTML = ""
+      var u = urlIn.value.trim()
+      if (u) {
+        // Guess filename from URL
+        try {
+          var p = new URL(u).pathname.split("/").pop().split("?")[0]
+          if (p) nameIn.value = p
+        } catch (e) {}
+        var img = document.createElement("img")
+        img.src = u
+        img.onerror = function () { preview.innerHTML = '<div class="meta">Preview blocked (usually OK — the server will fetch it directly)</div>' }
+        preview.appendChild(img)
+      }
+      refreshReady()
+    })
+
+    function refreshReady() {
+      var ready = mode === "file" ? !!(fileIn.files && fileIn.files[0]) : !!urlIn.value.trim()
+      uploadBtn.disabled = !ready
+    }
+    refreshReady()
+
+    function doUpload(overwrite) {
+      status.textContent = overwrite ? "Overwriting…" : "Uploading…"
+      uploadBtn.disabled = true
+      var finalName = slugifyName(nameIn.value || (fileIn.files && fileIn.files[0] && fileIn.files[0].name) || "")
+      var finalDir = (dirIn.value || guessImageDir(notePath)).trim()
+      var req
+      if (mode === "file") {
+        var fd = new FormData()
+        fd.append("file", fileIn.files[0])
+        fd.append("name", finalName)
+        fd.append("path", finalDir)
+        fd.append("overwrite", overwrite ? "true" : "false")
+        req = fetch("/api/upload", { method: "POST", credentials: "same-origin", body: fd })
+      } else {
+        req = fetch("/api/upload", {
+          method: "POST", credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: urlIn.value.trim(), name: finalName, path: finalDir, overwrite: !!overwrite }),
+        })
+      }
+      req.then(function (r) { return r.json().then(function (d) { d._status = r.status; return d }) })
+        .then(function (d) {
+          if (d._status === 409 && d.error === "exists") {
+            // Ask user: overwrite, rename with suffix, or cancel
+            var choice = window.confirm(
+              "That file already exists at:\n\n  " + d.path + "\n\n" +
+              "OK  = overwrite it\n" +
+              "Cancel = auto-suffix (upload as a new name like -2)"
+            )
+            if (choice === true) return doUpload(true)
+            // Suffix: bump filename with -2, -3, ... until we don't get 409
+            var base = finalName.replace(/(\.[^.]+)$/, "")
+            var ext = (finalName.match(/(\.[^.]+)$/) || [""])[0]
+            var n = 2
+            nameIn.value = base + "-" + n + ext
+            uploadBtn.disabled = false
+            status.textContent = "Renamed to " + nameIn.value + ". Click Upload again."
+            return
+          }
+          if (d.ok) {
+            status.textContent = "✓ Staged: " + d.path
+            // Update portrait: frontmatter if requested
+            if (portraitCk.checked) {
+              // Insert as portrait frontmatter — caller handles via callback with special marker
+              onInsert("\n<!-- PORTRAIT SET: " + d.url + " -->\n")
+              alert("Uploaded! Note: this page's frontmatter `portrait:` field was NOT automatically edited (frontmatter edits from the body editor are risky). To set the portrait, change `portrait:` in the frontmatter to:\n\n  portrait: \"" + d.path.replace(/^content\//, "") + "\"")
+            } else {
+              // Insert markdown at cursor
+              var alt = nameIn.value.replace(/\.[^.]+$/, "").replace(/-/g, " ")
+              onInsert("![" + alt + "](" + d.url + ")")
+            }
+            setTimeout(close, 1200)
+          } else {
+            status.textContent = "Upload failed: " + (d.error || "unknown") + (d.detail ? " — " + d.detail : "")
+            uploadBtn.disabled = false
+          }
+        })
+        .catch(function (e) { status.textContent = "Upload error: " + e.message; uploadBtn.disabled = false })
+    }
+    uploadBtn.addEventListener("click", function () { doUpload(false) })
   }
 
   // ---- Portrait: render <img> from the note's `portrait:` frontmatter field.
