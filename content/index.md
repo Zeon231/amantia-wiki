@@ -8,7 +8,7 @@ modified: 2026-07-28T12:50:06.434Z
 
 Welcome, travelers. This is the living wiki for our campaign — everything the party has learned about the world, its people, and its gods lives here.
 
-<div class="location-map"><img src="/01---world/maps/Amantia.jpg" alt="Map of Amantia" /></div>
+<div class="location-map"><img src="/01 - World/Maps/Map of Amantia.jpg" alt="Map of Amantia" /></div>
 
 <div id="campaign-home"></div>
 
