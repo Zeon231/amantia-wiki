@@ -6,6 +6,8 @@ modified: 2026-07-28T12:50:06.434Z
 
 # The World of Amantia
 
+![Map of Amantia](/_media/images/map-of-amantia.jpg)
+
 Welcome, travelers. This is the living wiki for our campaign — everything the party has learned about the world, its people, and its gods lives here.
 
 <div class="location-map"><img src="/01---world/maps/north_rose_subcontinent.jpg" alt="Map of the North Rose Subcontinent" />
