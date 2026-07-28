@@ -9,7 +9,7 @@ occupation: "Familiar (per [[Alexander]]'s 'vampire familiar program')"
 faction: "Party-adjacent (recruited from [[The White Crown]]'s kobold band)"
 
 editLevel: 1
-portrait: 
+portrait: "02 - People/Portraits/jeb.jpg"
 modified: 2026-07-28T12:53:40.830Z
 ---
 
