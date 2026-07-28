@@ -78,6 +78,15 @@
       ".ax-admin details{margin:.6rem 0}",
       ".ax-admin details summary{cursor:pointer;color:var(--secondary);font-size:13px}",
       ".ax-admin pre{background:#0d0d12;color:#eee;padding:8px;border-radius:6px;font-size:11px;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow:auto}",
+      /* -- .location-map (generic map with clickable zone overlays; used by Map Snippet template) -- */
+      ".location-map{position:relative;max-width:900px;margin:1rem auto;line-height:0;}",
+      ".location-map img{width:100%;height:auto;display:block;border-radius:8px;}",
+      ".location-map a.zone{box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;}",
+      ".location-map a.zone .lbl{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:5px;white-space:nowrap;font-size:12px;background:rgba(20,20,25,.88);color:#fff;padding:2px 7px;border-radius:4px;opacity:0;transition:opacity .12s;pointer-events:none;line-height:1.3;}",
+      ".location-map a.zone:hover{background:rgba(232,176,75,.25)!important;border-color:#e8b04b!important;}",
+      ".location-map a.zone:hover .lbl{opacity:1;}",
+      ".location-map .map-edit-btn{position:absolute;top:10px;right:10px;background:rgba(20,20,25,.85);color:#fff;text-decoration:none;padding:5px 10px;border-radius:6px;font:600 12px system-ui,sans-serif;line-height:1.2;opacity:.6;transition:opacity .12s;z-index:5;}",
+      ".location-map:hover .map-edit-btn{opacity:1;}",
     ].join("\n")
     document.head.appendChild(s)
   }
@@ -223,6 +232,9 @@
     document.body.appendChild(bar)
     document.getElementById("ax-logout").addEventListener("click", logout)
     if (WHO.canEdit) addAdminTools()
+    // Re-run map decoration now that admin state is known (adds edit button)
+    document.querySelectorAll(".location-map[data-ax-decorated]").forEach(function (m) { m.removeAttribute("data-ax-decorated") })
+    decorateMaps()
   }
   function addAdminTools() {
     if (document.getElementById("amantia-admin-bar")) return
@@ -424,6 +436,25 @@
     })
   }
 
+  // ---- Location maps: admin gets an "Edit zones" overlay on any .location-map
+  function decorateMaps() {
+    var maps = document.querySelectorAll(".location-map:not([data-ax-decorated])")
+    if (!maps.length) return
+    var sp = (document.querySelector('meta[name="source-path"]') || {}).content
+    var isAdmin = WHO && WHO.canEdit
+    maps.forEach(function (m) {
+      m.setAttribute("data-ax-decorated", "1")
+      if (!isAdmin || !sp) return
+      var btn = document.createElement("a")
+      btn.className = "map-edit-btn"
+      btn.href = "/static/map-zone-editor?" + new URLSearchParams({ target: sp })
+      btn.target = "_blank"
+      btn.rel = "noopener"
+      btn.textContent = "✏️ Edit zones"
+      m.appendChild(btn)
+    })
+  }
+
   // ---- Template placeholders: hide "[?]" tokens so partial notes look clean --
   function tidyPlaceholders() {
     var mount = document.querySelector("article")
@@ -450,6 +481,7 @@
     addBookmarkButton()
     renderHome()
     tidyPlaceholders()
+    decorateMaps()
     sessionInit()
   }
   if (document.readyState !== "loading") init()

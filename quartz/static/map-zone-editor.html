@@ -3,82 +3,124 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Brindelvik — Map Zone Editor</title>
+<title>Map Zone Editor</title>
 <style>
   :root { color-scheme: dark; }
   body { margin:0; background:#15151a; color:#eee; font:14px/1.5 system-ui, sans-serif; }
   .wrap { max-width:1000px; margin:0 auto; padding:16px; }
   h1 { color:#e8b04b; font-size:20px; margin:.2rem 0; }
+  h1 small { color:#aaa; font-size:13px; font-weight:400; margin-left:.6rem; }
   .hint { color:#aaa; font-size:13px; }
   .mapbox { position:relative; user-select:none; line-height:0; border-radius:8px; margin-top:12px; }
-  .mapbox img { width:100%; height:auto; display:block; border-radius:8px; }
+  .mapbox img { width:100%; height:auto; display:block; border-radius:8px; cursor:crosshair; }
   .zbox { position:absolute; box-sizing:border-box; border:2px solid #e8b04b; background:rgba(232,176,75,.18); border-radius:6px; cursor:move; }
   .zbox .ztag { position:absolute; left:0; top:-19px; font-size:11px; line-height:1.4; background:rgba(0,0,0,.82); color:#fff; padding:0 5px; border-radius:3px; white-space:nowrap; pointer-events:none; }
   .zbox .zdel { position:absolute; right:-9px; top:-9px; width:18px; height:18px; border-radius:50%; background:#c0392b; color:#fff; font:bold 12px/18px sans-serif; text-align:center; cursor:pointer; }
   .zbox .zres { position:absolute; right:-6px; bottom:-6px; width:13px; height:13px; background:#e8b04b; border:2px solid #fff; border-radius:2px; cursor:se-resize; }
+  #draw{ position:absolute; box-sizing:border-box; background:rgba(232,176,75,.22); border:2px dashed #e8b04b; border-radius:6px; display:none; pointer-events:none; }
   .bar { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
   button { background:#e8b04b; color:#111; border:0; border-radius:6px; padding:6px 12px; font-weight:600; cursor:pointer; }
   button.ghost { background:#2a2a33; color:#eee; }
+  button:disabled { opacity:.5; cursor:not-allowed; }
   .row { display:flex; gap:6px; align-items:center; margin:5px 0; }
   input { background:#0d0d12; color:#eee; border:1px solid #444; border-radius:4px; padding:4px 7px; font-size:12px; }
   .lbl-in { width:170px; } .href-in { flex:1; min-width:160px; }
   .row button { background:#3a2a2a; color:#f0b0b0; padding:3px 9px; }
-  textarea { width:100%; height:140px; background:#0d0d12; color:#9fe0a0; font-family:ui-monospace,monospace; font-size:12px; border:1px solid #444; border-radius:6px; padding:10px; margin-top:8px; box-sizing:border-box; }
+  textarea { width:100%; height:120px; background:#0d0d12; color:#9fe0a0; font-family:ui-monospace,monospace; font-size:12px; border:1px solid #444; border-radius:6px; padding:10px; margin-top:8px; box-sizing:border-box; }
   code { background:#0d0d12; padding:1px 5px; border-radius:4px; color:#e8b04b; }
+  .err { color:#f0b0b0; background:#3a2a2a; padding:10px 14px; border-radius:8px; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>Brindelvik — Map Zone Editor</h1>
-  <p class="hint">Drag a box to <b>move</b>, drag its corner to <b>resize</b>, click <b>×</b> to delete, <b>＋ Add zone</b> for a new one. Set each zone's label and link below. When done, <b>Copy HTML</b> and paste it into <code>Brindelvik.md</code> — between <code>&lt;img …&gt;</code> and <code>&lt;/div&gt;</code>, replacing the existing <code>&lt;a class="zone"&gt;</code> lines — then re-sync.</p>
+  <h1>Map Zone Editor <small id="target-label">— loading…</small></h1>
+  <p class="hint">
+    Drag a box to <b>move</b>, drag its corner to <b>resize</b>, click <b>×</b> to delete,
+    <b>click-drag</b> on empty map to draw a new zone, or use <b>＋ Add zone</b>.
+    Set each zone's label and link below.
+    <b>Save to wiki</b> commits back to this page (staged — deploy from ⚙ Admin).
+    <b>Copy HTML</b> gives you the raw block if you'd rather paste manually.
+  </p>
 
-  <div class="mapbox" id="mapbox">
-    <img id="map" src="/01---world/maps/brindelvik.png" alt="Brindelvik map" draggable="false" />
+  <div id="loader" class="hint" style="margin-top:14px">Loading map…</div>
+  <div id="editor" style="display:none">
+    <div class="mapbox" id="mapbox">
+      <img id="map" alt="Map" draggable="false" />
+      <div id="draw"></div>
+    </div>
+
+    <div class="bar">
+      <button id="add">＋ Add zone</button>
+      <button id="savewiki">💾 Save to wiki</button>
+      <button id="copy" class="ghost">Copy HTML</button>
+      <button id="reload" class="ghost">Reload from wiki</button>
+      <span class="hint" id="status"></span>
+    </div>
+
+    <div id="list"></div>
+    <textarea id="out" readonly></textarea>
   </div>
-
-  <div class="bar">
-    <button id="add">＋ Add zone</button>
-    <button id="savewiki">💾 Save to wiki</button>
-    <button id="copy" class="ghost">Copy HTML</button>
-    <button id="reset" class="ghost">Reset to defaults</button>
-    <span class="hint" id="status"></span>
-  </div>
-
-  <div id="list"></div>
-  <textarea id="out" readonly></textarea>
 </div>
 
 <script>
 (function(){
-  var LS = 'brindelvik-zones-v1';
-  // Defaults mirror the zones currently in Brindelvik.md
-  var DEFAULTS = [
-    { href:'/01---world/cities--and--locations/🏘-brindelvik/aldermans-hall',            label:"Alderman's Hall (12)",      left:45.5, top:44.5, width:7,   height:9.5 },
-    { href:'/01---world/cities--and--locations/🏘-brindelvik/master-velriks-house', label:"Master Velrik's House (21)", left:4.5,  top:17.5, width:6.5, height:9 },
-    { href:'/01---world/cities--and--locations/🏘-brindelvik/butcher',                   label:"Butcher (4)",                left:78.5, top:31,   width:6.5, height:9 },
-  ];
-  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-  function r(n){return Math.round(n*10)/10;}
-  function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+  var params = new URLSearchParams(location.search);
+  var TARGET = params.get('target'); // e.g. "content/01 - World/Cities & Locations/🏘 Brindelvik/Brindelvik.md"
 
+  var loader = document.getElementById('loader');
+  var editor = document.getElementById('editor');
   var mapbox = document.getElementById('mapbox');
   var img = document.getElementById('map');
+  var drawEl = document.getElementById('draw');
   var listEl = document.getElementById('list');
   var out = document.getElementById('out');
   var status = document.getElementById('status');
+  var savewiki = document.getElementById('savewiki');
+  var targetLabel = document.getElementById('target-label');
 
-  var zones;
-  try { zones = JSON.parse(localStorage.getItem(LS)) || null; } catch(e){}
-  if (!zones || !zones.length) zones = JSON.parse(JSON.stringify(DEFAULTS));
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function r(n){return Math.round(n*10)/10;}
+  function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+  function err(msg){ loader.innerHTML = '<div class="err">' + esc(msg) + '</div>'; }
 
-  function save(){ try{ localStorage.setItem(LS, JSON.stringify(zones)); }catch(e){} }
+  if (!TARGET) { err('Open this editor from a wiki page: it needs a ?target=<content path> query parameter.'); return; }
+  targetLabel.textContent = '— ' + TARGET.replace(/^content\//, '');
+
+  var noteContent = null, noteSha = null, zones = [];
+
+  // Regex to isolate the map block in the note. Captures: (opening_div_img)(zones)(closing_div)
+  var MAP_BLOCK_RE = /(<div class="location-map"[^>]*>\s*<img[^>]*>)([\s\S]*?)(<\/div>)/;
+
+  function parseMap(md) {
+    var m = md.match(MAP_BLOCK_RE);
+    if (!m) return null;
+    // Extract image src
+    var srcM = m[1].match(/<img[^>]*src="([^"]+)"/);
+    // Extract zones from the middle segment
+    var zoneRe = /<a class="zone"[^>]*href="([^"]+)"[^>]*style="([^"]+)"[^>]*>\s*<span class="lbl">([\s\S]*?)<\/span>\s*<\/a>/g;
+    var zs = [], zm;
+    while ((zm = zoneRe.exec(m[2])) !== null) {
+      var style = zm[2];
+      var pos = {};
+      ['left','top','width','height'].forEach(function(k){
+        var pm = new RegExp(k + ':([0-9.]+)%').exec(style);
+        pos[k] = pm ? parseFloat(pm[1]) : 0;
+      });
+      zs.push({
+        href: zm[1],
+        label: zm[3].replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"'),
+        left: pos.left, top: pos.top, width: pos.width, height: pos.height,
+      });
+    }
+    return { imgSrc: srcM ? srcM[1] : null, zones: zs };
+  }
+
   function anchorHTML(z){
     return '  <a class="zone" href="'+esc(z.href)+'" style="position:absolute;left:'+r(z.left)+'%;top:'+r(z.top)+'%;width:'+r(z.width)+'%;height:'+r(z.height)+'%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">'+esc(z.label)+'</span></a>';
   }
   function renderExport(){ out.value = zones.map(anchorHTML).join('\n'); }
 
   function render(){
-    // boxes
     Array.prototype.forEach.call(mapbox.querySelectorAll('.zbox'), function(e){ e.remove(); });
     zones.forEach(function(z, i){
       var b = document.createElement('div');
@@ -87,101 +129,147 @@
       b.innerHTML = '<span class="ztag">'+esc(z.label || ('zone '+(i+1)))+'</span><span class="zdel">×</span><span class="zres"></span>';
       mapbox.appendChild(b);
     });
-    // list rows
     listEl.innerHTML = zones.map(function(z,i){
       return '<div class="row" data-i="'+i+'"><input class="lbl-in" value="'+esc(z.label)+'" placeholder="label"/>'+
              '<input class="href-in" value="'+esc(z.href)+'" placeholder="/01---world/cities--and--locations/..."/>'+
              '<button class="del">delete</button></div>';
     }).join('');
-    renderExport(); save();
+    renderExport();
+  }
+
+  function loadTarget(){
+    status.textContent = ''; savewiki.disabled = true;
+    return fetch('/api/page?path=' + encodeURIComponent(TARGET), { credentials:'same-origin' })
+      .then(function(res){ return res.json(); })
+      .then(function(g){
+        if (g.error) throw new Error(g.error);
+        noteContent = g.content; noteSha = g.sha;
+        var parsed = parseMap(g.content);
+        if (!parsed) throw new Error('No <div class="location-map"> block found in this page. Add the Map Snippet template first.');
+        if (!parsed.imgSrc) throw new Error('Map block found but <img> has no src.');
+        img.src = parsed.imgSrc;
+        zones = parsed.zones;
+        loader.style.display = 'none';
+        editor.style.display = '';
+        render();
+        savewiki.disabled = false;
+      })
+      .catch(function(e){ err(e.message); });
   }
 
   document.getElementById('add').addEventListener('click', function(){
-    zones.push({ href:'/01---world/cities--and--locations/', label:'New zone', left:45, top:45, width:8, height:10 });
+    zones.push({ href:'/', label:'New zone', left:45, top:45, width:8, height:10 });
     render();
-  });
-  document.getElementById('reset').addEventListener('click', function(){
-    if(!confirm('Reset all zones to the current Brindelvik.md defaults?')) return;
-    zones = JSON.parse(JSON.stringify(DEFAULTS)); render();
   });
   document.getElementById('copy').addEventListener('click', function(){
     out.select(); try{ navigator.clipboard.writeText(out.value); }catch(e){ document.execCommand('copy'); }
-    status.textContent = 'Copied! Paste into Brindelvik.md, then re-sync.';
+    status.textContent = 'HTML copied. Paste between <img> and </div> in the target note.';
     setTimeout(function(){ status.textContent=''; }, 2500);
+  });
+  document.getElementById('reload').addEventListener('click', function(){
+    if (!confirm('Discard local changes and reload zones from the wiki?')) return;
+    loadTarget();
   });
   listEl.addEventListener('input', function(e){
     var row = e.target.closest('.row'); if(!row) return; var i = +row.dataset.i;
     if (e.target.classList.contains('lbl-in')) zones[i].label = e.target.value;
     if (e.target.classList.contains('href-in')) zones[i].href = e.target.value;
     var tag = mapbox.querySelector('.zbox[data-i="'+i+'"] .ztag'); if(tag) tag.textContent = zones[i].label || ('zone '+(i+1));
-    renderExport(); save();
+    renderExport();
   });
   listEl.addEventListener('click', function(e){
     if (!e.target.classList.contains('del')) return;
     var i = +e.target.closest('.row').dataset.i; zones.splice(i,1); render();
   });
 
-  var drag = null;
+  var drag = null, drawing = null;
+
+  function pct(e){
+    var rct = img.getBoundingClientRect();
+    return { x: clamp((e.clientX - rct.left) / rct.width * 100, 0, 100), y: clamp((e.clientY - rct.top) / rct.height * 100, 0, 100) };
+  }
+
   mapbox.addEventListener('mousedown', function(e){
-    var box = e.target.closest('.zbox'); if(!box) return;
-    var i = +box.dataset.i;
-    if (e.target.classList.contains('zdel')) { zones.splice(i,1); render(); return; }
-    drag = { i:i, box:box, rect:img.getBoundingClientRect(),
-      mode: e.target.classList.contains('zres') ? 'resize' : 'move',
-      sx:e.clientX, sy:e.clientY, z:Object.assign({}, zones[i]) };
-    e.preventDefault();
+    var box = e.target.closest('.zbox');
+    if (box) {
+      var i = +box.dataset.i;
+      if (e.target.classList.contains('zdel')) { zones.splice(i,1); render(); return; }
+      drag = { i:i, box:box, rect:img.getBoundingClientRect(),
+        mode: e.target.classList.contains('zres') ? 'resize' : 'move',
+        sx:e.clientX, sy:e.clientY, z:Object.assign({}, zones[i]) };
+      e.preventDefault();
+    } else if (e.target === img) {
+      var p = pct(e);
+      drawing = { sx:p.x, sy:p.y };
+      drawEl.style.cssText = 'left:'+p.x+'%;top:'+p.y+'%;width:0%;height:0%;display:block;';
+      e.preventDefault();
+    }
   });
   document.addEventListener('mousemove', function(e){
-    if(!drag) return;
-    var dx = (e.clientX - drag.sx) / drag.rect.width * 100;
-    var dy = (e.clientY - drag.sy) / drag.rect.height * 100;
-    var z = zones[drag.i];
-    if (drag.mode === 'move'){
-      z.left = clamp(drag.z.left + dx, 0, 100 - z.width);
-      z.top  = clamp(drag.z.top + dy, 0, 100 - z.height);
-    } else {
-      z.width  = clamp(drag.z.width + dx, 2, 100 - z.left);
-      z.height = clamp(drag.z.height + dy, 2, 100 - z.top);
+    if (drag) {
+      var dx = (e.clientX - drag.sx) / drag.rect.width * 100;
+      var dy = (e.clientY - drag.sy) / drag.rect.height * 100;
+      var z = zones[drag.i];
+      if (drag.mode === 'move') {
+        z.left = clamp(drag.z.left + dx, 0, 100 - z.width);
+        z.top  = clamp(drag.z.top + dy, 0, 100 - z.height);
+      } else {
+        z.width  = clamp(drag.z.width + dx, 2, 100 - z.left);
+        z.height = clamp(drag.z.height + dy, 2, 100 - z.top);
+      }
+      drag.box.style.left = z.left+'%'; drag.box.style.top = z.top+'%';
+      drag.box.style.width = z.width+'%'; drag.box.style.height = z.height+'%';
+      renderExport();
+    } else if (drawing) {
+      var p = pct(e);
+      var l = Math.min(drawing.sx, p.x), t = Math.min(drawing.sy, p.y);
+      var w = Math.abs(p.x - drawing.sx), h = Math.abs(p.y - drawing.sy);
+      drawEl.style.cssText = 'left:'+l+'%;top:'+t+'%;width:'+w+'%;height:'+h+'%;display:block;';
     }
-    drag.box.style.left = z.left+'%'; drag.box.style.top = z.top+'%';
-    drag.box.style.width = z.width+'%'; drag.box.style.height = z.height+'%';
-    renderExport();
   });
-  document.addEventListener('mouseup', function(){ if(drag){ drag=null; save(); } });
+  document.addEventListener('mouseup', function(){
+    if (drag) { drag = null; }
+    else if (drawing) {
+      var s = drawEl.style;
+      var w = parseFloat(s.width), h = parseFloat(s.height);
+      if (w >= 2 && h >= 2) {
+        zones.push({ href:'/', label:'New zone', left:parseFloat(s.left), top:parseFloat(s.top), width:w, height:h });
+        render();
+      }
+      drawEl.style.display = 'none';
+      drawing = null;
+    }
+  });
 
-  // ---- Save directly to Brindelvik.md via the admin editing API -----------
-  var SAVE_PATH = 'content/01 - World/Cities & Locations/🏘 Brindelvik/Brindelvik.md';
-  var savewiki = document.getElementById('savewiki');
   savewiki.addEventListener('click', function(){
-    savewiki.disabled = true; status.textContent = 'Loading Brindelvik.md…';
-    fetch('/api/page?path=' + encodeURIComponent(SAVE_PATH), { credentials:'same-origin' })
-      .then(function(res){ return res.json(); })
-      .then(function(g){
-        if (g.error) throw new Error(g.error);
-        var anchors = zones.map(anchorHTML).join('\n');
-        var re = /(<div class="brindelvik-map"[^>]*>\s*<img[^>]*>)([\s\S]*?)(<\/div>)/;
-        if (!re.test(g.content)) throw new Error('map block not found in Brindelvik.md');
-        var updated = g.content.replace(re, function(m, a, mid, c){ return a + '\n' + anchors + '\n' + c; });
-        return fetch('/api/page', {
-          method:'PUT', credentials:'same-origin', headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({ path: SAVE_PATH, content: updated, sha: g.sha, message: 'update Brindelvik map zones' })
-        }).then(function(res){ return res.json(); });
-      })
+    savewiki.disabled = true; status.textContent = 'Saving…';
+    // Rebuild the map block with new zones
+    var anchors = zones.map(anchorHTML).join('\n');
+    var updated = noteContent.replace(MAP_BLOCK_RE, function(_, a, _mid, c){
+      return a + '\n' + anchors + '\n' + c;
+    });
+    if (updated === noteContent) {
+      status.textContent = 'Nothing changed.'; savewiki.disabled = false; return;
+    }
+    fetch('/api/page', {
+      method:'PUT', credentials:'same-origin',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ path: TARGET, content: updated, sha: noteSha, message: 'update map zones on ' + TARGET.replace(/^content\//,'') })
+    }).then(function(res){ return res.json(); })
       .then(function(p){
-        status.textContent = (p && p.ok)
-          ? '✓ Staged — deploy from the wiki\'s ⚙ Admin menu to publish.'
-          : 'Save failed: ' + ((p && p.error) || 'unknown') + ((p && p.detail) ? ' — ' + p.detail : '');
+        if (p && p.ok) {
+          status.textContent = '✓ Staged — deploy from the wiki\'s ⚙ Admin menu to publish.';
+          if (p.sha) noteSha = p.sha;
+          noteContent = updated;
+        } else {
+          status.textContent = 'Save failed: ' + ((p && p.error) || 'unknown') + ((p && p.detail) ? ' — ' + p.detail : '');
+        }
       })
-      .catch(function(err){ status.textContent = 'Save failed: ' + err.message + ' — use Copy HTML instead.'; })
+      .catch(function(e){ status.textContent = 'Save failed: ' + e.message + ' — use Copy HTML instead.'; })
       .then(function(){ savewiki.disabled = false; });
   });
-  // Direct save is admin-only; others fall back to Copy HTML.
-  fetch('/whoami', { credentials:'same-origin' })
-    .then(function(res){ return res.ok ? res.json() : null; })
-    .then(function(w){ if (!(w && w.canEdit)) { savewiki.disabled = true; savewiki.style.opacity = .5; savewiki.title = 'Admin login required to save directly'; } })
-    .catch(function(){ savewiki.disabled = true; savewiki.style.opacity = .5; });
 
-  render();
+  loadTarget();
 })();
 </script>
 </body>
