@@ -10,9 +10,9 @@
  * Then: npm run quartz build (or git add/commit/push to trigger Cloudflare)
  */
 
-import { readdir, readFile, writeFile, mkdir, rm, copyFile, stat } from 'fs/promises'
+import { readdir, readFile, writeFile, mkdir, rm, copyFile, stat, unlink, rmdir } from 'fs/promises'
 import { existsSync } from 'fs'
-import { join, extname, dirname, basename } from 'path'
+import { join, extname, dirname, basename, relative, sep } from 'path'
 
 // Image/asset extensions to copy verbatim (maps, portraits, item art, etc.)
 const ASSET_EXTS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg', '.avif'])
@@ -150,12 +150,55 @@ function stripDmNotes(content) {
   return out.join('\n').replace(/\n{3,}/g, '\n\n')
 }
 
+// ── WEB-EDITABLE FRONTMATTER FIELDS ───────────────────────────────────────
+// Fields that can be set via the wiki's web editor / image uploader and are
+// often NOT mirrored back to the vault. When the vault version of a note has
+// these fields empty (or missing) but the currently-deployed content/ note
+// has a value, we preserve the deployed value instead of blanking it out.
+const WEB_EDITABLE_FIELDS = ['portrait', 'banner', 'banner-y']
+
+function extractFrontmatter(text) {
+  if (!text || !text.startsWith('---\n')) return null
+  const end = text.indexOf('\n---', 4)
+  if (end === -1) return null
+  const body = text.slice(4, end)
+  const fields = {}
+  for (const line of body.split('\n')) {
+    const m = line.match(/^([A-Za-z_][\w-]*)\s*:\s*(.*)$/)
+    if (m) fields[m[1]] = m[2].trim()
+  }
+  return { body, end, fields }
+}
+
+// If the vault version of `text` blanks a WEB_EDITABLE_FIELD that is set in
+// the currently-deployed `destText`, splice the deployed value back in so we
+// don't wipe a portrait/banner that was set via the web editor.
+function mergeWebEditableFields(text, destText) {
+  if (!destText) return text
+  const srcFm = extractFrontmatter(text); const destFm = extractFrontmatter(destText)
+  if (!srcFm || !destFm) return text
+  let body = srcFm.body
+  for (const key of WEB_EDITABLE_FIELDS) {
+    const srcVal = srcFm.fields[key]
+    const destVal = destFm.fields[key]
+    if (destVal && destVal !== '' && (!srcVal || srcVal === '')) {
+      const re = new RegExp('^(' + key + '\\s*:).*$', 'm')
+      if (re.test(body)) body = body.replace(re, key + ': ' + destVal)
+      else body += (body.endsWith('\n') ? '' : '\n') + key + ': ' + destVal
+    }
+  }
+  return '---\n' + body + text.slice(4 + srcFm.body.length)
+}
+
 // ── FILE SYNC ──────────────────────────────────────────────────────────────
 
 let copied = 0
 let stripped = 0
 let skipped = 0
 let assets = 0
+const writtenPaths = new Set() // relative POSIX paths under CONTENT_DIR, written this sync
+
+function relPosix(p) { return relative(CONTENT_DIR, p).split(sep).join('/') }
 
 async function syncDir(srcDir, destDir) {
   const entries = await readdir(srcDir, { withFileTypes: true })
@@ -180,6 +223,7 @@ async function syncDir(srcDir, destDir) {
       if (ASSET_EXTS.has(ext)) {
         await mkdir(dirname(destPath), { recursive: true })
         await copyFile(srcPath, destPath)
+        writtenPaths.add(relPosix(destPath))
         assets++
         continue
       }
@@ -199,9 +243,59 @@ async function syncDir(srcDir, destDir) {
       content = sanitizeFrontmatterPlaceholders(content)
       content = stampModified(content, srcStat.mtime.toISOString())
 
+      // Preserve web-editor-set frontmatter (portrait/banner) if the vault has
+      // blanked them. The web upload flow doesn't write back to the vault.
+      let destExisting = null
+      try { destExisting = await readFile(destPath, 'utf8') } catch { /* no prior */ }
+      if (destExisting) content = mergeWebEditableFields(content, destExisting)
+
       await writeFile(destPath, content, 'utf8')
+      writtenPaths.add(relPosix(destPath))
       copied++
     }
+  }
+}
+
+// Remove files under content/ that this sync did NOT write AND that used to
+// come from the vault (i.e., the file has a corresponding vault path that no
+// longer exists — a proper vault-side rename or delete). Anything without a
+// vault-side counterpart (web-uploaded images, /private/*, /_media/*) is
+// PRESERVED.
+const CLEANUP_SKIP_TOP = new Set(['private', '_media']) // never touched by sync
+let removed = 0
+async function cleanupOrphans(dir) {
+  let entries
+  try { entries = await readdir(dir, { withFileTypes: true }) } catch { return }
+  for (const e of entries) {
+    const p = join(dir, e.name)
+    const rel = relPosix(p)
+    if (e.isDirectory()) {
+      // Skip subtrees the sync doesn't own
+      const top = rel.split('/')[0]
+      if (CLEANUP_SKIP_TOP.has(top)) continue
+      await cleanupOrphans(p)
+      // Remove empty directories that came from now-deleted vault folders
+      try {
+        const remaining = await readdir(p)
+        if (!remaining.length) await rmdir(p)
+      } catch { /* not empty */ }
+      continue
+    }
+    if (!e.isFile()) continue
+    if (writtenPaths.has(rel)) continue
+    if (rel === 'index.md') continue // hand-written home page
+    // If the corresponding vault path still exists, the sync SKIPPED it
+    // deliberately (private/DM notes/templates) — do not touch.
+    if (existsSync(join(VAULT_DIR, rel))) continue
+    // No vault-side counterpart at all → preserve (came from web upload etc.).
+    // We only remove files whose vault dir exists but the file within was
+    // renamed/deleted. Heuristic: parent dir exists in the vault AND file has
+    // a .md extension AND file is NOT under a preserved subpath.
+    const ext = extname(e.name).toLowerCase()
+    if (ext !== '.md') continue
+    const relDir = dirname(rel)
+    if (relDir !== '.' && !existsSync(join(VAULT_DIR, relDir))) continue
+    try { await unlink(p); removed++ } catch { /* ignore */ }
   }
 }
 
@@ -211,25 +305,18 @@ console.log('🗺  Amantia Wiki — vault sync\n')
 console.log(`Source : ${VAULT_DIR}`)
 console.log(`Dest   : ${CONTENT_DIR}\n`)
 
-// Clear existing content (except index.md which we manage manually)
-if (existsSync(CONTENT_DIR)) {
-  const existing = await readdir(CONTENT_DIR, { withFileTypes: true })
-  for (const e of existing) {
-    if (e.name === 'index.md') continue  // keep the hand-written home page
-    await rm(join(CONTENT_DIR, e.name), { recursive: true, force: true })
-  }
-}
-
 await mkdir(CONTENT_DIR, { recursive: true })
 await syncDir(VAULT_DIR, CONTENT_DIR)
 if (PUBLISH_PRIVATE) {
   console.log('\n🔒 PUBLISH_PRIVATE=1 — publishing per-player private tiers into /private/* (gate with the Worker!)')
   await syncPrivate()
 }
+await cleanupOrphans(CONTENT_DIR)
 
 console.log(`✅  Done`)
 console.log(`   ${copied} notes copied`)
 console.log(`   ${assets} image assets copied`)
 console.log(`   ${stripped} notes had DM Notes sections stripped`)
 console.log(`   ${skipped} private folders skipped`)
+console.log(`   ${removed} orphaned notes removed (deleted/renamed in vault)`)
 console.log(`\nNext: git add content/ && git commit -m "sync vault" && git push`)

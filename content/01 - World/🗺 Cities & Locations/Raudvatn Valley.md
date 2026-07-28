@@ -1,7 +1,7 @@
 ---
 tags: [location, region, map, campaign]
 discovered: Session 1
-modified: 2026-07-27T19:30:46.706Z
+modified: 2026-07-28T20:17:30.566Z
 ---
 
 # Raudvatn Valley
@@ -12,7 +12,7 @@ modified: 2026-07-27T19:30:46.706Z
 The region around **[[Brindelvik]]** — the campaign's starting area. Named for the **Raudvatn** river running through it. The broader region label on the map reads **Askarsoeng**.
 
 <div class="location-map"><img src="/01---world/maps/raudvatn_valley.png" alt="Map of the Raudvatn Valley" />
-  <a class="zone" href="/🗺-cities--and--locations/shepherd's-retreat" style="position:absolute;left:71.1%;top:69.3%;width:5.2%;height:9.2%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">Shepherd's Retreat</span></a>
+  <a class="zone" href="/01---world/🗺-cities--and--locations/shepherds-retreat" style="position:absolute;left:71.1%;top:69.3%;width:5.2%;height:9.2%;box-sizing:border-box;border:2px solid rgba(232,176,75,.65);border-radius:6px;"><span class="lbl">Shepherd's Retreat</span></a>
 </div>
 
 *Regional map. Hover (as an admin) to reveal the edit button and add clickable zones for Brindelvik, Ardgrind, Svarthamarhald, etc.*

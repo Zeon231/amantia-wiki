@@ -6,8 +6,8 @@ class: Rogue
 background: Soldier (Ex-Soldier)
 level: 1
 status: active
-portrait: "02 - People/Portraits/vesper-crowe.png" 
-modified: 2026-07-28T12:53:42.011Z
+portrait: "02 - People/Portraits/vesper-crowe.png"
+modified: 2026-07-28T20:07:41.952Z
 ---
 
 # Vesper Crowe
