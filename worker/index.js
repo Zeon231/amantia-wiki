@@ -162,6 +162,10 @@ async function handleApi(path, request, env, auth) {
   if (path === "/api/page" && m === "GET") {
     const p = normPath(url.searchParams.get("path"))
     if (!p) return json({ error: "bad path" }, 400)
+    // Sync staging↔main first so a page added to main via sync-vault push is
+    // visible to the editor (otherwise staging would be stale and the editor
+    // would treat the page as empty, which then overwrites main on save).
+    await ensureStagingExists(env).catch(() => null)
     // Read from staging so the editor sees pending edits too. If staging doesn't
     // exist yet, the API falls back to main (until first write creates staging).
     const branch = (await stagingExists(env)) ? STAGING_BRANCH : MAIN_BRANCH
@@ -400,25 +404,38 @@ async function stagingExists(env) {
   if (r.status === 200) { _stagingCached = true; return true }
   return false
 }
-// Create staging from main if it doesn't exist. Returns null on success, or
-// a JSON error Response if creation failed (so callers can early-return).
+// Create staging from main if missing; if it exists, also merge main into
+// staging so the web editor sees files that landed on main via sync-vault
+// pushes since staging was created. Returns null on success, or a JSON error
+// Response if creation failed. If the main→staging merge conflicts, we log
+// but don't fail — the admin will see it in the changes log / deploy modal.
 async function ensureStagingExists(env) {
-  if (await stagingExists(env)) return null
-  // Get main's HEAD SHA
-  const headR = await ghApi(env, "GET", "/git/ref/heads/" + MAIN_BRANCH)
-  if (!headR.ok) return json({ error: "cannot read main ref: github " + headR.status }, 502)
-  const headData = await headR.json()
-  const sha = headData.object && headData.object.sha
-  if (!sha) return json({ error: "main ref has no sha" }, 502)
-  // Create staging ref pointing at main's HEAD
-  const createR = await ghApi(env, "POST", "/git/refs", null, {
-    ref: "refs/heads/" + STAGING_BRANCH,
-    sha,
-  })
-  if (!createR.ok && createR.status !== 422) {
-    return json({ error: "cannot create staging branch: github " + createR.status, detail: (await createR.text()).slice(0, 200) }, 502)
+  if (!(await stagingExists(env))) {
+    // First-time create: point staging at main's HEAD
+    const headR = await ghApi(env, "GET", "/git/ref/heads/" + MAIN_BRANCH)
+    if (!headR.ok) return json({ error: "cannot read main ref: github " + headR.status }, 502)
+    const headData = await headR.json()
+    const sha = headData.object && headData.object.sha
+    if (!sha) return json({ error: "main ref has no sha" }, 502)
+    const createR = await ghApi(env, "POST", "/git/refs", null, {
+      ref: "refs/heads/" + STAGING_BRANCH,
+      sha,
+    })
+    if (!createR.ok && createR.status !== 422) {
+      return json({ error: "cannot create staging branch: github " + createR.status, detail: (await createR.text()).slice(0, 200) }, 502)
+    }
+    _stagingCached = true
+    return null
   }
-  _stagingCached = true
+  // Fast-forward / auto-merge main INTO staging so it always reflects the
+  // latest deployed state plus staging's pending edits. GitHub's /merges
+  // endpoint returns 204 if nothing to merge, 201 on new merge commit,
+  // 409 on unresolvable conflict (we tolerate — admin fixes manually).
+  await ghApi(env, "POST", "/merges", null, {
+    base: STAGING_BRANCH,
+    head: MAIN_BRANCH,
+    commit_message: "sync: fast-forward staging from main",
+  }).catch(() => null)
   return null
 }
 

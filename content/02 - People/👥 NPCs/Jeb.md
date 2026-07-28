@@ -21,7 +21,7 @@ modified: 2026-07-28T12:53:40.830Z
 A **kobold** who survived the fight at the **[[Shepherd's Retreat]]** and flipped sides — now travels with the party as [[Alexander]]'s "vampire familiar."
 
 ## Appearance
-Whitish-gray scales (like the rest of [[The White Crown]]'s kobold band).
+Whitish-gray scales (like the rest of [[The White Crown]]'s kobold band). Wings?
 
 ## Known Facts
 - Formerly part of the kobold band serving **[[The White Crown]]** (a young white dragon wyrmling).

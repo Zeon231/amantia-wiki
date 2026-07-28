@@ -620,11 +620,10 @@
           }
           if (d.ok) {
             status.textContent = "✓ Staged: " + d.path
-            // Update portrait: frontmatter if requested
             if (portraitCk.checked) {
-              // Insert as portrait frontmatter — caller handles via callback with special marker
-              onInsert("\n<!-- PORTRAIT SET: " + d.url + " -->\n")
-              alert("Uploaded! Note: this page's frontmatter `portrait:` field was NOT automatically edited (frontmatter edits from the body editor are risky). To set the portrait, change `portrait:` in the frontmatter to:\n\n  portrait: \"" + d.path.replace(/^content\//, "") + "\"")
+              // DON'T touch the editor content. Just tell the user how to
+              // wire up the portrait via frontmatter (safer than auto-edit).
+              alert("✓ Uploaded to " + d.path + "\n\nThe portrait: frontmatter field was NOT auto-edited (frontmatter edits from the body editor can corrupt YAML). To wire this up, edit the frontmatter of this page and set:\n\n  portrait: \"" + d.path.replace(/^content\//, "") + "\"")
             } else {
               // Insert markdown at cursor
               var alt = nameIn.value.replace(/\.[^.]+$/, "").replace(/-/g, " ")
