@@ -1,14 +1,17 @@
 ---
 title: Welcome to Amantia
 tags: [index]
-modified: 2026-07-28T12:50:06.434Z
+modified: 2026-07-28T20:02:01.639Z
 ---
 
 # The World of Amantia
 
 Welcome, travelers. This is the living wiki for our campaign — everything the party has learned about the world, its people, and its gods lives here.
 
-<div class="location-map"><img src="/01 - World/Maps/Map of Amantia.jpg" alt="Map of Amantia" /></div>
+<div class="location-map"><img src="/01---world/maps/north_rose_subcontinent.jpg" alt="Map of the North Rose Subcontinent" />
+</div>
+
+*Placeholder — currently showing the [[North Rose Subcontinent]] (where the campaign is currently set). A full map of Amantia will replace this once one exists.*
 
 <div id="campaign-home"></div>
 
