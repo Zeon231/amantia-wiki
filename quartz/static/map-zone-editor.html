@@ -11,9 +11,16 @@
   h1 { color:#e8b04b; font-size:20px; margin:.2rem 0; }
   h1 small { color:#aaa; font-size:13px; font-weight:400; margin-left:.6rem; }
   .hint { color:#aaa; font-size:13px; }
-  .mapbox { position:relative; user-select:none; line-height:0; border-radius:8px; margin-top:12px; }
-  .mapbox img { width:100%; height:auto; display:block; border-radius:8px; cursor:crosshair; }
+  .mapview { position:relative; margin-top:12px; overflow:hidden; border-radius:8px; }
+  .mapview.pan-mode { cursor:grab; }
+  .mapview.panning { cursor:grabbing; }
+  .mapbox { position:relative; user-select:none; line-height:0; transform-origin:0 0; will-change:transform; }
+  .mapbox img { width:100%; height:auto; display:block; border-radius:8px; cursor:crosshair; -webkit-user-drag:none; }
   .mapbox.mode-poly img { cursor:copy; }
+  .mapview-controls { position:absolute; top:8px; right:8px; z-index:10; display:flex; gap:4px; }
+  .mapview-controls button { background:rgba(20,20,25,.85); color:#fff; border:none; width:28px; height:28px; border-radius:4px; font-size:14px; cursor:pointer; padding:0; }
+  .mapview-controls button:hover { background:#e8b04b; color:#111; }
+  .mapview-hint { position:absolute; bottom:8px; left:8px; z-index:10; background:rgba(20,20,25,.75); color:#fff; font:500 11px system-ui,sans-serif; padding:3px 8px; border-radius:4px; pointer-events:none; }
   /* Rectangle zone box */
   .zbox { position:absolute; box-sizing:border-box; border:2px solid #e8b04b; background:rgba(232,176,75,.18); border-radius:6px; cursor:move; }
   .zbox .ztag { position:absolute; left:0; top:-19px; font-size:11px; line-height:1.4; background:rgba(0,0,0,.82); color:#fff; padding:0 5px; border-radius:3px; white-space:nowrap; pointer-events:none; }
@@ -64,10 +71,18 @@
 
   <div id="loader" class="hint" style="margin-top:14px">Loading map…</div>
   <div id="editor" style="display:none">
-    <div class="mapbox" id="mapbox">
-      <img id="map" alt="Map" draggable="false" />
-      <div id="draw"></div>
-      <svg id="polydraw" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+    <div class="mapview" id="mapview">
+      <div class="mapbox" id="mapbox">
+        <img id="map" alt="Map" draggable="false" />
+        <div id="draw"></div>
+        <svg id="polydraw" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+      </div>
+      <div class="mapview-controls">
+        <button id="zoom-in" title="Zoom in">+</button>
+        <button id="zoom-out" title="Zoom out">−</button>
+        <button id="zoom-reset" title="Reset zoom">⟲</button>
+      </div>
+      <div class="mapview-hint">Ctrl+scroll to zoom · Ctrl+drag or middle-click to pan</div>
     </div>
 
     <div class="bar">
@@ -525,6 +540,68 @@
       })
       .catch(function(){ /* datalist just stays empty; typing still works */ })
   }
+  // ---- pan/zoom for the map (Ctrl+wheel to zoom, Ctrl+drag or middle-click
+  // to pan). Zone handles + rect draw keep working because pct() uses the
+  // transformed getBoundingClientRect for coordinate translation.
+  (function setupPanZoom(){
+    var view = document.getElementById('mapview')
+    var box = document.getElementById('mapbox')
+    var s = { scale:1, x:0, y:0, min:1, max:10 }
+    function apply(){ box.style.transform = 'translate('+s.x+'px,'+s.y+'px) scale('+s.scale+')' }
+    function clamp(){
+      var vw = view.clientWidth, vh = view.clientHeight
+      var mx = vw * (s.scale - 1), my = vh * (s.scale - 1)
+      s.x = Math.max(-mx, Math.min(0, s.x))
+      s.y = Math.max(-my, Math.min(0, s.y))
+    }
+    function reset(){ s.scale = 1; s.x = 0; s.y = 0; apply() }
+    function zoomAt(cx, cy, factor){
+      var next = Math.max(s.min, Math.min(s.max, s.scale * factor))
+      var f = next / s.scale
+      s.x = cx + (s.x - cx) * f
+      s.y = cy + (s.y - cy) * f
+      s.scale = next
+      if (s.scale <= 1.001) reset(); else { clamp(); apply() }
+    }
+    view.addEventListener('wheel', function(e){
+      if (!(e.ctrlKey || e.metaKey)) return
+      e.preventDefault()
+      var rect = view.getBoundingClientRect()
+      var cx = e.clientX - rect.left, cy = e.clientY - rect.top
+      zoomAt(cx, cy, e.deltaY < 0 ? 1.15 : 1/1.15)
+    }, { passive:false })
+    document.getElementById('zoom-in').addEventListener('click', function(){
+      var rect = view.getBoundingClientRect(); zoomAt(rect.width/2, rect.height/2, 1.3)
+    })
+    document.getElementById('zoom-out').addEventListener('click', function(){
+      var rect = view.getBoundingClientRect(); zoomAt(rect.width/2, rect.height/2, 1/1.3)
+    })
+    document.getElementById('zoom-reset').addEventListener('click', reset)
+    // Pan: Ctrl+left-drag OR middle-click drag. Never plain left-drag (that
+    // remains rectangle-draw / zone-drag).
+    var pan = null
+    view.addEventListener('mousedown', function(e){
+      var isPan = (e.button === 1) || (e.button === 0 && (e.ctrlKey || e.metaKey))
+      if (!isPan) return
+      pan = { sx:e.clientX, sy:e.clientY, ox:s.x, oy:s.y }
+      view.classList.add('panning')
+      e.preventDefault(); e.stopPropagation()
+    }, true) // capture-phase so it wins over the map's own mousedown
+    window.addEventListener('mousemove', function(e){
+      if (!pan) return
+      s.x = pan.ox + (e.clientX - pan.sx)
+      s.y = pan.oy + (e.clientY - pan.sy)
+      clamp(); apply()
+    })
+    window.addEventListener('mouseup', function(){
+      if (!pan) return
+      pan = null; view.classList.remove('panning')
+    })
+    // Show grabbing cursor when holding Ctrl (hint that pan is available)
+    document.addEventListener('keydown', function(e){ if (e.key === 'Control' || e.key === 'Meta') view.classList.add('pan-mode') })
+    document.addEventListener('keyup',   function(e){ if (e.key === 'Control' || e.key === 'Meta') view.classList.remove('pan-mode') })
+  })();
+
   loadPageList()
   loadTarget()
 })();
