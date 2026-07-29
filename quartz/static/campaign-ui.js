@@ -97,6 +97,25 @@
       ".location-map:hover .map-hint{opacity:.7;}",
       ".location-map.map-zoomed .map-hint{opacity:0;}",
       "@media (hover:none){.location-map .map-hint{content:'pinch to zoom · drag to pan';}}",
+      /* -- .zoom-image (opt-in pan/zoom wrapper for regular content images) -- */
+      ".zoom-image{position:relative;max-width:100%;margin:1rem 0;line-height:0;overflow:hidden;border-radius:6px;}",
+      ".zoom-image-inner{position:relative;transform-origin:center center;will-change:transform;}",
+      ".zoom-image img{width:100%;height:auto;display:block;user-select:none;-webkit-user-drag:none;}",
+      ".zoom-image.map-zoomed{cursor:grab;}",
+      ".zoom-image .map-reset-btn{position:absolute;bottom:8px;right:8px;background:rgba(20,20,25,.85);color:#fff;border:none;width:28px;height:28px;border-radius:50%;font:600 16px system-ui,sans-serif;line-height:1;cursor:pointer;opacity:0;transition:opacity .12s;z-index:5;padding:0;}",
+      ".zoom-image.map-zoomed .map-reset-btn{opacity:.9;}",
+      ".zoom-image .map-hint{position:absolute;bottom:8px;left:8px;background:rgba(20,20,25,.75);color:#fff;font:500 11px system-ui,sans-serif;padding:3px 8px;border-radius:4px;pointer-events:none;opacity:0;transition:opacity .12s;z-index:5;}",
+      ".zoom-image:hover .map-hint{opacity:.7;}",
+      ".zoom-image.map-zoomed .map-hint{opacity:0;}",
+      /* -- Lightbox: click any content image to open full-screen w/ pan+zoom -- */
+      ".ax-lightbox{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9998;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;cursor:zoom-out;}",
+      ".ax-lightbox-inner{position:relative;max-width:100%;max-height:100%;overflow:hidden;cursor:auto;}",
+      ".ax-lightbox img{max-width:90vw;max-height:90vh;width:auto;height:auto;display:block;user-select:none;-webkit-user-drag:none;transform-origin:center center;will-change:transform;transition:transform .05s ease-out;}",
+      ".ax-lightbox.panning img{cursor:grabbing;}",
+      ".ax-lightbox-close{position:fixed;top:16px;right:20px;background:rgba(20,20,25,.85);color:#fff;border:none;width:36px;height:36px;border-radius:50%;font:600 22px system-ui,sans-serif;line-height:1;cursor:pointer;padding:0;z-index:9999;}",
+      ".ax-lightbox-hint{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(20,20,25,.85);color:#fff;font:500 12px system-ui,sans-serif;padding:5px 12px;border-radius:4px;pointer-events:none;z-index:9999;}",
+      /* Regular content images become clickable when the lightbox is enabled */
+      "article img:not(.ax-portrait):not(.map-edit-btn):not([data-no-lightbox]){cursor:zoom-in;}",
       /* -- portrait: floated headshot rendered from frontmatter -- */
       /* -- image uploader modal -- */
       ".ax-upload .tabs{display:flex;gap:6px;margin-bottom:12px;border-bottom:1px solid var(--lightgray)}",
@@ -518,6 +537,7 @@
           '<label>Destination folder<input id="ax-dir" placeholder="content-relative folder"/></label>' +
           '<label>File name <small>(auto-slugified)</small><input id="ax-name" placeholder="picture.jpg"/></label>' +
           '<label class="alt-row"><input type="checkbox" id="ax-portrait-set"/> Set as this page\'s portrait (updates <code>portrait:</code> frontmatter — for NPC/character/monster pages)</label>' +
+          '<label class="alt-row"><input type="checkbox" id="ax-zoompan"/> Enable zoom &amp; pan on the inserted image (readers can Ctrl+scroll to zoom, drag to pan — off by default, even for maps)</label>' +
         '</div>' +
         '<p class="hint">The upload commits to the <code>staging</code> branch. Deploy from ⚙ Admin → Deploy Changes to publish. Max 25 MB. Formats: jpg, png, gif, webp, svg, avif.</p>' +
       '</div>' +
@@ -534,6 +554,17 @@
     var dirIn = body.querySelector("#ax-dir")
     var nameIn = body.querySelector("#ax-name")
     var portraitCk = body.querySelector("#ax-portrait-set")
+    var zoomPanCk = body.querySelector("#ax-zoompan")
+
+    function wrapInsert(mdOrPath, alt) {
+      // If zoom/pan is on, insert a raw HTML div so the site-side script
+      // attaches pan-zoom to it. Otherwise fall back to plain markdown.
+      if (zoomPanCk.checked) {
+        return '\n<div class="zoom-image">\n  <img src="' + mdOrPath + '" alt="' + esc(alt) + '" />\n</div>\n'
+      }
+      return "![" + alt + "](" + mdOrPath + ")"
+    }
+    function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
     var preview = body.querySelector("#ax-preview")
     var wikiGrid = body.querySelector("#ax-wiki-grid")
     var wikiFilter = body.querySelector("#ax-wiki-filter")
@@ -653,7 +684,7 @@
           alert("✓ Selected " + im.path + "\n\nThe portrait: frontmatter field was NOT auto-edited. To wire this up, edit the frontmatter of this page and set:\n\n  portrait: \"" + im.path.replace(/^content\//, "") + "\"")
         } else {
           var alt2 = (nameIn.value || im.path.split("/").pop()).replace(/\.[^.]+$/, "").replace(/-/g, " ")
-          onInsert("![" + alt2 + "](" + im.url + ")")
+          onInsert(wrapInsert(im.url, alt2))
         }
         setTimeout(close, 400)
         return
@@ -705,7 +736,7 @@
             } else {
               // Insert markdown at cursor
               var alt = nameIn.value.replace(/\.[^.]+$/, "").replace(/-/g, " ")
-              onInsert("![" + alt + "](" + d.url + ")")
+              onInsert(wrapInsert(d.url, alt))
             }
             setTimeout(close, 1200)
           } else {
@@ -801,7 +832,7 @@
       var rect = container.getBoundingClientRect()
       var cx = e.clientX - rect.left - rect.width / 2
       var cy = e.clientY - rect.top - rect.height / 2
-      var delta = -e.deltaY * 0.003
+      var delta = -e.deltaY * 0.001
       var next = Math.max(s.min, Math.min(s.max, s.scale * (1 + delta)))
       var f = next / s.scale
       s.x = cx + (s.x - cx) * f
@@ -860,6 +891,99 @@
     pz.state.scale = 1; pz.state.x = 0; pz.state.y = 0
     pz.inner.style.transform = ""
     container.classList.remove("map-zoomed")
+  }
+
+  // ---- .zoom-image opt-in wrapper: attach pan/zoom to any such container --
+  function decorateZoomImages() {
+    var els = document.querySelectorAll(".zoom-image:not([data-ax-decorated])")
+    els.forEach(function (el) {
+      el.setAttribute("data-ax-decorated", "1")
+      var inner = document.createElement("div")
+      inner.className = "zoom-image-inner"
+      while (el.firstChild) inner.appendChild(el.firstChild)
+      el.appendChild(inner)
+      attachPanZoom(el, inner)
+      var reset = document.createElement("button")
+      reset.className = "map-reset-btn"; reset.type = "button"; reset.textContent = "⟲"
+      reset.title = "Reset zoom (or double-click)"
+      reset.addEventListener("click", function (e) { e.stopPropagation(); resetZoom(el) })
+      el.appendChild(reset)
+      var hint = document.createElement("div")
+      hint.className = "map-hint"; hint.textContent = "Ctrl + scroll to zoom · drag to pan"
+      el.appendChild(hint)
+      // Stop lightbox from opening when the user just wants to interact
+      inner.querySelectorAll("img").forEach(function (img) { img.setAttribute("data-no-lightbox", "1") })
+    })
+  }
+
+  // ---- Lightbox: click any content image → full-screen pan/zoom overlay ----
+  function openLightbox(srcUrl, altText) {
+    var ov = document.createElement("div")
+    ov.className = "ax-lightbox"
+    ov.innerHTML =
+      '<div class="ax-lightbox-inner"><img src="' + srcUrl + '" alt="' + (altText || "") + '"/></div>' +
+      '<button class="ax-lightbox-close" title="Close (Esc)">×</button>' +
+      '<div class="ax-lightbox-hint">Ctrl + scroll to zoom · drag to pan · Esc to close</div>'
+    document.body.appendChild(ov)
+    var img = ov.querySelector("img")
+    var inner = ov.querySelector(".ax-lightbox-inner")
+    var s = { scale: 1, x: 0, y: 0, min: 1, max: 12 }
+    function apply() { img.style.transform = "translate(" + s.x + "px," + s.y + "px) scale(" + s.scale + ")" }
+    function close() { ov.remove(); document.removeEventListener("keydown", onKey) }
+    function onKey(e) { if (e.key === "Escape") close() }
+    document.addEventListener("keydown", onKey)
+    ov.addEventListener("click", function (e) { if (e.target === ov) close() })
+    ov.querySelector(".ax-lightbox-close").addEventListener("click", close)
+    ov.addEventListener("wheel", function (e) {
+      if (!(e.ctrlKey || e.metaKey)) return
+      e.preventDefault()
+      var rect = img.getBoundingClientRect()
+      var cx = e.clientX - rect.left - rect.width / 2
+      var cy = e.clientY - rect.top - rect.height / 2
+      var delta = -e.deltaY * 0.001 // finer zoom (matches maps)
+      var next = Math.max(s.min, Math.min(s.max, s.scale * (1 + delta)))
+      var f = next / s.scale
+      s.x = cx + (s.x - cx) * f
+      s.y = cy + (s.y - cy) * f
+      s.scale = next
+      if (s.scale <= 1.01) { s.scale = 1; s.x = 0; s.y = 0 }
+      apply()
+    }, { passive: false })
+    var drag = null
+    img.addEventListener("mousedown", function (e) {
+      if (s.scale <= 1) return
+      drag = { sx: e.clientX, sy: e.clientY, ox: s.x, oy: s.y }
+      ov.classList.add("panning")
+      e.preventDefault(); e.stopPropagation()
+    })
+    window.addEventListener("mousemove", function (e) {
+      if (!drag) return
+      s.x = drag.ox + (e.clientX - drag.sx); s.y = drag.oy + (e.clientY - drag.sy); apply()
+    })
+    window.addEventListener("mouseup", function () {
+      if (!drag) return
+      drag = null; ov.classList.remove("panning")
+    })
+    img.addEventListener("dblclick", function (e) {
+      e.preventDefault(); e.stopPropagation()
+      s.scale = 1; s.x = 0; s.y = 0; apply()
+    })
+    img.addEventListener("click", function (e) { e.stopPropagation() }) // don't close on image click
+  }
+  function setupLightbox() {
+    var article = document.querySelector("article")
+    if (!article || article.dataset.axLightbox) return
+    article.dataset.axLightbox = "1"
+    article.addEventListener("click", function (e) {
+      var t = e.target
+      if (!(t instanceof HTMLImageElement)) return
+      if (t.classList.contains("ax-portrait")) return
+      if (t.hasAttribute("data-no-lightbox")) return
+      if (t.closest("a")) return               // clicks on linked images follow the link
+      if (t.closest(".location-map")) return   // maps have their own pan/zoom
+      e.preventDefault()
+      openLightbox(t.currentSrc || t.src, t.alt)
+    })
   }
 
   // ---- Explorer sidebar: Home button + hide duplicate folder-note entries ---
@@ -934,6 +1058,8 @@
     tidyPlaceholders()
     renderPortrait()
     decorateMaps()
+    decorateZoomImages()
+    setupLightbox()
     watchExplorer()
     sessionInit()
   }

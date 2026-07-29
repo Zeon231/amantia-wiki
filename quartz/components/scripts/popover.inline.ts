@@ -125,14 +125,30 @@ function clearActivePopover() {
   allPopoverElements.forEach((popoverElement) => popoverElement.classList.remove("active-popover"))
 }
 
+// Delay before a hovered link's popover appears. Prevents drive-by hover
+// noise while the reader is just scanning the page.
+const POPOVER_HOVER_DELAY_MS = 3000
+
 function setupPopovers() {
   const links = [...document.querySelectorAll("a.internal")] as HTMLAnchorElement[]
   for (const link of links) {
-    link.addEventListener("mouseenter", mouseEnterHandler)
-    link.addEventListener("mouseleave", clearActivePopover)
+    let hoverTimer: number | null = null
+    const onEnter = (e: MouseEvent) => {
+      if (hoverTimer !== null) clearTimeout(hoverTimer)
+      hoverTimer = window.setTimeout(() => {
+        hoverTimer = null
+        mouseEnterHandler.call(link, e)
+      }, POPOVER_HOVER_DELAY_MS)
+    }
+    const onLeave = () => {
+      if (hoverTimer !== null) { clearTimeout(hoverTimer); hoverTimer = null }
+      clearActivePopover()
+    }
+    link.addEventListener("mouseenter", onEnter)
+    link.addEventListener("mouseleave", onLeave)
     window.addCleanup(() => {
-      link.removeEventListener("mouseenter", mouseEnterHandler)
-      link.removeEventListener("mouseleave", clearActivePopover)
+      link.removeEventListener("mouseenter", onEnter)
+      link.removeEventListener("mouseleave", onLeave)
     })
   }
 }
