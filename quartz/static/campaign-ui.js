@@ -57,6 +57,22 @@
       "#amantia-admin-menu{position:fixed;right:16px;bottom:60px;z-index:950;background:var(--light);border:1px solid var(--gray);border-radius:8px;padding:5px;display:flex;flex-direction:column;gap:4px;min-width:190px;box-shadow:0 4px 14px rgba(0,0,0,.35)}",
       "#amantia-admin-menu button{background:transparent;color:var(--darkgray);border:0;text-align:left;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:14px}",
       "#amantia-admin-menu button:hover{background:var(--lightgray)}",
+      /* view-as impersonation banner + user tables + tools */
+      "#ax-viewas-banner{position:fixed;top:0;left:0;right:0;z-index:9500;background:#7cc47a;color:#111;padding:6px 14px;font:600 13px system-ui,sans-serif;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.25)}",
+      "#ax-viewas-banner a{color:#111;text-decoration:underline;margin-left:.5em}",
+      ".ax-table{width:100%;border-collapse:collapse;font-size:13px;margin:.5rem 0}",
+      ".ax-table th,.ax-table td{padding:6px 8px;border-bottom:1px solid var(--lightgray);text-align:left;vertical-align:middle}",
+      ".ax-table th{font-weight:600;color:var(--gray);font-size:11px;text-transform:uppercase;letter-spacing:.5px}",
+      ".ax-table tr.row-current{background:rgba(124,196,122,.15)}",
+      ".ax-table .badge{display:inline-block;background:var(--lightgray);color:var(--darkgray);padding:1px 6px;border-radius:3px;font-size:11px;margin-right:3px}",
+      ".ax-table .badge-admin{background:#e8b04b;color:#111}",
+      ".ax-table .badge-player{background:#7cc47a;color:#111}",
+      ".ax-tool{background:var(--lightgray);padding:12px;border-radius:6px;margin-top:8px}",
+      ".ax-tool h3{margin:0 0 8px 0;font-size:14px;color:var(--darkgray)}",
+      ".ax-tool label{display:block;margin:6px 0}",
+      ".ax-tool label input{width:100%;padding:5px 8px;border:1px solid var(--gray);border-radius:4px;background:var(--light);color:var(--darkgray);margin-top:2px;box-sizing:border-box}",
+      ".ax-btn.ax-small{padding:3px 9px;font-size:11px;font-weight:500}",
+      ".ax-btn.ax-primary{background:#e8b04b;color:#111}",
       ".ax-admin .ax-body{padding:1rem 1.2rem;overflow-y:auto;max-height:60vh}",
       ".ax-admin .ax-body p{margin:.4rem 0}",
       ".ax-admin .ax-body h4{margin:1rem 0 .4rem;font-size:14px;color:var(--secondary)}",
@@ -97,6 +113,25 @@
       ".location-map:hover .map-hint{opacity:.7;}",
       ".location-map.map-zoomed .map-hint{opacity:0;}",
       "@media (hover:none){.location-map .map-hint{content:'pinch to zoom · drag to pan';}}",
+      /* -- .zoom-image (opt-in pan/zoom wrapper for regular content images) -- */
+      ".zoom-image{position:relative;max-width:100%;margin:1rem 0;line-height:0;overflow:hidden;border-radius:6px;}",
+      ".zoom-image-inner{position:relative;transform-origin:center center;will-change:transform;}",
+      ".zoom-image img{width:100%;height:auto;display:block;user-select:none;-webkit-user-drag:none;}",
+      ".zoom-image.map-zoomed{cursor:grab;}",
+      ".zoom-image .map-reset-btn{position:absolute;bottom:8px;right:8px;background:rgba(20,20,25,.85);color:#fff;border:none;width:28px;height:28px;border-radius:50%;font:600 16px system-ui,sans-serif;line-height:1;cursor:pointer;opacity:0;transition:opacity .12s;z-index:5;padding:0;}",
+      ".zoom-image.map-zoomed .map-reset-btn{opacity:.9;}",
+      ".zoom-image .map-hint{position:absolute;bottom:8px;left:8px;background:rgba(20,20,25,.75);color:#fff;font:500 11px system-ui,sans-serif;padding:3px 8px;border-radius:4px;pointer-events:none;opacity:0;transition:opacity .12s;z-index:5;}",
+      ".zoom-image:hover .map-hint{opacity:.7;}",
+      ".zoom-image.map-zoomed .map-hint{opacity:0;}",
+      /* -- Lightbox: click any content image to open full-screen w/ pan+zoom -- */
+      ".ax-lightbox{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9998;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;cursor:zoom-out;}",
+      ".ax-lightbox-inner{position:relative;max-width:100%;max-height:100%;overflow:hidden;cursor:auto;}",
+      ".ax-lightbox img{max-width:90vw;max-height:90vh;width:auto;height:auto;display:block;user-select:none;-webkit-user-drag:none;transform-origin:center center;will-change:transform;transition:transform .05s ease-out;}",
+      ".ax-lightbox.panning img{cursor:grabbing;}",
+      ".ax-lightbox-close{position:fixed;top:16px;right:20px;background:rgba(20,20,25,.85);color:#fff;border:none;width:36px;height:36px;border-radius:50%;font:600 22px system-ui,sans-serif;line-height:1;cursor:pointer;padding:0;z-index:9999;}",
+      ".ax-lightbox-hint{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(20,20,25,.85);color:#fff;font:500 12px system-ui,sans-serif;padding:5px 12px;border-radius:4px;pointer-events:none;z-index:9999;}",
+      /* Regular content images become clickable when the lightbox is enabled */
+      "article img:not(.ax-portrait):not(.map-edit-btn):not([data-no-lightbox]){cursor:zoom-in;}",
       /* -- portrait: floated headshot rendered from frontmatter -- */
       /* -- image uploader modal -- */
       ".ax-upload .tabs{display:flex;gap:6px;margin-bottom:12px;border-bottom:1px solid var(--lightgray)}",
@@ -262,6 +297,7 @@
     document.body.appendChild(bar)
     document.getElementById("ax-logout").addEventListener("click", logout)
     if (WHO.canEdit) addAdminTools()
+    renderViewAsBanner()
     // Re-run map decoration now that admin state is known (adds edit button)
     document.querySelectorAll(".location-map[data-ax-decorated]").forEach(function (m) { m.removeAttribute("data-ax-decorated") })
     decorateMaps()
@@ -297,13 +333,17 @@
     m.id = "amantia-admin-menu"
     m.innerHTML =
       '<button data-act="deploy">🚀 Deploy Changes</button>' +
-      '<button data-act="log">📜 Changes Log</button>'
+      '<button data-act="log">📜 Changes Log</button>' +
+      '<button data-act="viewas">👤 View as…</button>' +
+      '<button data-act="users">🔑 Manage users</button>'
     document.body.appendChild(m)
     m.addEventListener("click", function (e) {
       var b = e.target.closest("button"); if (!b) return
       m.remove()
       if (b.dataset.act === "deploy") openDeployModal()
       else if (b.dataset.act === "log") openChangesModal()
+      else if (b.dataset.act === "viewas") openViewAsModal()
+      else if (b.dataset.act === "users") openUsersModal()
     })
     // click-outside dismisses
     setTimeout(function () {
@@ -400,6 +440,184 @@
       var diffs = (f.additions || f.deletions) ? ' <span class="pm">+' + f.additions + '/-' + f.deletions + '</span>' : ""
       return '<li><span class="sym ' + esc(f.status) + '">' + sym + '</span> ' + line + diffs + '</li>'
     }).join("") + '</ul>'
+  }
+
+  // ---- View-as impersonation --------------------------------------------
+  function openViewAsModal() {
+    var ov = mkOverlay("View site as…")
+    var body = ov.querySelector(".ax-body")
+    body.innerHTML = '<p class="ax-status">Loading users…</p>'
+    var footer = ov.querySelector("footer")
+    footer.innerHTML = '<button class="ax-btn ax-cancel">Close</button>'
+    footer.querySelector(".ax-cancel").addEventListener("click", function () { ov.remove() })
+    fetch("/api/view-as", { credentials: "same-origin" })
+      .then(function (r) { return r.json() })
+      .then(function (d) {
+        if (!d || !d.users) { body.innerHTML = '<p class="ax-status">Failed to load: ' + esc((d && d.error) || "unknown") + '</p>'; return }
+        var current = d.current // null if not impersonating
+        var real = d.real
+        var rows = d.users.map(function (u) {
+          var isCurrent = current && u.user.toLowerCase() === current.toLowerCase()
+          var isReal = u.user.toLowerCase() === real.toLowerCase()
+          var badge = u.role === "admin" || u.role === "dm" ? '<span class="badge badge-admin">' + esc(u.role) + '</span>'
+            : '<span class="badge badge-player">player</span>' + (u.tier ? ' <span class="badge">tier: ' + esc(u.tier) + '</span>' : '')
+          return '<tr' + (isCurrent ? ' class="row-current"' : '') + '>' +
+            '<td>' + esc(u.user) + (isReal ? ' <span class="badge">you</span>' : '') + '</td>' +
+            '<td>' + badge + '</td>' +
+            '<td><button class="ax-btn" data-as="' + esc(u.user) + '"' + (isCurrent || isReal ? ' disabled' : '') + '>' + (isCurrent ? 'viewing' : 'View as') + '</button></td>' +
+            '</tr>'
+        }).join("")
+        body.innerHTML =
+          '<p class="hint">Simulate what each user actually sees. Your real login stays as <b>' + esc(real) + '</b> for audit.</p>' +
+          '<table class="ax-table"><thead><tr><th>User</th><th>Role</th><th></th></tr></thead><tbody>' + rows +
+          '<tr><td colspan="2"><em>Anonymous</em> — what a signed-out visitor would see (only meaningful with <code>PUBLIC_SHARED=true</code>)</td>' +
+          '<td><button class="ax-btn" data-as="anonymous"' + (current === "anonymous" ? ' disabled' : '') + '>' + (current === "anonymous" ? 'viewing' : 'View as') + '</button></td></tr>' +
+          '</tbody></table>' +
+          (current ? '<p><button class="ax-btn ax-primary" data-as="">↩ Return to your real view</button></p>' : '')
+        body.addEventListener("click", function (e) {
+          var b = e.target.closest("button[data-as]"); if (!b) return
+          var as = b.getAttribute("data-as") || null
+          b.disabled = true; b.textContent = "…"
+          fetch("/api/view-as", {
+            method: "POST", credentials: "same-origin",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ as: as }),
+          }).then(function (r) { return r.json() }).then(function () {
+            location.reload()
+          }).catch(function () { b.disabled = false; b.textContent = "Retry" })
+        })
+      })
+      .catch(function (e) { body.innerHTML = '<p class="ax-status">Failed to load: ' + esc(e.message) + '</p>' })
+  }
+  // Persistent banner when impersonating — makes it obvious the view is fake.
+  function renderViewAsBanner() {
+    if (!WHO || !WHO.viewAsBy) return
+    if (document.getElementById("ax-viewas-banner")) return
+    var bar = document.createElement("div")
+    bar.id = "ax-viewas-banner"
+    bar.innerHTML = '👁 Viewing as <b>' + esc(WHO.user) + '</b> (real: ' + esc(WHO.viewAsBy) + ') — <a href="#" id="ax-viewas-off">Return to your view</a>'
+    document.body.appendChild(bar)
+    document.getElementById("ax-viewas-off").addEventListener("click", function (e) {
+      e.preventDefault()
+      fetch("/api/view-as", {
+        method: "POST", credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ as: null }),
+      }).then(function () { location.reload() })
+    })
+  }
+
+  // ---- User management (read + client-side hash generator) --------------
+  function openUsersModal() {
+    var ov = mkOverlay("Manage users")
+    var body = ov.querySelector(".ax-body")
+    body.innerHTML = '<p class="ax-status">Loading users…</p>'
+    var footer = ov.querySelector("footer")
+    footer.innerHTML = '<button class="ax-btn ax-cancel">Close</button>'
+    footer.querySelector(".ax-cancel").addEventListener("click", function () { ov.remove() })
+    fetch("/api/users", { credentials: "same-origin" })
+      .then(function (r) { return r.json() })
+      .then(function (d) {
+        if (!d || !d.users) { body.innerHTML = '<p class="ax-status">Failed to load: ' + esc((d && d.error) || "unknown") + '</p>'; return }
+        var rows = d.users.map(function (u) {
+          return '<tr>' +
+            '<td>' + esc(u.user) + '</td>' +
+            '<td>' + esc(u.role) + (u.tier ? ' · tier ' + esc(u.tier) : '') + '</td>' +
+            '<td>' + (u.editLevel != null ? esc(String(u.editLevel)) : '—') + '</td>' +
+            '<td><button class="ax-btn ax-small" data-op="rename" data-user="' + esc(u.user) + '">Rename</button> ' +
+                '<button class="ax-btn ax-small" data-op="pw" data-user="' + esc(u.user) + '">Change password</button></td>' +
+            '</tr>'
+        }).join("")
+        body.innerHTML =
+          '<table class="ax-table"><thead><tr><th>User</th><th>Role</th><th>Edit lvl</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>' +
+          '<div id="ax-user-tool" style="margin-top:12px"></div>' +
+          '<p class="hint" style="margin-top:12px">' + esc(d.note || "") + '</p>'
+        body.addEventListener("click", function (e) {
+          var b = e.target.closest("button[data-op]"); if (!b) return
+          var user = b.getAttribute("data-user"), op = b.getAttribute("data-op")
+          if (op === "pw") openPasswordTool(user, d.users)
+          else if (op === "rename") openRenameTool(user, d.users)
+        })
+      })
+      .catch(function (e) { body.innerHTML = '<p class="ax-status">Failed to load: ' + esc(e.message) + '</p>' })
+  }
+  function updatedUsersJson(users, patch) {
+    // users is the list from /api/users (no hashes). We can only produce a
+    // PARTIAL patch. So instead we ask the admin to paste their current JSON
+    // and we splice in the change on their machine before showing them what
+    // to run.
+    var obj = {}
+    users.forEach(function (u) {
+      obj[u.user] = { hash: "<KEEP EXISTING>", role: u.role }
+      if (u.tier) obj[u.user].tier = u.tier
+      if (u.editLevel != null) obj[u.user].editLevel = u.editLevel
+    })
+    Object.assign(obj, patch || {})
+    return obj
+  }
+  function showJsonAndCommand(preamble, obj) {
+    var pretty = JSON.stringify(obj, null, 2)
+    var cmd = "echo '" + pretty.replace(/'/g, "'\\''") + "' | npx wrangler secret put WIKI_USERS"
+    return preamble +
+      '<p class="hint"><b>1.</b> Copy this JSON (edit the KEEP-EXISTING entries with your other users\' real hashes — see current secret via <code>wrangler secret list</code> → the JSON in your local notes):</p>' +
+      '<textarea readonly style="width:100%;height:180px;font:12px ui-monospace,monospace">' + esc(pretty) + '</textarea>' +
+      '<p class="hint"><b>2.</b> From your <code>blujelly-wiki</code> folder, run <code>npx wrangler secret put WIKI_USERS</code> and paste the JSON when prompted (do NOT use the shell one-liner above unless you\'re certain it won\'t leak into your history).</p>' +
+      '<p class="hint">The change goes live within ~30s. No redeploy needed.</p>'
+  }
+  async function sha256hex(str) {
+    var buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str))
+    return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, "0") }).join("")
+  }
+  function openPasswordTool(user, users) {
+    var host = document.getElementById("ax-user-tool")
+    host.innerHTML =
+      '<div class="ax-tool"><h3>🔑 Reset password for <code>' + esc(user) + '</code></h3>' +
+      '<label>New password<input type="password" id="ax-pw-new" autocomplete="new-password"/></label>' +
+      '<label>Confirm <input type="password" id="ax-pw-cnf" autocomplete="new-password"/></label>' +
+      '<button class="ax-btn ax-primary" id="ax-pw-go">Compute updated JSON</button>' +
+      '<div id="ax-pw-out"></div></div>'
+    document.getElementById("ax-pw-go").addEventListener("click", async function () {
+      var pw = document.getElementById("ax-pw-new").value
+      var cnf = document.getElementById("ax-pw-cnf").value
+      if (!pw || pw.length < 6) { alert("Password too short (min 6 chars)."); return }
+      if (pw !== cnf) { alert("Passwords don't match."); return }
+      var hash = await sha256hex(pw)
+      var patch = {}
+      var existing = users.find(function (u) { return u.user === user })
+      patch[user] = { hash: hash, role: existing.role }
+      if (existing.tier) patch[user].tier = existing.tier
+      if (existing.editLevel != null) patch[user].editLevel = existing.editLevel
+      document.getElementById("ax-pw-out").innerHTML = showJsonAndCommand(
+        '<p class="ax-status">✓ New SHA-256 hash computed. It is <b>never sent to the server</b>. Only you see it below.</p>',
+        updatedUsersJson(users, patch),
+      )
+    })
+  }
+  function openRenameTool(user, users) {
+    var host = document.getElementById("ax-user-tool")
+    host.innerHTML =
+      '<div class="ax-tool"><h3>✏ Rename <code>' + esc(user) + '</code></h3>' +
+      '<label>New username <input type="text" id="ax-rn-new" value="' + esc(user) + '"/></label>' +
+      '<p class="hint">Case-insensitive. Keeps the same hash, role, and tier. Old sessions must sign in again with the new name.</p>' +
+      '<button class="ax-btn ax-primary" id="ax-rn-go">Compute updated JSON</button>' +
+      '<div id="ax-rn-out"></div></div>'
+    document.getElementById("ax-rn-go").addEventListener("click", function () {
+      var newName = document.getElementById("ax-rn-new").value.trim()
+      if (!newName || newName === user) { alert("Enter a different name."); return }
+      var conflict = users.find(function (u) { return u.user.toLowerCase() === newName.toLowerCase() && u.user !== user })
+      if (conflict) { alert("A user named " + conflict.user + " already exists (case-insensitive)."); return }
+      var next = users.map(function (u) { return u.user === user ? Object.assign({}, u, { user: newName }) : u })
+      var obj = {}
+      next.forEach(function (u) {
+        obj[u.user] = { hash: "<KEEP EXISTING>", role: u.role }
+        if (u.tier) obj[u.user].tier = u.tier
+        if (u.editLevel != null) obj[u.user].editLevel = u.editLevel
+      })
+      document.getElementById("ax-rn-out").innerHTML = showJsonAndCommand(
+        '<p class="ax-status">✓ Rename staged in this JSON. Replace <code>&lt;KEEP EXISTING&gt;</code> with the actual hashes before applying.</p>',
+        obj,
+      )
+    })
   }
 
   function mkOverlay(title) {
@@ -518,6 +736,7 @@
           '<label>Destination folder<input id="ax-dir" placeholder="content-relative folder"/></label>' +
           '<label>File name <small>(auto-slugified)</small><input id="ax-name" placeholder="picture.jpg"/></label>' +
           '<label class="alt-row"><input type="checkbox" id="ax-portrait-set"/> Set as this page\'s portrait (updates <code>portrait:</code> frontmatter — for NPC/character/monster pages)</label>' +
+          '<label class="alt-row"><input type="checkbox" id="ax-zoompan"/> Enable zoom &amp; pan on the inserted image (readers can Ctrl+scroll to zoom, drag to pan — off by default, even for maps)</label>' +
         '</div>' +
         '<p class="hint">The upload commits to the <code>staging</code> branch. Deploy from ⚙ Admin → Deploy Changes to publish. Max 25 MB. Formats: jpg, png, gif, webp, svg, avif.</p>' +
       '</div>' +
@@ -534,6 +753,17 @@
     var dirIn = body.querySelector("#ax-dir")
     var nameIn = body.querySelector("#ax-name")
     var portraitCk = body.querySelector("#ax-portrait-set")
+    var zoomPanCk = body.querySelector("#ax-zoompan")
+
+    function wrapInsert(mdOrPath, alt) {
+      // If zoom/pan is on, insert a raw HTML div so the site-side script
+      // attaches pan-zoom to it. Otherwise fall back to plain markdown.
+      if (zoomPanCk.checked) {
+        return '\n<div class="zoom-image">\n  <img src="' + mdOrPath + '" alt="' + esc(alt) + '" />\n</div>\n'
+      }
+      return "![" + alt + "](" + mdOrPath + ")"
+    }
+    function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
     var preview = body.querySelector("#ax-preview")
     var wikiGrid = body.querySelector("#ax-wiki-grid")
     var wikiFilter = body.querySelector("#ax-wiki-filter")
@@ -653,7 +883,7 @@
           alert("✓ Selected " + im.path + "\n\nThe portrait: frontmatter field was NOT auto-edited. To wire this up, edit the frontmatter of this page and set:\n\n  portrait: \"" + im.path.replace(/^content\//, "") + "\"")
         } else {
           var alt2 = (nameIn.value || im.path.split("/").pop()).replace(/\.[^.]+$/, "").replace(/-/g, " ")
-          onInsert("![" + alt2 + "](" + im.url + ")")
+          onInsert(wrapInsert(im.url, alt2))
         }
         setTimeout(close, 400)
         return
@@ -705,7 +935,7 @@
             } else {
               // Insert markdown at cursor
               var alt = nameIn.value.replace(/\.[^.]+$/, "").replace(/-/g, " ")
-              onInsert("![" + alt + "](" + d.url + ")")
+              onInsert(wrapInsert(d.url, alt))
             }
             setTimeout(close, 1200)
           } else {
@@ -801,7 +1031,7 @@
       var rect = container.getBoundingClientRect()
       var cx = e.clientX - rect.left - rect.width / 2
       var cy = e.clientY - rect.top - rect.height / 2
-      var delta = -e.deltaY * 0.003
+      var delta = -e.deltaY * 0.001
       var next = Math.max(s.min, Math.min(s.max, s.scale * (1 + delta)))
       var f = next / s.scale
       s.x = cx + (s.x - cx) * f
@@ -860,6 +1090,99 @@
     pz.state.scale = 1; pz.state.x = 0; pz.state.y = 0
     pz.inner.style.transform = ""
     container.classList.remove("map-zoomed")
+  }
+
+  // ---- .zoom-image opt-in wrapper: attach pan/zoom to any such container --
+  function decorateZoomImages() {
+    var els = document.querySelectorAll(".zoom-image:not([data-ax-decorated])")
+    els.forEach(function (el) {
+      el.setAttribute("data-ax-decorated", "1")
+      var inner = document.createElement("div")
+      inner.className = "zoom-image-inner"
+      while (el.firstChild) inner.appendChild(el.firstChild)
+      el.appendChild(inner)
+      attachPanZoom(el, inner)
+      var reset = document.createElement("button")
+      reset.className = "map-reset-btn"; reset.type = "button"; reset.textContent = "⟲"
+      reset.title = "Reset zoom (or double-click)"
+      reset.addEventListener("click", function (e) { e.stopPropagation(); resetZoom(el) })
+      el.appendChild(reset)
+      var hint = document.createElement("div")
+      hint.className = "map-hint"; hint.textContent = "Ctrl + scroll to zoom · drag to pan"
+      el.appendChild(hint)
+      // Stop lightbox from opening when the user just wants to interact
+      inner.querySelectorAll("img").forEach(function (img) { img.setAttribute("data-no-lightbox", "1") })
+    })
+  }
+
+  // ---- Lightbox: click any content image → full-screen pan/zoom overlay ----
+  function openLightbox(srcUrl, altText) {
+    var ov = document.createElement("div")
+    ov.className = "ax-lightbox"
+    ov.innerHTML =
+      '<div class="ax-lightbox-inner"><img src="' + srcUrl + '" alt="' + (altText || "") + '"/></div>' +
+      '<button class="ax-lightbox-close" title="Close (Esc)">×</button>' +
+      '<div class="ax-lightbox-hint">Ctrl + scroll to zoom · drag to pan · Esc to close</div>'
+    document.body.appendChild(ov)
+    var img = ov.querySelector("img")
+    var inner = ov.querySelector(".ax-lightbox-inner")
+    var s = { scale: 1, x: 0, y: 0, min: 1, max: 12 }
+    function apply() { img.style.transform = "translate(" + s.x + "px," + s.y + "px) scale(" + s.scale + ")" }
+    function close() { ov.remove(); document.removeEventListener("keydown", onKey) }
+    function onKey(e) { if (e.key === "Escape") close() }
+    document.addEventListener("keydown", onKey)
+    ov.addEventListener("click", function (e) { if (e.target === ov) close() })
+    ov.querySelector(".ax-lightbox-close").addEventListener("click", close)
+    ov.addEventListener("wheel", function (e) {
+      if (!(e.ctrlKey || e.metaKey)) return
+      e.preventDefault()
+      var rect = img.getBoundingClientRect()
+      var cx = e.clientX - rect.left - rect.width / 2
+      var cy = e.clientY - rect.top - rect.height / 2
+      var delta = -e.deltaY * 0.001 // finer zoom (matches maps)
+      var next = Math.max(s.min, Math.min(s.max, s.scale * (1 + delta)))
+      var f = next / s.scale
+      s.x = cx + (s.x - cx) * f
+      s.y = cy + (s.y - cy) * f
+      s.scale = next
+      if (s.scale <= 1.01) { s.scale = 1; s.x = 0; s.y = 0 }
+      apply()
+    }, { passive: false })
+    var drag = null
+    img.addEventListener("mousedown", function (e) {
+      if (s.scale <= 1) return
+      drag = { sx: e.clientX, sy: e.clientY, ox: s.x, oy: s.y }
+      ov.classList.add("panning")
+      e.preventDefault(); e.stopPropagation()
+    })
+    window.addEventListener("mousemove", function (e) {
+      if (!drag) return
+      s.x = drag.ox + (e.clientX - drag.sx); s.y = drag.oy + (e.clientY - drag.sy); apply()
+    })
+    window.addEventListener("mouseup", function () {
+      if (!drag) return
+      drag = null; ov.classList.remove("panning")
+    })
+    img.addEventListener("dblclick", function (e) {
+      e.preventDefault(); e.stopPropagation()
+      s.scale = 1; s.x = 0; s.y = 0; apply()
+    })
+    img.addEventListener("click", function (e) { e.stopPropagation() }) // don't close on image click
+  }
+  function setupLightbox() {
+    var article = document.querySelector("article")
+    if (!article || article.dataset.axLightbox) return
+    article.dataset.axLightbox = "1"
+    article.addEventListener("click", function (e) {
+      var t = e.target
+      if (!(t instanceof HTMLImageElement)) return
+      if (t.classList.contains("ax-portrait")) return
+      if (t.hasAttribute("data-no-lightbox")) return
+      if (t.closest("a")) return               // clicks on linked images follow the link
+      if (t.closest(".location-map")) return   // maps have their own pan/zoom
+      e.preventDefault()
+      openLightbox(t.currentSrc || t.src, t.alt)
+    })
   }
 
   // ---- Explorer sidebar: Home button + hide duplicate folder-note entries ---
@@ -934,6 +1257,8 @@
     tidyPlaceholders()
     renderPortrait()
     decorateMaps()
+    decorateZoomImages()
+    setupLightbox()
     watchExplorer()
     sessionInit()
   }

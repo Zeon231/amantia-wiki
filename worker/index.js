@@ -89,6 +89,7 @@ export default {
         editLevel: auth.editLevel,
         canSeeAllTiers: isAdminRole(auth.role),
         canEdit: isAdminRole(auth.role), // admin-only editing, for now
+        viewAsBy: auth.viewAsBy || null, // if set, admin is impersonating
       })
     }
 
@@ -152,8 +153,54 @@ const MAIN_BRANCH = "main"
 const STAGING_BRANCH = "staging"
 
 async function handleApi(path, request, env, auth) {
+  // /api/view-as must remain callable even DURING impersonation — otherwise
+  // an admin who impersonated a player would be stuck as that player. It
+  // passes the gate if the caller is currently an admin OR was originally
+  // an admin (viewAsBy). All other endpoints require the effective role
+  // to be admin.
+  const isRealAdmin = isAdminRole(auth.role) || !!auth.viewAsBy
+  if (path === "/api/view-as") {
+    if (!isRealAdmin) return json({ error: "forbidden — admin only" }, 403)
+    if (request.method === "GET") {
+      // List candidates (canonical names + roles/tiers, no hashes) for the picker
+      let users = {}
+      try { users = JSON.parse(env.WIKI_USERS || "{}") } catch {}
+      const list = Object.keys(users).map((k) => ({
+        user: k,
+        role: users[k].role || "player",
+        tier: users[k].tier || null,
+        editLevel: Number.isFinite(users[k].editLevel) ? users[k].editLevel : null,
+      }))
+      return json({ users: list, current: auth.viewAsBy ? auth.user : null, real: auth.viewAsBy || auth.user })
+    }
+    if (request.method === "POST") {
+      const body = await request.json().catch(() => ({}))
+      const as = body && body.as ? String(body.as) : null
+      const cookieBase = "AX_VIEW_AS=" + (as ? encodeURIComponent(as) : "") +
+        "; Path=/; SameSite=Lax" +
+        (as ? "; Max-Age=86400" : "; Max-Age=0")
+      return new Response(JSON.stringify({ ok: true, viewingAs: as || null }), {
+        headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "Set-Cookie": cookieBase },
+      })
+    }
+    return json({ error: "method not allowed" }, 405)
+  }
+
   if (!isAdminRole(auth.role)) return json({ error: "forbidden — admin only" }, 403)
   if (!env.GITHUB_TOKEN) return json({ error: "editing not configured (GITHUB_TOKEN not set)" }, 501)
+
+  // ---- Users list (admin panel: no hashes, safe to hand to the browser) ----
+  if (path === "/api/users" && request.method === "GET") {
+    let users = {}
+    try { users = JSON.parse(env.WIKI_USERS || "{}") } catch { return json({ error: "WIKI_USERS malformed" }, 500) }
+    const list = Object.keys(users).map((k) => ({
+      user: k,
+      role: users[k].role || "player",
+      tier: users[k].tier || null,
+      editLevel: Number.isFinite(users[k].editLevel) ? users[k].editLevel : null,
+    }))
+    return json({ users: list, storage: "secret", note: "Editing WIKI_USERS from the wiki requires a Cloudflare API token or migrating to KV. Use the tool below to compute the updated JSON, then run: wrangler secret put WIKI_USERS" })
+  }
 
   const url = new URL(request.url)
   const m = request.method
@@ -518,15 +565,21 @@ async function authenticate(request, env) {
     return { ok: false }
   }
 
-  const entry = users[user]
+  // Case-insensitive username lookup. Stored key wins for canonical display;
+  // any input casing matches. Passwords stay case-sensitive.
+  const lookup = String(user).toLowerCase()
+  let canonicalName = null, entry = null
+  for (const k of Object.keys(users)) {
+    if (k.toLowerCase() === lookup) { canonicalName = k; entry = users[k]; break }
+  }
   if (!entry || typeof entry.hash !== "string") return { ok: false }
   const passHash = await sha256hex(pass)
   if (!timingSafeEqualHex(passHash, entry.hash.toLowerCase())) return { ok: false }
 
   const role = isAdminRole(entry.role) ? entry.role : "player"
-  return {
+  const realAuth = {
     ok: true,
-    user,
+    user: canonicalName,
     role,
     tier: entry.tier,
     // Default players to a mid level so they can edit player-editable pages
@@ -537,6 +590,38 @@ async function authenticate(request, env) {
         ? 1
         : 3,
   }
+
+  // View-as impersonation: only ADMIN-role callers can trigger this. After
+  // the real password check succeeds, if the AX_VIEW_AS cookie names another
+  // user (or "anonymous"), swap the returned role/tier so the site behaves
+  // as if THAT user were logged in. Real admin identity is kept in viewAsBy
+  // so the client can render a "Viewing as X" banner.
+  if (isAdminRole(role)) {
+    const cookieHdr = request.headers.get("Cookie") || ""
+    const m = /(?:^|;\s*)AX_VIEW_AS=([^;]+)/.exec(cookieHdr)
+    const asName = m ? decodeURIComponent(m[1]) : null
+    if (asName && asName.toLowerCase() !== canonicalName.toLowerCase()) {
+      if (asName.toLowerCase() === "anonymous") {
+        return {
+          ok: true, user: "anonymous", role: "player", tier: null,
+          editLevel: 999, viewAsBy: canonicalName,
+        }
+      }
+      const asLookup = asName.toLowerCase()
+      for (const k of Object.keys(users)) {
+        if (k.toLowerCase() !== asLookup) continue
+        const e = users[k]
+        const asRole = isAdminRole(e.role) ? e.role : "player"
+        return {
+          ok: true, user: k, role: asRole, tier: e.tier,
+          editLevel: Number.isFinite(e.editLevel) ? e.editLevel : (isAdminRole(asRole) ? 1 : 3),
+          viewAsBy: canonicalName,
+        }
+      }
+      // Unknown impersonation target — fall through to real admin auth
+    }
+  }
+  return realAuth
 }
 
 function unauthorized(msg) {
