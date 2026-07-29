@@ -557,7 +557,7 @@
         })
         .then(function (d) {
           if (!d || (!d.entries && !d.error)) { out.innerHTML = '<p class="ax-status">No data.</p>'; return }
-          if (d.error) { out.innerHTML = '<p class="ax-status">Error: ' + esc(d.error) + '</p>'; return }
+          if (d.error) { out.innerHTML = '<p class="ax-status" style="white-space:pre-wrap;font:11px ui-monospace,monospace">Error: ' + esc(d.error) + (d.message ? "\n\n" + esc(d.message) : "") + (d.detail ? "\n\n" + esc(d.detail) : "") + '</p>'; return }
           allEntries = d.entries || []
           var users = Array.from(new Set(allEntries.map(function (e) { return e.user }))).sort()
           var prev = userSel.value
