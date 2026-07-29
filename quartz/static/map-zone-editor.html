@@ -14,28 +14,31 @@
   .mapview { position:relative; margin-top:12px; overflow:hidden; border-radius:8px; }
   .mapview.pan-mode { cursor:grab; }
   .mapview.panning { cursor:grabbing; }
-  .mapbox { position:relative; user-select:none; line-height:0; transform-origin:0 0; will-change:transform; }
+  .mapbox { position:relative; user-select:none; line-height:0; transform-origin:0 0; will-change:transform; --map-scale:1; }
   .mapbox img { width:100%; height:auto; display:block; border-radius:8px; cursor:crosshair; -webkit-user-drag:none; }
   .mapbox.mode-poly img { cursor:copy; }
   .mapview-controls { position:absolute; top:8px; right:8px; z-index:10; display:flex; gap:4px; }
   .mapview-controls button { background:rgba(20,20,25,.85); color:#fff; border:none; width:28px; height:28px; border-radius:4px; font-size:14px; cursor:pointer; padding:0; }
   .mapview-controls button:hover { background:#e8b04b; color:#111; }
   .mapview-hint { position:absolute; bottom:8px; left:8px; z-index:10; background:rgba(20,20,25,.75); color:#fff; font:500 11px system-ui,sans-serif; padding:3px 8px; border-radius:4px; pointer-events:none; }
-  /* Rectangle zone box */
-  .zbox { position:absolute; box-sizing:border-box; border:2px solid #e8b04b; background:rgba(232,176,75,.18); border-radius:6px; cursor:move; }
-  .zbox .ztag { position:absolute; left:0; top:-19px; font-size:11px; line-height:1.4; background:rgba(0,0,0,.82); color:#fff; padding:0 5px; border-radius:3px; white-space:nowrap; pointer-events:none; }
-  .zbox .zdel { position:absolute; right:-9px; top:-9px; width:18px; height:18px; border-radius:50%; background:#c0392b; color:#fff; font:bold 12px/18px sans-serif; text-align:center; cursor:pointer; z-index:3; }
-  .zbox .zres { position:absolute; right:-6px; bottom:-6px; width:13px; height:13px; background:#e8b04b; border:2px solid #fff; border-radius:2px; cursor:se-resize; }
-  /* Polygon SVG overlay */
+  /* Rectangle zone box — border, tag, and handles all counter-scale to
+     stay a constant visual size at any zoom level (var(--map-scale) is
+     set on .mapbox by the pan/zoom JS). */
+  .zbox { position:absolute; box-sizing:border-box; border:calc(2px / var(--map-scale)) solid #e8b04b; background:rgba(232,176,75,.18); border-radius:calc(6px / var(--map-scale)); cursor:move; }
+  .zbox .ztag { position:absolute; left:0; top:calc(-19px / var(--map-scale)); font-size:calc(11px / var(--map-scale)); line-height:1.4; background:rgba(0,0,0,.82); color:#fff; padding:0 calc(5px / var(--map-scale)); border-radius:calc(3px / var(--map-scale)); white-space:nowrap; pointer-events:none; }
+  .zbox .zdel { position:absolute; right:calc(-9px / var(--map-scale)); top:calc(-9px / var(--map-scale)); width:calc(18px / var(--map-scale)); height:calc(18px / var(--map-scale)); border-radius:50%; background:#c0392b; color:#fff; font-weight:bold; font-size:calc(12px / var(--map-scale)); line-height:calc(18px / var(--map-scale)); text-align:center; cursor:pointer; z-index:3; }
+  .zbox .zres { position:absolute; right:calc(-6px / var(--map-scale)); bottom:calc(-6px / var(--map-scale)); width:calc(13px / var(--map-scale)); height:calc(13px / var(--map-scale)); background:#e8b04b; border:calc(2px / var(--map-scale)) solid #fff; border-radius:calc(2px / var(--map-scale)); cursor:se-resize; }
+  /* Polygon SVG overlay — polygon stroke uses non-scaling-stroke; circle
+     radii and text size are counter-scaled by JS on zoom. */
   .zpoly-svg { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
-  .zpoly-svg polygon { fill:rgba(232,176,75,.18); stroke:#e8b04b; stroke-width:.4; pointer-events:all; cursor:move; }
-  .zpoly-svg .vhandle { fill:#e8b04b; stroke:#fff; stroke-width:.3; cursor:grab; pointer-events:all; }
+  .zpoly-svg polygon { fill:rgba(232,176,75,.18); stroke:#e8b04b; stroke-width:1.5; vector-effect:non-scaling-stroke; pointer-events:all; cursor:move; }
+  .zpoly-svg .vhandle { fill:#e8b04b; stroke:#fff; stroke-width:1; vector-effect:non-scaling-stroke; cursor:grab; pointer-events:all; }
   .zpoly-svg .vhandle.dragging { cursor:grabbing; }
-  .zpoly-svg .vmid { fill:#fff; stroke:#e8b04b; stroke-width:.3; cursor:crosshair; pointer-events:all; opacity:.55; }
-  .zpoly-svg .vmid:hover { opacity:1; r:1.1; }
-  .zpoly-svg text { fill:#fff; font:600 3px system-ui,sans-serif; text-anchor:middle; pointer-events:none; paint-order:stroke; stroke:rgba(0,0,0,.7); stroke-width:.8; }
+  .zpoly-svg .vmid { fill:#fff; stroke:#e8b04b; stroke-width:1; vector-effect:non-scaling-stroke; cursor:crosshair; pointer-events:all; opacity:.55; }
+  .zpoly-svg .vmid:hover { opacity:1; }
+  .zpoly-svg text { fill:#fff; text-anchor:middle; pointer-events:none; paint-order:stroke; stroke:rgba(0,0,0,.7); stroke-width:3; vector-effect:non-scaling-stroke; }
   .zpoly-controls { position:absolute; box-sizing:border-box; pointer-events:none; }
-  .zpoly-controls .zdel { position:absolute; width:18px; height:18px; border-radius:50%; background:#c0392b; color:#fff; font:bold 12px/18px sans-serif; text-align:center; cursor:pointer; z-index:3; pointer-events:all; transform:translate(-50%,-50%); }
+  .zpoly-controls .zdel { position:absolute; width:calc(18px / var(--map-scale)); height:calc(18px / var(--map-scale)); border-radius:50%; background:#c0392b; color:#fff; font-weight:bold; font-size:calc(12px / var(--map-scale)); line-height:calc(18px / var(--map-scale)); text-align:center; cursor:pointer; z-index:3; pointer-events:all; transform:translate(-50%,-50%); }
   /* In-progress polygon while drawing */
   #polydraw { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; overflow:visible; display:none; }
   #polydraw polyline { fill:rgba(232,176,75,.14); stroke:#e8b04b; stroke-width:.5; stroke-dasharray:1,1; }
@@ -242,6 +245,8 @@
              '<button class="del" data-i="'+i+'">delete</button></div>';
     }).join('');
     renderExport();
+    // Newly-added SVG nodes need to inherit the current counter-scale
+    if (window.__mapRescale) window.__mapRescale();
   }
 
   function loadTarget(){
@@ -547,7 +552,22 @@
     var view = document.getElementById('mapview')
     var box = document.getElementById('mapbox')
     var s = { scale:1, x:0, y:0, min:1, max:10 }
-    function apply(){ box.style.transform = 'translate('+s.x+'px,'+s.y+'px) scale('+s.scale+')' }
+    function apply(){
+      box.style.transform = 'translate('+s.x+'px,'+s.y+'px) scale('+s.scale+')'
+      box.style.setProperty('--map-scale', s.scale)
+      rescaleSvgHandles()
+    }
+    // Counter-scale SVG-based handles (rectangles handled via CSS calc()).
+    // Vertex circles, midpoint circles, and label text should stay a constant
+    // visual size regardless of map zoom.
+    function rescaleSvgHandles(){
+      var inv = 1 / s.scale
+      box.querySelectorAll('.zpoly-svg .vhandle').forEach(function(c){ c.setAttribute('r', 1.4 * inv) })
+      box.querySelectorAll('.zpoly-svg .vmid').forEach(function(c){ c.setAttribute('r', 0.8 * inv) })
+      box.querySelectorAll('.zpoly-svg text').forEach(function(t){ t.setAttribute('font-size', 3 * inv) })
+    }
+    // Expose rescale so render() can call it after rebuilding SVG nodes.
+    window.__mapRescale = rescaleSvgHandles
     function clamp(){
       var vw = view.clientWidth, vh = view.clientHeight
       var mx = vw * (s.scale - 1), my = vh * (s.scale - 1)
