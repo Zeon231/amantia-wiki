@@ -217,17 +217,98 @@ async function handleApi(path, request, env, auth) {
     return json({ date, entries })
   }
 
-  // ---- Users list (admin panel: no hashes, safe to hand to the browser) ----
+  // ---- Users CRUD (KV-backed once USERS_KV is bound) ----------------------
+  const usersReadOnly = !env.USERS_KV
   if (path === "/api/users" && request.method === "GET") {
-    let users = {}
-    try { users = JSON.parse(env.WIKI_USERS || "{}") } catch { return json({ error: "WIKI_USERS malformed" }, 500) }
+    const users = await getUsers(env)
     const list = Object.keys(users).map((k) => ({
       user: k,
       role: users[k].role || "player",
       tier: users[k].tier || null,
       editLevel: Number.isFinite(users[k].editLevel) ? users[k].editLevel : null,
     }))
-    return json({ users: list, storage: "secret", note: "Editing WIKI_USERS from the wiki requires a Cloudflare API token or migrating to KV. Use the tool below to compute the updated JSON, then run: wrangler secret put WIKI_USERS" })
+    return json({
+      users: list,
+      storage: usersReadOnly ? "secret" : "kv",
+      note: usersReadOnly ? "Live editing needs USERS_KV — bind it in wrangler.jsonc and redeploy." : "",
+    })
+  }
+
+  // Common guard: writes need KV
+  const requireKV = () => usersReadOnly ? json({ error: "USERS_KV not configured — user edits require KV" }, 501) : null
+
+  if (path === "/api/users/password" && request.method === "POST") {
+    const guard = requireKV(); if (guard) return guard
+    const body = await request.json().catch(() => null)
+    if (!body || !body.user || !body.hash) return json({ error: "user and hash required" }, 400)
+    if (!/^[0-9a-fA-F]{64}$/.test(body.hash)) return json({ error: "hash must be 64-char hex sha256" }, 400)
+    const users = await getUsers(env)
+    const key = Object.keys(users).find((k) => k.toLowerCase() === String(body.user).toLowerCase())
+    if (!key) return json({ error: "user not found" }, 404)
+    users[key].hash = body.hash.toLowerCase()
+    await saveUsers(env, users)
+    return json({ ok: true, user: key })
+  }
+
+  if (path === "/api/users/rename" && request.method === "POST") {
+    const guard = requireKV(); if (guard) return guard
+    const body = await request.json().catch(() => null)
+    if (!body || !body.from || !body.to) return json({ error: "from and to required" }, 400)
+    const to = String(body.to).trim()
+    if (!/^[a-zA-Z0-9._-]{2,32}$/.test(to)) return json({ error: "new name must be 2-32 chars, letters/digits/._-" }, 400)
+    const users = await getUsers(env)
+    const fromKey = Object.keys(users).find((k) => k.toLowerCase() === String(body.from).toLowerCase())
+    if (!fromKey) return json({ error: "user not found" }, 404)
+    const conflict = Object.keys(users).find((k) => k.toLowerCase() === to.toLowerCase() && k !== fromKey)
+    if (conflict) return json({ error: "a user named '" + conflict + "' already exists (case-insensitive)" }, 409)
+    const record = users[fromKey]
+    delete users[fromKey]
+    users[to] = record
+    await saveUsers(env, users)
+    return json({ ok: true, from: fromKey, to })
+  }
+
+  if (path === "/api/users/create" && request.method === "POST") {
+    const guard = requireKV(); if (guard) return guard
+    const body = await request.json().catch(() => null)
+    if (!body || !body.user || !body.hash) return json({ error: "user and hash required" }, 400)
+    const name = String(body.user).trim()
+    const rec = {
+      hash: String(body.hash).toLowerCase(),
+      role: body.role || "player",
+    }
+    if (body.tier) rec.tier = String(body.tier)
+    if (body.editLevel != null) rec.editLevel = parseInt(body.editLevel, 10)
+    const err = validateUserRecord(rec, name); if (err) return json({ error: err }, 400)
+    const users = await getUsers(env)
+    if (Object.keys(users).some((k) => k.toLowerCase() === name.toLowerCase())) {
+      return json({ error: "user already exists" }, 409)
+    }
+    users[name] = rec
+    await saveUsers(env, users)
+    return json({ ok: true, user: name })
+  }
+
+  if (path === "/api/users/delete" && request.method === "POST") {
+    const guard = requireKV(); if (guard) return guard
+    const body = await request.json().catch(() => null)
+    if (!body || !body.user) return json({ error: "user required" }, 400)
+    const users = await getUsers(env)
+    const key = Object.keys(users).find((k) => k.toLowerCase() === String(body.user).toLowerCase())
+    if (!key) return json({ error: "user not found" }, 404)
+    // Never let an admin delete themselves — foot-gun. They can rename first,
+    // then have another admin delete the old name if truly needed.
+    if (auth.viewAsBy ? key.toLowerCase() === auth.viewAsBy.toLowerCase() : key.toLowerCase() === auth.user.toLowerCase()) {
+      return json({ error: "you cannot delete yourself — rename or ask another admin" }, 403)
+    }
+    // Never let the last admin be deleted.
+    const remainingAdmins = Object.keys(users).filter((k) => k !== key && ADMIN_ROLES.has(users[k].role))
+    if (ADMIN_ROLES.has(users[key].role) && !remainingAdmins.length) {
+      return json({ error: "cannot delete the last admin" }, 403)
+    }
+    delete users[key]
+    await saveUsers(env, users)
+    return json({ ok: true, user: key })
   }
 
   const url = new URL(request.url)

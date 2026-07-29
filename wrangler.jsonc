@@ -13,6 +13,6 @@
   // request after deploy, the Worker seeds this from the existing WIKI_USERS
   // secret so the migration is one-shot and reversible.
   "kv_namespaces": [
-    { "binding": "USERS_KV", "id": "PASTE_KV_ID_HERE" }
+    { "binding": "USERS_KV", "id": "619aad5566de4fe2837c1bd52e74ecf0" }
   ]
 }

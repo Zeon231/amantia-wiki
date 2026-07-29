@@ -73,6 +73,9 @@
       ".ax-tool label input{width:100%;padding:5px 8px;border:1px solid var(--gray);border-radius:4px;background:var(--light);color:var(--darkgray);margin-top:2px;box-sizing:border-box}",
       ".ax-btn.ax-small{padding:3px 9px;font-size:11px;font-weight:500}",
       ".ax-btn.ax-primary{background:#e8b04b;color:#111}",
+      ".ax-btn.ax-danger{background:#c0392b;color:#fff}",
+      ".ax-tool select{width:100%;padding:5px 8px;border:1px solid var(--gray);border-radius:4px;background:var(--light);color:var(--darkgray);margin-top:2px;box-sizing:border-box}",
+      ".ax-tool small{color:var(--gray);font-weight:normal;margin-left:.3em}",
       /* audit log */
       ".ax-log-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:end;padding-bottom:6px;border-bottom:1px solid var(--lightgray);margin-bottom:6px}",
       ".ax-log-controls label{display:flex;flex-direction:column;font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;gap:2px}",
@@ -619,117 +622,166 @@
     })
   }
 
-  // ---- User management (read + client-side hash generator) --------------
-  function openUsersModal() {
-    var ov = mkOverlay("Manage users")
-    var body = ov.querySelector(".ax-body")
-    body.innerHTML = '<p class="ax-status">Loading users…</p>'
-    var footer = ov.querySelector("footer")
-    footer.innerHTML = '<button class="ax-btn ax-cancel">Close</button>'
-    footer.querySelector(".ax-cancel").addEventListener("click", function () { ov.remove() })
-    fetch("/api/users", { credentials: "same-origin" })
-      .then(function (r) { return r.json() })
-      .then(function (d) {
-        if (!d || !d.users) { body.innerHTML = '<p class="ax-status">Failed to load: ' + esc((d && d.error) || "unknown") + '</p>'; return }
-        var rows = d.users.map(function (u) {
-          return '<tr>' +
-            '<td>' + esc(u.user) + '</td>' +
-            '<td>' + esc(u.role) + (u.tier ? ' · tier ' + esc(u.tier) : '') + '</td>' +
-            '<td>' + (u.editLevel != null ? esc(String(u.editLevel)) : '—') + '</td>' +
-            '<td><button class="ax-btn ax-small" data-op="rename" data-user="' + esc(u.user) + '">Rename</button> ' +
-                '<button class="ax-btn ax-small" data-op="pw" data-user="' + esc(u.user) + '">Change password</button></td>' +
-            '</tr>'
-        }).join("")
-        body.innerHTML =
-          '<table class="ax-table"><thead><tr><th>User</th><th>Role</th><th>Edit lvl</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>' +
-          '<div id="ax-user-tool" style="margin-top:12px"></div>' +
-          '<p class="hint" style="margin-top:12px">' + esc(d.note || "") + '</p>'
-        body.addEventListener("click", function (e) {
-          var b = e.target.closest("button[data-op]"); if (!b) return
-          var user = b.getAttribute("data-user"), op = b.getAttribute("data-op")
-          if (op === "pw") openPasswordTool(user, d.users)
-          else if (op === "rename") openRenameTool(user, d.users)
-        })
-      })
-      .catch(function (e) { body.innerHTML = '<p class="ax-status">Failed to load: ' + esc(e.message) + '</p>' })
-  }
-  function updatedUsersJson(users, patch) {
-    // users is the list from /api/users (no hashes). We can only produce a
-    // PARTIAL patch. So instead we ask the admin to paste their current JSON
-    // and we splice in the change on their machine before showing them what
-    // to run.
-    var obj = {}
-    users.forEach(function (u) {
-      obj[u.user] = { hash: "<KEEP EXISTING>", role: u.role }
-      if (u.tier) obj[u.user].tier = u.tier
-      if (u.editLevel != null) obj[u.user].editLevel = u.editLevel
-    })
-    Object.assign(obj, patch || {})
-    return obj
-  }
-  function showJsonAndCommand(preamble, obj) {
-    var pretty = JSON.stringify(obj, null, 2)
-    var cmd = "echo '" + pretty.replace(/'/g, "'\\''") + "' | npx wrangler secret put WIKI_USERS"
-    return preamble +
-      '<p class="hint"><b>1.</b> Copy this JSON (edit the KEEP-EXISTING entries with your other users\' real hashes — see current secret via <code>wrangler secret list</code> → the JSON in your local notes):</p>' +
-      '<textarea readonly style="width:100%;height:180px;font:12px ui-monospace,monospace">' + esc(pretty) + '</textarea>' +
-      '<p class="hint"><b>2.</b> From your <code>blujelly-wiki</code> folder, run <code>npx wrangler secret put WIKI_USERS</code> and paste the JSON when prompted (do NOT use the shell one-liner above unless you\'re certain it won\'t leak into your history).</p>' +
-      '<p class="hint">The change goes live within ~30s. No redeploy needed.</p>'
-  }
+  // ---- User management (live edits via KV API) --------------------------
   async function sha256hex(str) {
     var buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str))
     return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, "0") }).join("")
   }
-  function openPasswordTool(user, users) {
-    var host = document.getElementById("ax-user-tool")
-    host.innerHTML =
+  function openUsersModal() {
+    var ov = mkOverlay("Manage users")
+    var body = ov.querySelector(".ax-body")
+    var footer = ov.querySelector("footer")
+    footer.innerHTML = '<button class="ax-btn ax-cancel">Close</button>'
+    footer.querySelector(".ax-cancel").addEventListener("click", function () { ov.remove() })
+    function reload() {
+      body.innerHTML = '<p class="ax-status">Loading users…</p>'
+      fetch("/api/users", { credentials: "same-origin" })
+        .then(function (r) { return r.json() })
+        .then(function (d) {
+          if (!d || !d.users) { body.innerHTML = '<p class="ax-status">Failed to load: ' + esc((d && d.error) || "unknown") + '</p>'; return }
+          var readonly = d.storage !== "kv"
+          var rows = d.users.map(function (u) {
+            var btns = readonly ? '' :
+              '<button class="ax-btn ax-small" data-op="rename" data-user="' + esc(u.user) + '">Rename</button> ' +
+              '<button class="ax-btn ax-small" data-op="pw"     data-user="' + esc(u.user) + '">Change password</button> ' +
+              '<button class="ax-btn ax-small ax-danger" data-op="delete" data-user="' + esc(u.user) + '">Delete</button>'
+            return '<tr>' +
+              '<td>' + esc(u.user) + '</td>' +
+              '<td>' + esc(u.role) + (u.tier ? ' · tier ' + esc(u.tier) : '') + '</td>' +
+              '<td>' + (u.editLevel != null ? esc(String(u.editLevel)) : '—') + '</td>' +
+              '<td>' + btns + '</td>' +
+              '</tr>'
+          }).join("")
+          body.innerHTML =
+            (readonly ? '<p class="ax-status">' + esc(d.note || "USERS_KV not bound — read-only mode.") + '</p>' : '') +
+            '<table class="ax-table"><thead><tr><th>User</th><th>Role</th><th>Edit lvl</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>' +
+            (readonly ? '' :
+              '<div style="margin-top:10px"><button class="ax-btn ax-primary" data-op="create">＋ Add user</button></div>' +
+              '<div id="ax-user-tool" style="margin-top:12px"></div>')
+          if (readonly) return
+          body.addEventListener("click", function (e) {
+            var b = e.target.closest("button[data-op]"); if (!b) return
+            var user = b.getAttribute("data-user"), op = b.getAttribute("data-op")
+            if (op === "pw") openPasswordTool(user)
+            else if (op === "rename") openRenameTool(user)
+            else if (op === "delete") deleteUser(user)
+            else if (op === "create") openCreateTool(d.users)
+          })
+        })
+        .catch(function (e) { body.innerHTML = '<p class="ax-status">Failed to load: ' + esc(e.message) + '</p>' })
+    }
+    reload()
+    // Expose reload to child tools
+    ov._reloadUsers = reload
+  }
+  function toolHost() { return document.getElementById("ax-user-tool") }
+  function openPasswordTool(user) {
+    toolHost().innerHTML =
       '<div class="ax-tool"><h3>🔑 Reset password for <code>' + esc(user) + '</code></h3>' +
       '<label>New password<input type="password" id="ax-pw-new" autocomplete="new-password"/></label>' +
       '<label>Confirm <input type="password" id="ax-pw-cnf" autocomplete="new-password"/></label>' +
-      '<button class="ax-btn ax-primary" id="ax-pw-go">Compute updated JSON</button>' +
-      '<div id="ax-pw-out"></div></div>'
+      '<p class="hint">Password is hashed locally with SHA-256. Only the hash is sent — the plaintext never leaves your browser.</p>' +
+      '<button class="ax-btn ax-primary" id="ax-pw-go">Save new password</button>' +
+      '<div id="ax-pw-status" class="ax-status" style="margin-top:6px"></div></div>'
     document.getElementById("ax-pw-go").addEventListener("click", async function () {
       var pw = document.getElementById("ax-pw-new").value
       var cnf = document.getElementById("ax-pw-cnf").value
-      if (!pw || pw.length < 6) { alert("Password too short (min 6 chars)."); return }
-      if (pw !== cnf) { alert("Passwords don't match."); return }
+      var st = document.getElementById("ax-pw-status")
+      if (!pw || pw.length < 6) { st.textContent = "Password too short (min 6 chars)."; return }
+      if (pw !== cnf) { st.textContent = "Passwords don't match."; return }
+      st.textContent = "Saving…"
       var hash = await sha256hex(pw)
-      var patch = {}
-      var existing = users.find(function (u) { return u.user === user })
-      patch[user] = { hash: hash, role: existing.role }
-      if (existing.tier) patch[user].tier = existing.tier
-      if (existing.editLevel != null) patch[user].editLevel = existing.editLevel
-      document.getElementById("ax-pw-out").innerHTML = showJsonAndCommand(
-        '<p class="ax-status">✓ New SHA-256 hash computed. It is <b>never sent to the server</b>. Only you see it below.</p>',
-        updatedUsersJson(users, patch),
-      )
+      var r = await fetch("/api/users/password", {
+        method: "POST", credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user: user, hash: hash }),
+      }).then(function (x) { return x.json() })
+      if (r.ok) { st.textContent = "✓ Password updated for " + r.user + "."; setTimeout(function () { toolHost().innerHTML = "" }, 1500) }
+      else st.textContent = "Failed: " + (r.error || "unknown")
     })
   }
-  function openRenameTool(user, users) {
-    var host = document.getElementById("ax-user-tool")
-    host.innerHTML =
+  function openRenameTool(user) {
+    toolHost().innerHTML =
       '<div class="ax-tool"><h3>✏ Rename <code>' + esc(user) + '</code></h3>' +
       '<label>New username <input type="text" id="ax-rn-new" value="' + esc(user) + '"/></label>' +
-      '<p class="hint">Case-insensitive. Keeps the same hash, role, and tier. Old sessions must sign in again with the new name.</p>' +
-      '<button class="ax-btn ax-primary" id="ax-rn-go">Compute updated JSON</button>' +
-      '<div id="ax-rn-out"></div></div>'
+      '<p class="hint">Case-insensitive. Keeps the same password, role, and tier. That user must sign in with the new name next time.</p>' +
+      '<button class="ax-btn ax-primary" id="ax-rn-go">Save rename</button>' +
+      '<div id="ax-rn-status" class="ax-status" style="margin-top:6px"></div></div>'
     document.getElementById("ax-rn-go").addEventListener("click", function () {
-      var newName = document.getElementById("ax-rn-new").value.trim()
-      if (!newName || newName === user) { alert("Enter a different name."); return }
-      var conflict = users.find(function (u) { return u.user.toLowerCase() === newName.toLowerCase() && u.user !== user })
-      if (conflict) { alert("A user named " + conflict.user + " already exists (case-insensitive)."); return }
-      var next = users.map(function (u) { return u.user === user ? Object.assign({}, u, { user: newName }) : u })
-      var obj = {}
-      next.forEach(function (u) {
-        obj[u.user] = { hash: "<KEEP EXISTING>", role: u.role }
-        if (u.tier) obj[u.user].tier = u.tier
-        if (u.editLevel != null) obj[u.user].editLevel = u.editLevel
-      })
-      document.getElementById("ax-rn-out").innerHTML = showJsonAndCommand(
-        '<p class="ax-status">✓ Rename staged in this JSON. Replace <code>&lt;KEEP EXISTING&gt;</code> with the actual hashes before applying.</p>',
-        obj,
-      )
+      var to = document.getElementById("ax-rn-new").value.trim()
+      var st = document.getElementById("ax-rn-status")
+      if (!to || to.toLowerCase() === user.toLowerCase()) { st.textContent = "Enter a different name."; return }
+      st.textContent = "Saving…"
+      fetch("/api/users/rename", {
+        method: "POST", credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ from: user, to: to }),
+      }).then(function (x) { return x.json() })
+        .then(function (r) {
+          if (r.ok) {
+            st.textContent = "✓ Renamed " + r.from + " → " + r.to
+            var ov = document.querySelector(".ax-overlay"); if (ov && ov._reloadUsers) setTimeout(ov._reloadUsers, 800)
+          } else st.textContent = "Failed: " + (r.error || "unknown")
+        })
     })
+  }
+  function openCreateTool(existing) {
+    toolHost().innerHTML =
+      '<div class="ax-tool"><h3>＋ Add new user</h3>' +
+      '<label>Username <input type="text" id="ax-cr-user" placeholder="e.g. lucas"/></label>' +
+      '<label>Role <select id="ax-cr-role">' +
+        '<option value="player" selected>player</option>' +
+        '<option value="dm">dm</option>' +
+        '<option value="admin">admin</option>' +
+      '</select></label>' +
+      '<label>Tier <small>(private-page tier for players — e.g. "aphelia", leave blank for admin/dm)</small><input type="text" id="ax-cr-tier"/></label>' +
+      '<label>Edit level <small>(1=most restricted … 5=most permissive; leave blank for role default)</small><input type="number" id="ax-cr-lvl" min="1" max="5"/></label>' +
+      '<label>Password <input type="password" id="ax-cr-pw" autocomplete="new-password"/></label>' +
+      '<button class="ax-btn ax-primary" id="ax-cr-go">Create user</button>' +
+      '<div id="ax-cr-status" class="ax-status" style="margin-top:6px"></div></div>'
+    document.getElementById("ax-cr-go").addEventListener("click", async function () {
+      var st = document.getElementById("ax-cr-status")
+      var name = document.getElementById("ax-cr-user").value.trim()
+      var role = document.getElementById("ax-cr-role").value
+      var tier = document.getElementById("ax-cr-tier").value.trim() || null
+      var lvlRaw = document.getElementById("ax-cr-lvl").value.trim()
+      var editLevel = lvlRaw ? parseInt(lvlRaw, 10) : null
+      var pw = document.getElementById("ax-cr-pw").value
+      if (!name) { st.textContent = "Username required."; return }
+      if (!pw || pw.length < 6) { st.textContent = "Password too short (min 6 chars)."; return }
+      if (existing.some(function (u) { return u.user.toLowerCase() === name.toLowerCase() })) {
+        st.textContent = "User already exists (case-insensitive)."; return
+      }
+      st.textContent = "Saving…"
+      var hash = await sha256hex(pw)
+      var payload = { user: name, hash: hash, role: role }
+      if (tier) payload.tier = tier
+      if (editLevel != null) payload.editLevel = editLevel
+      fetch("/api/users/create", {
+        method: "POST", credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }).then(function (x) { return x.json() })
+        .then(function (r) {
+          if (r.ok) {
+            st.textContent = "✓ Created " + r.user
+            var ov = document.querySelector(".ax-overlay"); if (ov && ov._reloadUsers) setTimeout(ov._reloadUsers, 800)
+          } else st.textContent = "Failed: " + (r.error || "unknown")
+        })
+    })
+  }
+  function deleteUser(user) {
+    if (!confirm("Delete user " + user + "? This cannot be undone.\n\nThey'll be unable to sign in immediately.")) return
+    fetch("/api/users/delete", {
+      method: "POST", credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: user }),
+    }).then(function (x) { return x.json() })
+      .then(function (r) {
+        if (r.ok) {
+          var ov = document.querySelector(".ax-overlay"); if (ov && ov._reloadUsers) ov._reloadUsers()
+        } else alert("Delete failed: " + (r.error || "unknown"))
+      })
   }
 
   function mkOverlay(title) {
