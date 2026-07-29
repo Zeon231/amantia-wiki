@@ -13,6 +13,36 @@
 import { readdir, readFile, writeFile, mkdir, rm, copyFile, stat, unlink, rmdir } from 'fs/promises'
 import { existsSync } from 'fs'
 import { join, extname, dirname, basename, relative, sep } from 'path'
+import { execSync } from 'child_process'
+
+// ── DRIFT DETECTION ────────────────────────────────────────────────────────
+// If a content/ file's last git-commit author is NOT the local user, someone
+// else touched it (GitHub web UI, the wiki's web editor, a teammate) since
+// the last sync. Overwriting would silently revert their work — so we skip
+// and warn. Set FORCE=1 to override (e.g., you know your vault edit should
+// win the conflict).
+let LOCAL_GIT_USER = null
+try { LOCAL_GIT_USER = execSync('git config user.name', { encoding: 'utf8' }).trim() } catch { /* not a git repo */ }
+const FORCE = process.env.FORCE === '1'
+let driftSkipped = 0
+function lastCommitAuthor(filePath) {
+  try {
+    return execSync('git log -1 --format=%an -- ' + JSON.stringify(filePath), { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim() || null
+  } catch { return null }
+}
+function lastCommitMsg(filePath) {
+  try {
+    return execSync('git log -1 --format=%s -- ' + JSON.stringify(filePath), { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim() || null
+  } catch { return null }
+}
+function isDriftedFile(destPath, newContent, existingContent) {
+  if (!LOCAL_GIT_USER) return false
+  if (existingContent === null || existingContent === undefined) return false
+  if (newContent === existingContent) return false
+  const author = lastCommitAuthor(destPath)
+  if (!author) return false
+  return author !== LOCAL_GIT_USER
+}
 
 // Image/asset extensions to copy verbatim (maps, portraits, item art, etc.)
 const ASSET_EXTS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg', '.avif'])
@@ -249,6 +279,19 @@ async function syncDir(srcDir, destDir) {
       try { destExisting = await readFile(destPath, 'utf8') } catch { /* no prior */ }
       if (destExisting) content = mergeWebEditableFields(content, destExisting)
 
+      // Drift check: if the current content/ file was last committed by
+      // someone other than the local git user, the vault version would
+      // overwrite their edit. Skip and warn unless FORCE=1.
+      if (!FORCE && isDriftedFile(destPath, content, destExisting)) {
+        const who = lastCommitAuthor(destPath), msg = lastCommitMsg(destPath)
+        console.log(`  ⚠  DRIFT: ${relPosix(destPath)}`)
+        console.log(`     last touched by "${who}" — "${(msg || '').slice(0, 70)}"`)
+        console.log(`     vault change would overwrite. Skipped. Use FORCE=1 to override.`)
+        writtenPaths.add(relPosix(destPath)) // prevent orphan cleanup from deleting it
+        driftSkipped++
+        continue
+      }
+
       await writeFile(destPath, content, 'utf8')
       writtenPaths.add(relPosix(destPath))
       copied++
@@ -319,4 +362,10 @@ console.log(`   ${assets} image assets copied`)
 console.log(`   ${stripped} notes had DM Notes sections stripped`)
 console.log(`   ${skipped} private folders skipped`)
 console.log(`   ${removed} orphaned notes removed (deleted/renamed in vault)`)
-console.log(`\nNext: git add content/ && git commit -m "sync vault" && git push`)
+if (driftSkipped) {
+  console.log(`\n⚠  ${driftSkipped} file(s) SKIPPED — content/ had a newer edit from someone else.`)
+  console.log(`   Review the DRIFT lines above. To force-overwrite them with the vault version,`)
+  console.log(`   re-run:  FORCE=1 node sync-vault.mjs`)
+} else {
+  console.log(`\nNext: git add content/ && git commit -m "sync vault" && git push`)
+}
