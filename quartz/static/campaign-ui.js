@@ -505,9 +505,14 @@
       '<div class="ax-modal ax-admin ax-upload"><header><b>🖼 Insert image</b></header>' +
       '<div class="ax-body">' +
         '<div class="tabs"><button class="tab tab-file on" data-mode="file">📁 From PC</button>' +
-        '<button class="tab tab-url" data-mode="url">🔗 From URL</button></div>' +
+        '<button class="tab tab-url" data-mode="url">🔗 From URL</button>' +
+        '<button class="tab tab-wiki" data-mode="wiki">🗂 Browse wiki</button></div>' +
         '<div class="row-mode row-mode-file"><input type="file" id="ax-file" accept="image/*"/></div>' +
         '<div class="row-mode row-mode-url" style="display:none"><input type="url" id="ax-url" placeholder="https://example.com/image.jpg" style="width:100%"/></div>' +
+        '<div class="row-mode row-mode-wiki" style="display:none">' +
+          '<input type="search" id="ax-wiki-filter" placeholder="filter by filename or folder…" style="width:100%;margin-bottom:6px"/>' +
+          '<div id="ax-wiki-grid" style="max-height:280px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px;background:var(--light,#111);padding:6px;border-radius:6px;">Loading…</div>' +
+        '</div>' +
         '<div class="preview" id="ax-preview"></div>' +
         '<div class="fields">' +
           '<label>Destination folder<input id="ax-dir" placeholder="content-relative folder"/></label>' +
@@ -530,7 +535,11 @@
     var nameIn = body.querySelector("#ax-name")
     var portraitCk = body.querySelector("#ax-portrait-set")
     var preview = body.querySelector("#ax-preview")
+    var wikiGrid = body.querySelector("#ax-wiki-grid")
+    var wikiFilter = body.querySelector("#ax-wiki-filter")
     var mode = "file"
+    var pickedWikiImg = null // { url, path } when a wiki image is selected
+    var wikiImages = null
 
     dirIn.value = guessImageDir(notePath)
 
@@ -545,9 +554,54 @@
         body.querySelectorAll(".tab").forEach(function (x) { x.classList.toggle("on", x === t) })
         body.querySelector(".row-mode-file").style.display = mode === "file" ? "" : "none"
         body.querySelector(".row-mode-url").style.display = mode === "url" ? "" : "none"
+        body.querySelector(".row-mode-wiki").style.display = mode === "wiki" ? "" : "none"
+        uploadBtn.textContent = mode === "wiki" ? "Insert" : "Upload"
+        if (mode === "wiki" && !wikiImages) loadWikiImages()
         refreshReady()
       })
     })
+
+    function loadWikiImages() {
+      fetch("/api/images", { credentials: "same-origin" })
+        .then(function (r) { return r.json() })
+        .then(function (d) {
+          if (!d || !d.images) { wikiGrid.textContent = "Failed to load: " + ((d && d.error) || "unknown"); return }
+          wikiImages = d.images
+          renderWikiGrid()
+        })
+        .catch(function (e) { wikiGrid.textContent = "Failed to load: " + e.message })
+    }
+    function renderWikiGrid() {
+      var q = (wikiFilter.value || "").toLowerCase()
+      var matches = wikiImages.filter(function (im) { return !q || im.path.toLowerCase().indexOf(q) !== -1 })
+      wikiGrid.innerHTML = ""
+      if (!matches.length) { wikiGrid.textContent = "No images match."; return }
+      matches.slice(0, 200).forEach(function (im) {
+        var cell = document.createElement("button")
+        cell.type = "button"
+        cell.style.cssText = "position:relative;padding:0;border:2px solid transparent;border-radius:4px;background:#0d0d12;cursor:pointer;aspect-ratio:1;overflow:hidden;"
+        cell.title = im.path.replace(/^content\//, "") + "\n" + Math.round(im.size / 1024) + " KB"
+        cell.innerHTML = '<img src="' + im.url + '" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block"/>' +
+                         '<span style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.75);color:#fff;font:500 10px system-ui;padding:2px 4px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;text-align:left">' +
+                         im.path.split("/").pop() + '</span>'
+        cell.addEventListener("click", function () {
+          wikiGrid.querySelectorAll("button").forEach(function (b) { b.style.borderColor = "transparent" })
+          cell.style.borderColor = "#e8b04b"
+          pickedWikiImg = im
+          preview.innerHTML = '<img src="' + im.url + '"/><div class="meta">' + im.path.replace(/^content\//, "") + " · " + Math.round(im.size / 1024) + " KB</div>"
+          nameIn.value = im.path.split("/").pop()
+          refreshReady()
+        })
+        wikiGrid.appendChild(cell)
+      })
+      if (matches.length > 200) {
+        var more = document.createElement("div")
+        more.style.cssText = "grid-column:1/-1;color:#aaa;font-size:11px;padding:4px 2px;text-align:center"
+        more.textContent = "…and " + (matches.length - 200) + " more — refine your filter"
+        wikiGrid.appendChild(more)
+      }
+    }
+    wikiFilter.addEventListener("input", function () { if (wikiImages) renderWikiGrid() })
 
     // File-picker preview
     fileIn.addEventListener("change", function () {
@@ -584,12 +638,26 @@
     })
 
     function refreshReady() {
-      var ready = mode === "file" ? !!(fileIn.files && fileIn.files[0]) : !!urlIn.value.trim()
+      var ready = mode === "file" ? !!(fileIn.files && fileIn.files[0])
+                : mode === "url"  ? !!urlIn.value.trim()
+                : /* wiki */       !!pickedWikiImg
       uploadBtn.disabled = !ready
     }
     refreshReady()
 
     function doUpload(overwrite) {
+      // "Browse wiki" mode: nothing to upload, just insert the reference.
+      if (mode === "wiki" && pickedWikiImg) {
+        var im = pickedWikiImg
+        if (portraitCk.checked) {
+          alert("✓ Selected " + im.path + "\n\nThe portrait: frontmatter field was NOT auto-edited. To wire this up, edit the frontmatter of this page and set:\n\n  portrait: \"" + im.path.replace(/^content\//, "") + "\"")
+        } else {
+          var alt2 = (nameIn.value || im.path.split("/").pop()).replace(/\.[^.]+$/, "").replace(/-/g, " ")
+          onInsert("![" + alt2 + "](" + im.url + ")")
+        }
+        setTimeout(close, 400)
+        return
+      }
       status.textContent = overwrite ? "Overwriting…" : "Uploading…"
       uploadBtn.disabled = true
       var finalName = slugifyName(nameIn.value || (fileIn.files && fileIn.files[0] && fileIn.files[0].name) || "")

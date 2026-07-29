@@ -283,6 +283,40 @@ async function handleApi(path, request, env, auth) {
     })
   }
 
+  // ---- List all images in content/ (admin: for the "Browse wiki" picker) ----
+  // Returns { images: [{ path, url, size }] } sorted by path. Uses a single
+  // Git Trees API call so we don't hammer the Contents API for every folder.
+  if (path === "/api/images" && m === "GET") {
+    await ensureStagingExists(env).catch(() => null)
+    const branch = (await stagingExists(env)) ? STAGING_BRANCH : MAIN_BRANCH
+    const refR = await ghApi(env, "GET", "/git/ref/heads/" + branch)
+    if (!refR.ok) return json({ error: "cannot read ref " + branch + ": github " + refR.status }, 502)
+    const refD = await refR.json()
+    const commitSha = refD.object && refD.object.sha
+    if (!commitSha) return json({ error: "no commit sha on ref" }, 502)
+    const commitR = await ghApi(env, "GET", "/git/commits/" + commitSha)
+    if (!commitR.ok) return json({ error: "cannot read commit: github " + commitR.status }, 502)
+    const commitD = await commitR.json()
+    const treeSha = commitD.tree && commitD.tree.sha
+    if (!treeSha) return json({ error: "no tree sha on commit" }, 502)
+    const treeR = await ghApi(env, "GET", "/git/trees/" + treeSha + "?recursive=1")
+    if (!treeR.ok) return json({ error: "cannot read tree: github " + treeR.status }, 502)
+    const treeD = await treeR.json()
+    const IMG_RE = /\.(jpe?g|png|gif|webp|svg|avif)$/i
+    const images = (treeD.tree || [])
+      .filter((n) => n.type === "blob" && n.path.startsWith("content/") && IMG_RE.test(n.path))
+      .map((n) => {
+        const rel = n.path.slice("content/".length)
+        // Slugified public URL — matches how the upload endpoint constructs it
+        const dir = rel.substring(0, rel.lastIndexOf("/"))
+        const file = rel.substring(rel.lastIndexOf("/") + 1)
+        const url = "/" + dir.toLowerCase().replace(/ /g, "-") + "/" + file
+        return { path: n.path, url, size: n.size || 0 }
+      })
+      .sort((a, b) => a.path.localeCompare(b.path))
+    return json({ images, truncated: !!treeD.truncated, branch })
+  }
+
   if (path === "/api/page" && m === "DELETE") {
     const body = await request.json().catch(() => null)
     if (!body || !body.sha) return json({ error: "sha required to delete" }, 400)
