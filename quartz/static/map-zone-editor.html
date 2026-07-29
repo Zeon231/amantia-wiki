@@ -80,6 +80,7 @@
 
     <div id="list"></div>
     <textarea id="out" readonly></textarea>
+    <datalist id="page-list"></datalist>
   </div>
 </div>
 
@@ -222,7 +223,7 @@
         : '<span class="badge">▭ rectangle</span><button class="to-poly" data-i="'+i+'">→ poly</button>';
       return '<div class="row" data-i="'+i+'">'+badge+
              '<input class="lbl-in" value="'+esc(z.label)+'" placeholder="label"/>'+
-             '<input class="href-in" value="'+esc(z.href)+'" placeholder="/01---world/..."/>'+
+             '<input class="href-in" list="page-list" value="'+esc(z.href)+'" placeholder="type to search pages or paste path"/>'+
              '<button class="del" data-i="'+i+'">delete</button></div>';
     }).join('');
     renderExport();
@@ -500,7 +501,32 @@
       .then(function(){ savewiki.disabled = false; });
   });
 
-  loadTarget();
+  // Populate the page-picker datalist from the site's contentIndex so the
+  // href field autocompletes against every existing page. Value = the URL
+  // path, label = the page's title, so typing part of a title suggests the
+  // right link and picking one drops in the canonical slug path.
+  function loadPageList() {
+    fetch('/static/contentIndex.json', { credentials: 'same-origin' })
+      .then(function(r){ return r.ok ? r.json() : null })
+      .then(function(idx){
+        if (!idx) return
+        var dl = document.getElementById('page-list')
+        var frag = document.createDocumentFragment()
+        Object.keys(idx).sort().forEach(function(slug){
+          var page = idx[slug] || {}
+          var title = page.title || slug
+          var opt = document.createElement('option')
+          opt.value = '/' + slug
+          opt.label = title + '  —  /' + slug
+          frag.appendChild(opt)
+        })
+        dl.innerHTML = ''
+        dl.appendChild(frag)
+      })
+      .catch(function(){ /* datalist just stays empty; typing still works */ })
+  }
+  loadPageList()
+  loadTarget()
 })();
 </script>
 </body>
