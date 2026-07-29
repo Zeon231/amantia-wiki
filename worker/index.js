@@ -42,6 +42,25 @@ const isAdminRole = (role) => ADMIN_ROLES.has(role)
 
 export default {
   async fetch(request, env, ctx) {
+    try {
+      return await handleRequest(request, env, ctx)
+    } catch (err) {
+      // Never let the Worker fall through to Cloudflare's HTML 500 page —
+      // clients (especially our own admin panel) can't parse HTML as JSON.
+      // Log to console for the tail dashboard and return a compact JSON body.
+      console.error("worker crash:", err && err.stack || err)
+      return new Response(JSON.stringify({
+        error: "worker-crash",
+        message: (err && (err.message || String(err))).slice(0, 300),
+      }), {
+        status: 500,
+        headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+      })
+    }
+  },
+}
+
+async function handleRequest(request, env, ctx) {
     const path = new URL(request.url).pathname
     const isPrivate = path.startsWith(PRIVATE_PREFIX)
 
@@ -86,13 +105,18 @@ export default {
     // Small endpoint the page can call to render admin-only UI (edit buttons).
     // Returns identity + edit permissions; does not leak page content.
     if (path === "/whoami") {
+      // canEdit gates page edit/add buttons AND the ⚙ Admin menu. Only the
+      // top-tier admin (editLevel 1, not impersonating) gets these; other
+      // admin-role users (e.g. Billy at editLevel 2) see the wiki without
+      // author tools. Impersonating admin also sees the plain reader view.
+      const isTopAdmin = isAdminRole(auth.role) && auth.editLevel === 1 && !auth.viewAsBy
       return json({
         user: auth.user,
         role: auth.role,
         tier: auth.tier || null,
         editLevel: auth.editLevel,
-        canSeeAllTiers: isAdminRole(auth.role),
-        canEdit: isAdminRole(auth.role), // admin-only editing, for now
+        canSeeAllTiers: isAdminRole(auth.role) && !auth.viewAsBy,
+        canEdit: isTopAdmin,
         viewAsBy: auth.viewAsBy || null, // if set, admin is impersonating
       })
     }
@@ -134,7 +158,6 @@ export default {
     }
 
     return env.ASSETS.fetch(request)
-  },
 }
 
 // /private/<tier>/... — admin-tier roles see everything; players only their own.
@@ -157,14 +180,13 @@ const MAIN_BRANCH = "main"
 const STAGING_BRANCH = "staging"
 
 async function handleApi(path, request, env, auth) {
-  // /api/view-as must remain callable even DURING impersonation — otherwise
-  // an admin who impersonated a player would be stuck as that player. It
-  // passes the gate if the caller is currently an admin OR was originally
-  // an admin (viewAsBy). All other endpoints require the effective role
-  // to be admin.
-  const isRealAdmin = isAdminRole(auth.role) || !!auth.viewAsBy
+  // "Top admin" = editLevel 1 admin. Only they can access the admin API.
+  // viewAsBy being set means the caller was originally a top admin who is
+  // currently impersonating — they keep API access so they can switch back
+  // (otherwise impersonation would be a one-way trip into the player role).
+  const isTopAdmin = !!auth.viewAsBy || (isAdminRole(auth.role) && auth.editLevel === 1)
   if (path === "/api/view-as") {
-    if (!isRealAdmin) return json({ error: "forbidden — admin only" }, 403)
+    if (!isTopAdmin) return json({ error: "forbidden — admin only" }, 403)
     if (request.method === "GET") {
       // List candidates (canonical names + roles/tiers, no hashes) for the picker
       let users = {}
@@ -190,7 +212,7 @@ async function handleApi(path, request, env, auth) {
     return json({ error: "method not allowed" }, 405)
   }
 
-  if (!isAdminRole(auth.role)) return json({ error: "forbidden — admin only" }, 403)
+  if (!isTopAdmin) return json({ error: "forbidden — editLevel-1 admin only" }, 403)
   if (!env.GITHUB_TOKEN) return json({ error: "editing not configured (GITHUB_TOKEN not set)" }, 501)
 
   // ---- Access log (admin panel) ----
@@ -659,13 +681,18 @@ function bytesToBase64(bytes) {
 // backwards-compatible with the pre-migration deploy).
 async function getUsers(env) {
   if (env.USERS_KV) {
-    const raw = await env.USERS_KV.get("users")
+    // Wrap the KV read: if the binding is present but the namespace lookup
+    // itself fails (bad namespace id, network hiccup, KV outage), fall back
+    // to the legacy secret so auth doesn't 500 the whole site.
+    let raw = null
+    try { raw = await env.USERS_KV.get("users") }
+    catch { /* fall through to secret fallback below */ }
     if (raw) { try { return JSON.parse(raw) } catch { return {} } }
     // First read after migration: seed from the legacy secret if present.
     if (env.WIKI_USERS) {
       try {
         const seed = JSON.parse(env.WIKI_USERS)
-        await env.USERS_KV.put("users", JSON.stringify(seed))
+        try { await env.USERS_KV.put("users", JSON.stringify(seed)) } catch { /* seed failed — still return seed */ }
         return seed
       } catch { /* malformed secret — ignore */ }
     }
@@ -782,12 +809,14 @@ async function authenticate(request, env) {
         : 3,
   }
 
-  // View-as impersonation: only ADMIN-role callers can trigger this. After
-  // the real password check succeeds, if the AX_VIEW_AS cookie names another
-  // user (or "anonymous"), swap the returned role/tier so the site behaves
-  // as if THAT user were logged in. Real admin identity is kept in viewAsBy
-  // so the client can render a "Viewing as X" banner.
-  if (isAdminRole(role)) {
+  // View-as impersonation: only editLevel-1 ADMINS can trigger this. Lower-
+  // level admins (e.g. Billy at editLevel 2) can't impersonate other users.
+  // After the real password check succeeds, if the AX_VIEW_AS cookie names
+  // another user (or "anonymous"), swap the returned role/tier so the site
+  // behaves as if THAT user were logged in. Real admin identity is kept in
+  // viewAsBy so the client can render a "Viewing as X" banner and the API
+  // can allow the switch-back call.
+  if (isAdminRole(role) && realAuth.editLevel === 1) {
     const cookieHdr = request.headers.get("Cookie") || ""
     const m = /(?:^|;\s*)AX_VIEW_AS=([^;]+)/.exec(cookieHdr)
     const asName = m ? decodeURIComponent(m[1]) : null
