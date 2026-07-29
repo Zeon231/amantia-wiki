@@ -180,6 +180,11 @@ const MAIN_BRANCH = "main"
 const STAGING_BRANCH = "staging"
 
 async function handleApi(path, request, env, auth) {
+  // Hoist url/method to the top — the audit and users endpoints below use
+  // url.searchParams before the block that used to declare it further down,
+  // which threw "Cannot access 'url' before initialization" and 500'd.
+  const url = new URL(request.url)
+  const m = request.method
   // "Top admin" = editLevel 1 admin. Only they can access the admin API.
   // viewAsBy being set means the caller was originally a top admin who is
   // currently impersonating — they keep API access so they can switch back
@@ -333,8 +338,7 @@ async function handleApi(path, request, env, auth) {
     return json({ ok: true, user: key })
   }
 
-  const url = new URL(request.url)
-  const m = request.method
+  // (url + m are hoisted at the top of handleApi)
 
   // ---- Page CRUD (writes go to staging) ----
   if (path === "/api/page" && m === "GET") {
