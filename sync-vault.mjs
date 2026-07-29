@@ -45,7 +45,14 @@ function isDriftedFile(destPath, newContent, existingContent) {
 }
 
 // Image/asset extensions to copy verbatim (maps, portraits, item art, etc.)
-const ASSET_EXTS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg', '.avif'])
+// Docs (docx/pdf) are copied too so wikilinks in the Species / Rules pages
+// pointing at Amantia Source Material resolve on the deployed site.
+const ASSET_EXTS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg', '.avif', '.pdf', '.docx', '.xlsx'])
+// GitHub rejects any single file > 100 MB. Play it safe at 50 MB so
+// we don't get a pre-receive rejection mid-push. Oversized assets get
+// skipped with a warning — publish them via a different route (linked
+// cloud storage, LFS if you ever set it up, etc.).
+const MAX_ASSET_SIZE = 50 * 1024 * 1024
 
 // ── CONFIG ─────────────────────────────────────────────────────────────────
 
@@ -59,8 +66,10 @@ const SKIP_FOLDERS = new Set([
   '06 - Encounters',
   '09 - DM Notes',
   '10 - Private',
-  'Amantia Source Material',
-  'website', // vault's own local Quartz project — not campaign content
+  // 'Amantia Source Material' is now PUBLISHED — the species/rules pages
+  // link to its docx/pdf files as reference material. The folder contains
+  // no session spoilers, only public campaign source docs.
+  'website',
 ])
 
 // Per-player private tiers live in "10 - Private/<Player>/" and are SKIPPED above by default.
@@ -251,6 +260,11 @@ async function syncDir(srcDir, destDir) {
 
       // Copy image/asset files verbatim (maps, portraits, item art, etc.)
       if (ASSET_EXTS.has(ext)) {
+        const size = (await stat(srcPath)).size
+        if (size > MAX_ASSET_SIZE) {
+          console.log(`  ⚠  skip oversized asset (${Math.round(size/1024/1024)} MB > ${MAX_ASSET_SIZE/1024/1024} MB): ${entry.name}`)
+          continue
+        }
         await mkdir(dirname(destPath), { recursive: true })
         await copyFile(srcPath, destPath)
         writtenPaths.add(relPosix(destPath))

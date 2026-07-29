@@ -1,6 +1,6 @@
 ---
 tags: [deity, index]
-modified: 2026-05-10T20:12:49.164Z
+modified: 2026-07-29T15:03:25.217Z
 ---
 
 # Deity Index
@@ -142,7 +142,7 @@ Amantia's divine cosmos spans four tiers and fourteen cultural pantheons. Click 
 | [[Thesmyrha|Thesmyrha]] | Intermediate | Disease, Poison • Malkûn Pantheon: *Afāya*, Iljarnskarn Pantheon: *Svyrrhild*, Holy Rose Empire Church (HRCC): *Vyneith*, Vanakuti Pantheon: *Lu Xalimara*, Arcavéan Pantheon: *Talonessa* |
 | [[Valtharyon|Valtharyon]] | Intermediate | Victory, Revenge • Malkûn Pantheon: *Ra’iqûn*, Holy Rose Empire Church (HRCC): *Aurakhai*, Vanakuti Pantheon: *Tojilk’atun*, Arcavéan Pantheon: *Vindarion* |
 | [[Vyrhaen na Dhaenmor|Vyrhaen na Dhaenmor]] | Intermediate | Necromancy, Liches, Undeath • Malkûn Pantheon: *Nashrûn*, Iljarnskarn Pantheon: *Halvnirghul*, Holy Rose Empire Church (HRCC): *Mor'Kaelith*, Vanakuti Pantheon: *Tzomixibal*, Arcavéan Pantheon: *Ossmandros* |
-| [[39|39]] |  |  • Bakassari Pantheon: *39*, Malkûn Pantheon: *41*, Iljarnskarn Pantheon: *35*, Holy Rose Empire Church (HRCC): *25*, Vanakuti Pantheon: *41*, Arcavéan Pantheon: *39* |
+| *(unnamed row 39)* |  |  • Bakassari Pantheon: *39*, Malkûn Pantheon: *41*, Iljarnskarn Pantheon: *35*, Holy Rose Empire Church (HRCC): *25*, Vanakuti Pantheon: *41*, Arcavéan Pantheon: *39* |
 
 ## Bakassari Pantheon
 

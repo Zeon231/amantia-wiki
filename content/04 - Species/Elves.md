@@ -10,7 +10,7 @@ size: Medium
 speed: 30 ft
 lifespan: ~750 years
 common: true
-modified: 2026-06-10T15:29:56.951Z
+modified: 2026-07-29T15:03:38.579Z
 ---
 
 # Elves
@@ -122,7 +122,7 @@ Elves can live well over 700 years. They reach adulthood around age 100, and thi
 - **Autumn:** Rich oranges, browns, and deep golds; reflective and melancholy.
 - **Winter:** Pale whites, icy blues and silvers; cold, distant, precise.
 
-**Homeland:** Found near Feywild crossings; the Summer Court and Winter Court (see [[03 - Religion/Religious Orders/]]) have Eladrin connections.
+**Homeland:** Found near Feywild crossings; the Summer Court and Winter Court (see [[Religious Orders]]) have Eladrin connections.
 
 **Notable Traits:** Fey Step — short-range teleportation usable once per short rest. Emotional resonance — appearance subtly shifts with mood.
 

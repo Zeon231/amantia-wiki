@@ -74,6 +74,23 @@
       ".ax-btn.ax-small{padding:3px 9px;font-size:11px;font-weight:500}",
       ".ax-btn.ax-primary{background:#e8b04b;color:#111}",
       ".ax-btn.ax-danger{background:#c0392b;color:#fff}",
+      /* Autolinker */
+      ".ax-al-list{max-height:55vh;overflow-y:auto;border:1px solid var(--lightgray);border-radius:6px;padding:4px}",
+      ".ax-al-row{display:grid;grid-template-columns:auto 220px 1fr;gap:8px;align-items:center;padding:4px 8px;font-size:12px;border-bottom:1px solid var(--lightgray);cursor:pointer}",
+      ".ax-al-row:last-child{border-bottom:0}",
+      ".ax-al-row:hover{background:var(--lightgray)}",
+      ".ax-al-name code{background:transparent;color:var(--secondary,#e8b04b);font-weight:600}",
+      ".ax-al-ctx{font-family:ui-monospace,monospace;color:var(--gray);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",
+      ".ax-al-ctx mark{background:rgba(232,176,75,.35);color:var(--darkgray);padding:0 2px;border-radius:2px}",
+      /* Session timeline */
+      "ol.ax-timeline{list-style:none;padding:0;margin:1rem 0;border-left:2px solid var(--lightgray)}",
+      "ol.ax-timeline li{position:relative;padding:.5rem 0 .5rem 1.5rem;margin:0}",
+      "ol.ax-timeline li::before{content:'';position:absolute;left:-6px;top:1rem;width:10px;height:10px;border-radius:50%;background:var(--secondary,#e8b04b);border:2px solid var(--light,#fff)}",
+      "ol.ax-timeline li a{display:block;text-decoration:none;color:inherit;padding:.15rem 0}",
+      "ol.ax-timeline li a:hover .ax-timeline-title{text-decoration:underline}",
+      ".ax-timeline-num{display:inline-block;font:600 11px system-ui,sans-serif;color:var(--secondary,#e8b04b);text-transform:uppercase;letter-spacing:.5px;margin-right:.6em}",
+      ".ax-timeline-title{font-weight:600}",
+      ".ax-timeline-desc{color:var(--gray);font-size:.88rem;margin-top:.1rem;padding-left:0}",
       ".ax-tool select{width:100%;padding:5px 8px;border:1px solid var(--gray);border-radius:4px;background:var(--light);color:var(--darkgray);margin-top:2px;box-sizing:border-box}",
       ".ax-tool small{color:var(--gray);font-weight:normal;margin-left:.3em}",
       /* audit log */
@@ -241,6 +258,52 @@
   }
   function li(slug, label, extra) {
     return '<li><a href="/' + slug + '" data-no-popover="false">' + esc(label) + "</a>" + (extra || "") + "</li>"
+  }
+
+  // Populates the Session Timeline page from contentIndex. Ordered by
+  // session number if present in the title (e.g. "Session 3"), else by title.
+  function renderTimeline() {
+    var mount = document.getElementById("ax-timeline")
+    if (!mount) return
+    contentIndex().then(function (ci) {
+      var slugs = Object.keys(ci)
+      var sessions = slugs
+        .map(function (s) {
+          var e = ci[s]
+          if (!e || !e.title) return null
+          var tags = e.tags || []
+          var isSession = tags.indexOf("session") !== -1 ||
+                          /session[- ]?\d/i.test(s) ||
+                          /^Session\s/i.test(e.title || "")
+          if (!isSession) return null
+          var num = null
+          var mNum = /Session\s+(\d+)/i.exec(e.title || "")
+          if (mNum) num = parseInt(mNum[1], 10)
+          return { slug: s, title: e.title, num: num, tags: tags, description: e.description || "" }
+        })
+        .filter(Boolean)
+      sessions.sort(function (a, b) {
+        if (a.num != null && b.num != null) return a.num - b.num
+        if (a.num != null) return -1
+        if (b.num != null) return 1
+        return a.title.localeCompare(b.title)
+      })
+      if (!sessions.length) {
+        mount.innerHTML = '<p class="hint">No session notes found. Once session notes exist with a title like "Session 1" (or the frontmatter tag <code>session</code>), they will appear here in order.</p>'
+        return
+      }
+      mount.innerHTML =
+        '<ol class="ax-timeline">' +
+        sessions.map(function (s) {
+          var num = s.num != null ? '<span class="ax-timeline-num">Session ' + s.num + '</span>' : ""
+          var titleClean = (s.title || "").replace(/^Session\s+\d+[\s—:–-]*/i, "").trim() || "(untitled)"
+          var desc = s.description ? '<div class="ax-timeline-desc">' + esc(s.description.slice(0, 240)) + (s.description.length > 240 ? "…" : "") + '</div>' : ""
+          return '<li><a href="/' + s.slug + '">' + num + '<span class="ax-timeline-title">' + esc(titleClean) + '</span></a>' + desc + '</li>'
+        }).join("") +
+        '</ol>'
+    }).catch(function (e) {
+      mount.innerHTML = '<p class="hint">Could not load timeline: ' + esc(e.message) + '</p>'
+    })
   }
 
   function renderHome() {
@@ -456,6 +519,115 @@
       var diffs = (f.additions || f.deletions) ? ' <span class="pm">+' + f.additions + '/-' + f.deletions + '</span>' : ""
       return '<li><span class="sym ' + esc(f.status) + '">' + sym + '</span> ' + line + diffs + '</li>'
     }).join("") + '</ul>'
+  }
+
+  // ---- Autolinker ------------------------------------------------------
+  // Scans the editor textarea for names of existing wiki pages that appear
+  // as plain text (not already inside a wikilink, markdown link, code block,
+  // frontmatter, or heading) and offers to convert them to [[wikilinks]].
+  // Default is FIRST-OCCURRENCE-only per name — repeat mentions stay plain.
+  function openAutolinkModal(ta, selfPath) {
+    var ov = mkOverlay("Autolink — suggest wikilinks")
+    var body = ov.querySelector(".ax-body")
+    var footer = ov.querySelector("footer")
+    footer.innerHTML = '<span class="status" style="flex:1;font-size:.82rem;color:var(--gray)"></span>' +
+      '<button class="ax-btn ax-cancel">Cancel</button>' +
+      '<button class="ax-btn ax-primary" disabled>Apply selected</button>'
+    var st = footer.querySelector(".status")
+    var applyBtn = footer.querySelector(".ax-primary")
+    footer.querySelector(".ax-cancel").addEventListener("click", function () { ov.remove() })
+    body.innerHTML = '<p class="ax-status">Loading wiki index…</p>'
+    contentIndex().then(function (ci) {
+      // Build a name→slug map from titles + basenames. Slug's own file is
+      // excluded so we don't self-link.
+      var selfSlug = (selfPath || "").replace(/^content\//, "").replace(/\.md$/, "").toLowerCase().replace(/ /g, "-")
+      var names = new Map() // lowercased name → { canonical: display, slug }
+      Object.keys(ci).forEach(function (slug) {
+        if (slug.toLowerCase() === selfSlug) return
+        var entry = ci[slug]
+        var title = (entry && entry.title) || null
+        // Use both the title and the last slug segment as candidate names
+        var candidates = []
+        if (title) candidates.push(title)
+        var last = slug.split("/").pop().replace(/-/g, " ")
+        if (last && last !== title) candidates.push(last)
+        candidates.forEach(function (n) {
+          var clean = n.replace(/\s+/g, " ").trim()
+          if (clean.length < 4) return // skip tiny names to avoid absurd matches
+          var key = clean.toLowerCase()
+          if (!names.has(key)) names.set(key, { canonical: clean, slug: slug })
+        })
+      })
+      var text = ta.value
+      // Mask parts of the doc we should NOT touch: frontmatter, code blocks,
+      // wikilinks already, markdown links, HTML tags, headings. We replace
+      // them with placeholders of the same length so offsets are preserved.
+      var masked = text
+        .replace(/^---\n[\s\S]*?\n---/m, function (m) { return " ".repeat(m.length) })
+        .replace(/```[\s\S]*?```/g, function (m) { return " ".repeat(m.length) })
+        .replace(/`[^`]+`/g, function (m) { return " ".repeat(m.length) })
+        .replace(/\[\[[^\]]+\]\]/g, function (m) { return " ".repeat(m.length) })
+        .replace(/\[[^\]]+\]\([^\)]+\)/g, function (m) { return " ".repeat(m.length) })
+        .replace(/<[^>]+>/g, function (m) { return " ".repeat(m.length) })
+      // Find candidate matches — sort names by length descending so
+      // "Holy Rose Empire" wins over "Rose".
+      var sortedKeys = [...names.keys()].sort(function (a, b) { return b.length - a.length })
+      var found = [] // {key, canonical, slug, index, matched}
+      var claimed = new Uint8Array(masked.length) // prevent overlap
+      sortedKeys.forEach(function (key) {
+        var info = names.get(key)
+        // Word-boundary search, case-insensitive
+        var re = new RegExp("\\b" + info.canonical.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "gi")
+        var m
+        while ((m = re.exec(masked)) !== null) {
+          var start = m.index, end = start + m[0].length
+          var free = true
+          for (var i = start; i < end; i++) if (claimed[i]) { free = false; break }
+          if (!free) continue
+          for (var j = start; j < end; j++) claimed[j] = 1
+          found.push({ key: key, canonical: info.canonical, slug: info.slug, index: start, matched: m[0] })
+          break // first occurrence per name only
+        }
+      })
+      found.sort(function (a, b) { return a.index - b.index })
+      if (!found.length) {
+        body.innerHTML = '<p class="ax-status">Nothing to link — this page either already links everything it mentions, or the mentioned pages don\'t exist yet.</p>'
+        return
+      }
+      var rows = found.map(function (f, i) {
+        var contextStart = Math.max(0, f.index - 40)
+        var contextEnd = Math.min(text.length, f.index + f.matched.length + 40)
+        var before = text.slice(contextStart, f.index)
+        var after = text.slice(f.index + f.matched.length, contextEnd)
+        return '<label class="ax-al-row"><input type="checkbox" data-i="' + i + '" checked/>' +
+          '<span class="ax-al-name"><code>[[' + esc(f.canonical) + ']]</code></span>' +
+          '<span class="ax-al-ctx">' + esc(before) + '<mark>' + esc(f.matched) + '</mark>' + esc(after) + '</span>' +
+          '</label>'
+      }).join("")
+      body.innerHTML = '<p class="hint">' + found.length + ' unlinked mentions of existing pages. Uncheck any you don\'t want linked. First occurrence per name only.</p>' +
+        '<div class="ax-al-list">' + rows + '</div>'
+      applyBtn.disabled = false
+      applyBtn.addEventListener("click", function apply() {
+        applyBtn.disabled = true
+        var checked = []
+        body.querySelectorAll('input[type=checkbox]:checked').forEach(function (cb) { checked.push(found[+cb.dataset.i]) })
+        if (!checked.length) { ov.remove(); return }
+        // Apply in reverse order so earlier indices remain valid
+        checked.sort(function (a, b) { return b.index - a.index })
+        var updated = ta.value
+        checked.forEach(function (f) {
+          var replacement = f.matched === f.canonical
+            ? "[[" + f.canonical + "]]"
+            : "[[" + f.canonical + "|" + f.matched + "]]"
+          updated = updated.slice(0, f.index) + replacement + updated.slice(f.index + f.matched.length)
+        })
+        ta.value = updated
+        st.textContent = "✓ Linked " + checked.length + " mention" + (checked.length === 1 ? "" : "s") + "."
+        setTimeout(function () { ov.remove() }, 900)
+      })
+    }).catch(function (e) {
+      body.innerHTML = '<p class="ax-status">Failed to load wiki index: ' + esc(e.message) + '</p>'
+    })
   }
 
   // ---- Access log (admin) -----------------------------------------------
@@ -821,6 +993,7 @@
       '<textarea spellcheck="false" placeholder="Loading…"></textarea>' +
       '<footer>' + (isNew ? "" : '<button class="ax-btn ax-del">Delete</button>') +
       '<button class="ax-btn ax-img">🖼 Insert image</button>' +
+      '<button class="ax-btn ax-autolink">🔗 Autolink</button>' +
       '<span class="status"></span><button class="ax-btn ax-cancel">Cancel</button>' +
       '<button class="ax-btn ax-save">Save</button></footer></div>'
     document.body.appendChild(ov)
@@ -860,6 +1033,13 @@
         ta.focus()
         status.textContent = "✓ Image inserted at cursor. Save the page to commit both."
       })
+    })
+
+    // 🔗 Autolink — scan textarea for names of existing wiki pages that aren't
+    // already wrapped in a wikilink or a markdown link, and convert them to
+    // [[wikilinks]] on confirmation.
+    ov.querySelector(".ax-autolink").addEventListener("click", function () {
+      openAutolinkModal(ta, path)
     })
 
     var del = ov.querySelector(".ax-del")
@@ -1357,7 +1537,6 @@
     article.addEventListener("click", function (e) {
       var t = e.target
       if (!(t instanceof HTMLImageElement)) return
-      if (t.classList.contains("ax-portrait")) return
       if (t.hasAttribute("data-no-lightbox")) return
       if (t.closest("a")) return               // clicks on linked images follow the link
       if (t.closest(".location-map")) return   // maps have their own pan/zoom
@@ -1435,6 +1614,7 @@
     trackView()
     addBookmarkButton()
     renderHome()
+    renderTimeline()
     tidyPlaceholders()
     renderPortrait()
     decorateMaps()

@@ -6,7 +6,7 @@ banner-height: 700
 content-start: 712
 tags: [species, fae, lineage, index]
 common: false
-modified: 2026-06-10T15:29:00.423Z
+modified: 2026-07-29T15:03:38.628Z
 ---
 
 # Fae & Fae-touched
@@ -62,4 +62,4 @@ Meeting a Summer Court Faerie and a Winter Court Faerie together in the mortal w
 
 ---
 
-*See also:* [[Species Index]] | [[Elves]] | [[Cosmology & The Planes]] | [[03 - Religion/Religious Orders/]]
+*See also:* [[Species Index]] | [[Elves]] | [[Cosmology & The Planes]] | [[Religious Orders]]
