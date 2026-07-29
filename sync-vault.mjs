@@ -292,7 +292,7 @@ async function cleanupOrphans(dir) {
     // renamed/deleted. Heuristic: parent dir exists in the vault AND file has
     // a .md extension AND file is NOT under a preserved subpath.
     const ext = extname(e.name).toLowerCase()
-    if (ext !== '.md') continue
+    if (ext !== '.md' && !ASSET_EXTS.has(ext)) continue
     const relDir = dirname(rel)
     if (relDir !== '.' && !existsSync(join(VAULT_DIR, relDir))) continue
     try { await unlink(p); removed++ } catch { /* ignore */ }
