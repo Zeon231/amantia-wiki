@@ -74,6 +74,22 @@
       ".ax-btn.ax-small{padding:3px 9px;font-size:11px;font-weight:500}",
       ".ax-btn.ax-primary{background:#e8b04b;color:#111}",
       ".ax-btn.ax-danger{background:#c0392b;color:#fff}",
+      /* Presenter mode: hide chrome, center + enlarge content */
+      "body.ax-presenter .sidebar,body.ax-presenter #quartz-body>*:not(.center),body.ax-presenter .page-header,body.ax-presenter #amantia-session-bar,body.ax-presenter #ax-capture-btn{display:none!important}",
+      "body.ax-presenter .center{max-width:min(900px,92vw)!important;margin:2rem auto!important;font-size:1.08rem;line-height:1.65}",
+      "body.ax-presenter article h1{font-size:2.2rem}",
+      "body.ax-presenter article h2{font-size:1.6rem;margin-top:2rem}",
+      "#ax-presenter-hint{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:rgba(20,20,25,.9);color:#e8b04b;padding:6px 14px;border-radius:6px;font:600 12px system-ui;z-index:9999;box-shadow:0 2px 8px rgba(0,0,0,.4)}",
+      /* Quick capture floating button */
+      "#ax-capture-btn{position:fixed;right:20px;bottom:70px;z-index:940;width:48px;height:48px;border-radius:50%;border:0;background:#e8b04b;color:#111;font:600 24px system-ui;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.35);line-height:1;padding:0}",
+      "#ax-capture-btn:hover{background:#f4c05a;transform:scale(1.05)}",
+      /* Random encounter roller */
+      ".ax-encounter{margin:1.5rem 0;padding:12px;border:1px solid var(--lightgray);border-radius:8px;background:var(--light)}",
+      ".ax-encounter-result{margin-top:10px;padding:8px 12px;background:var(--lightgray);border-radius:4px;font-size:1.05rem;min-height:1.3em}",
+      ".ax-encounter-list{margin-top:8px;font-size:.88rem;color:var(--gray)}",
+      ".ax-encounter-list summary{cursor:pointer}",
+      ".ax-encounter-list ul{margin:6px 0 0 0;padding-left:1.5rem}",
+      ".ax-encounter-list .weight{color:var(--secondary,#e8b04b);font-size:.85em}",
       /* Autolinker */
       ".ax-al-list{max-height:55vh;overflow-y:auto;border:1px solid var(--lightgray);border-radius:6px;padding:4px}",
       ".ax-al-row{display:grid;grid-template-columns:auto 220px 1fr;gap:8px;align-items:center;padding:4px 8px;font-size:12px;border-bottom:1px solid var(--lightgray);cursor:pointer}",
@@ -260,6 +276,153 @@
     return '<li><a href="/' + slug + '" data-no-popover="false">' + esc(label) + "</a>" + (extra || "") + "</li>"
   }
 
+  // ---- Presenter mode ---------------------------------------------------
+  // Press F (or click the ⚙ Admin menu item) to toggle a distraction-free
+  // full-screen reader view: sidebar + header hidden, content centered and
+  // larger. Escape or F again exits. Persists per-tab; no server round trip.
+  function setupPresenterHotkey() {
+    if (document.body.dataset.axPresenterHotkey) return
+    document.body.dataset.axPresenterHotkey = "1"
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "f" && e.key !== "F" && e.key !== "Escape") return
+      // Don't trigger if the user is typing in a field
+      var t = e.target
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return
+      if (e.key === "Escape") {
+        if (document.body.classList.contains("ax-presenter")) togglePresenter(false)
+        return
+      }
+      // F toggles
+      togglePresenter()
+    })
+  }
+  function togglePresenter(force) {
+    var on = force != null ? !!force : !document.body.classList.contains("ax-presenter")
+    document.body.classList.toggle("ax-presenter", on)
+    if (on && !document.getElementById("ax-presenter-hint")) {
+      var hint = document.createElement("div")
+      hint.id = "ax-presenter-hint"
+      hint.textContent = "Presenter mode · Press F or Esc to exit"
+      document.body.appendChild(hint)
+      setTimeout(function () { var h = document.getElementById("ax-presenter-hint"); if (h) h.remove() }, 2500)
+    }
+  }
+
+  // ---- Random encounter roller -----------------------------------------
+  // Any page with an `encounters:` frontmatter array gets a button that
+  // rolls one random entry. Optional weights via `1d6 goblins @2` (weight 2)
+  // syntax. Zero infrastructure — the encounters live in the note.
+  function decorateEncounterRollers() {
+    var meta = document.querySelector('meta[name="encounters"]')
+    if (!meta) return
+    var raw = meta.getAttribute("content") || ""
+    if (!raw.trim()) return
+    // Parse: comma-separated OR one-per-line if we ever expose that
+    var entries = raw.split(/\s*\|\|\s*/).map(function (s) { return s.trim() }).filter(Boolean)
+    if (!entries.length) return
+    var parsed = entries.map(function (s) {
+      var m = s.match(/^(.+?)\s*@(\d+)\s*$/)
+      return m ? { text: m[1].trim(), weight: parseInt(m[2], 10) || 1 } : { text: s, weight: 1 }
+    })
+    var article = document.querySelector("article")
+    if (!article || article.dataset.axEncounters) return
+    article.dataset.axEncounters = "1"
+    var box = document.createElement("div")
+    box.className = "ax-encounter"
+    box.innerHTML = '<button type="button" class="ax-btn ax-primary ax-encounter-roll">🎲 Roll random encounter</button>' +
+                    '<div class="ax-encounter-result"></div>' +
+                    '<details class="ax-encounter-list"><summary>' + parsed.length + ' possible encounters (click)</summary>' +
+                      '<ul>' + parsed.map(function (e) { return '<li>' + esc(e.text) + (e.weight > 1 ? ' <span class="weight">×' + e.weight + '</span>' : '') + '</li>' }).join("") + '</ul>' +
+                    '</details>'
+    article.appendChild(box)
+    box.querySelector(".ax-encounter-roll").addEventListener("click", function () {
+      var total = parsed.reduce(function (a, b) { return a + b.weight }, 0)
+      var pick = Math.random() * total
+      var acc = 0, chosen = parsed[0]
+      for (var i = 0; i < parsed.length; i++) {
+        acc += parsed[i].weight
+        if (pick < acc) { chosen = parsed[i]; break }
+      }
+      box.querySelector(".ax-encounter-result").innerHTML = '<strong>→</strong> ' + esc(chosen.text)
+    })
+  }
+
+  // ---- Quick capture ---------------------------------------------------
+  // Floating "+ Note" button (admin only). Opens a modal, user types a
+  // title + body, saves to content/Captures/<slug-of-title>.md via the
+  // existing /api/page endpoint. Meant for zero-friction lore jots.
+  function addQuickCaptureButton() {
+    if (!WHO || !WHO.canEdit) return
+    if (document.getElementById("ax-capture-btn")) return
+    var btn = document.createElement("button")
+    btn.id = "ax-capture-btn"
+    btn.type = "button"
+    btn.title = "Quick capture (Alt+C)"
+    btn.textContent = "＋"
+    document.body.appendChild(btn)
+    btn.addEventListener("click", openQuickCaptureModal)
+    // Hotkey: Alt+C
+    if (!document.body.dataset.axCaptureHotkey) {
+      document.body.dataset.axCaptureHotkey = "1"
+      document.addEventListener("keydown", function (e) {
+        if (!e.altKey || (e.key !== "c" && e.key !== "C")) return
+        var t = e.target
+        if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return
+        e.preventDefault()
+        openQuickCaptureModal()
+      })
+    }
+  }
+  function openQuickCaptureModal() {
+    var ov = mkOverlay("Quick capture")
+    var body = ov.querySelector(".ax-body")
+    body.innerHTML =
+      '<label style="display:block;margin:6px 0">Title (becomes the filename)<br/>' +
+        '<input type="text" id="ax-cap-title" placeholder="e.g. NPC: The stranger at the crossroads" style="width:100%;padding:6px 8px;border:1px solid var(--gray);border-radius:4px;background:var(--light);color:var(--darkgray);font-size:14px"/></label>' +
+      '<label style="display:block;margin:6px 0">Body<br/>' +
+        '<textarea id="ax-cap-body" placeholder="Anything worth remembering. Markdown fine — [[wikilinks]] resolve." style="width:100%;height:220px;padding:8px;border:1px solid var(--gray);border-radius:4px;background:var(--light);color:var(--darkgray);font:13px ui-monospace,monospace"></textarea></label>' +
+      '<label style="display:block;margin:6px 0"><input type="checkbox" id="ax-cap-open"/> Open the new note after saving</label>' +
+      '<p class="hint">Saves to <code>content/Captures/{slug}.md</code>. Staged for deploy like any other edit.</p>'
+    var footer = ov.querySelector("footer")
+    footer.innerHTML = '<span class="status" style="flex:1;font-size:.82rem;color:var(--gray)"></span>' +
+      '<button class="ax-btn ax-cancel">Cancel</button>' +
+      '<button class="ax-btn ax-primary" id="ax-cap-save">Save capture</button>'
+    var st = footer.querySelector(".status")
+    var titleIn = body.querySelector("#ax-cap-title")
+    var bodyIn = body.querySelector("#ax-cap-body")
+    var openCk = body.querySelector("#ax-cap-open")
+    footer.querySelector(".ax-cancel").addEventListener("click", function () { ov.remove() })
+    setTimeout(function () { titleIn.focus() }, 50)
+    document.getElementById("ax-cap-save").addEventListener("click", function () {
+      var title = titleIn.value.trim()
+      if (!title) { st.textContent = "Give it a title."; return }
+      var slug = title.toLowerCase().replace(/['"]+/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80) || "capture"
+      var stamp = new Date().toISOString()
+      var contentText =
+        "---\n" +
+        "tags: [capture]\n" +
+        "captured: " + stamp + "\n" +
+        "captured-by: " + (WHO.viewAsBy || WHO.user || "") + "\n" +
+        "title: " + JSON.stringify(title).slice(1, -1) + "\n" +
+        "---\n\n" +
+        "# " + title + "\n\n" +
+        (bodyIn.value || "") + "\n"
+      var path = "content/Captures/" + slug + ".md"
+      st.textContent = "Saving…"
+      fetch("/api/page", {
+        method: "PUT", credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path: path, content: contentText, message: "capture: " + title }),
+      }).then(function (r) { return r.json() }).then(function (d) {
+        if (d.ok) {
+          st.textContent = "✓ Staged: /" + path.replace(/^content\//, "").replace(/\.md$/, "")
+          if (openCk.checked) setTimeout(function () { location.href = "/" + path.replace(/^content\//, "").replace(/\.md$/, "").toLowerCase().replace(/ /g, "-") }, 800)
+          else setTimeout(function () { ov.remove() }, 1200)
+        } else st.textContent = "Failed: " + (d.error || "unknown") + (d.detail ? " — " + d.detail : "")
+      }).catch(function (e) { st.textContent = "Save failed: " + e.message })
+    })
+  }
+
   // Populates the Session Timeline page from contentIndex. Ordered by
   // session number if present in the title (e.g. "Session 3"), else by title.
   function renderTimeline() {
@@ -374,6 +537,7 @@
     document.body.appendChild(bar)
     document.getElementById("ax-logout").addEventListener("click", logout)
     if (WHO.canEdit) addAdminTools()
+    if (WHO.canEdit) addQuickCaptureButton()
     renderViewAsBanner()
     // Re-run map decoration now that admin state is known (adds edit button)
     document.querySelectorAll(".location-map[data-ax-decorated]").forEach(function (m) { m.removeAttribute("data-ax-decorated") })
@@ -413,7 +577,9 @@
       '<button data-act="log">📜 Changes Log</button>' +
       '<button data-act="viewas">👤 View as…</button>' +
       '<button data-act="users">🔑 Manage users</button>' +
-      '<button data-act="audit">📋 Access log</button>'
+      '<button data-act="audit">📋 Access log</button>' +
+      '<button data-act="presenter">📽 Presenter mode (F)</button>' +
+      '<button data-act="capture">＋ Quick capture (Alt+C)</button>'
     document.body.appendChild(m)
     m.addEventListener("click", function (e) {
       var b = e.target.closest("button"); if (!b) return
@@ -423,6 +589,8 @@
       else if (b.dataset.act === "viewas") openViewAsModal()
       else if (b.dataset.act === "users") openUsersModal()
       else if (b.dataset.act === "audit") openAuditModal()
+      else if (b.dataset.act === "presenter") togglePresenter()
+      else if (b.dataset.act === "capture") openQuickCaptureModal()
     })
     // click-outside dismisses
     setTimeout(function () {
@@ -1621,6 +1789,8 @@
     decorateZoomImages()
     setupLightbox()
     watchExplorer()
+    setupPresenterHotkey()
+    decorateEncounterRollers()
     sessionInit()
   }
   if (document.readyState !== "loading") init()
