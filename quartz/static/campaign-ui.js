@@ -536,18 +536,35 @@
       out.innerHTML = '<p class="hint">Loading…</p>'
       var days = parseInt(rangeSel.value, 10) || 1
       fetch("/api/audit?days=" + days, { credentials: "same-origin" })
-        .then(function (r) { return r.json() })
+        .then(function (r) {
+          return r.text().then(function (text) {
+            var d
+            try { d = JSON.parse(text) }
+            catch (e) {
+              // Not JSON — most commonly means the Worker didn't run and
+              // Cloudflare Pages served a static-asset 404 HTML for /api/*.
+              // The USERS_KV binding hasn't been picked up yet — either the
+              // build is mid-flight, or the binding isn't configured in the
+              // Cloudflare dashboard for this Pages project.
+              throw new Error(
+                "Response was " + r.status + " " + r.statusText + " but not JSON:\n\n" +
+                text.slice(0, 300) +
+                (text.length > 300 ? "…" : "")
+              )
+            }
+            return d
+          })
+        })
         .then(function (d) {
           if (!d || (!d.entries && !d.error)) { out.innerHTML = '<p class="ax-status">No data.</p>'; return }
           if (d.error) { out.innerHTML = '<p class="ax-status">Error: ' + esc(d.error) + '</p>'; return }
           allEntries = d.entries || []
-          // Populate user dropdown from data
           var users = Array.from(new Set(allEntries.map(function (e) { return e.user }))).sort()
           var prev = userSel.value
           userSel.innerHTML = '<option value="">All</option>' + users.map(function (u) { return '<option value="' + esc(u) + '"' + (u === prev ? ' selected' : '') + '>' + esc(u) + '</option>' }).join("")
           renderList()
         })
-        .catch(function (e) { out.innerHTML = '<p class="ax-status">Fetch failed: ' + esc(e.message) + '</p>' })
+        .catch(function (e) { out.innerHTML = '<p class="ax-status" style="white-space:pre-wrap;font-family:ui-monospace,monospace;font-size:11px">Fetch failed: ' + esc(e.message) + '</p>' })
     }
     rangeSel.addEventListener("change", load)
     userSel.addEventListener("change", renderList)
