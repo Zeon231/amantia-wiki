@@ -300,7 +300,13 @@
     var row = e.target.closest('.row'); if(!row) return; var i = +row.dataset.i;
     if (e.target.classList.contains('lbl-in')) zones[i].label = e.target.value;
     if (e.target.classList.contains('href-in')) zones[i].href = e.target.value;
-    render();
+    // Update just the label displays in-place — DON'T re-render the list, that
+    // rebuilds the input elements and steals focus on every keystroke.
+    var rectTag = mapbox.querySelector('.zbox[data-i="'+i+'"] .ztag')
+    if (rectTag) rectTag.textContent = zones[i].label || ('zone '+(i+1))
+    var polyText = mapbox.querySelector('.zpoly-svg[data-i="'+i+'"] text')
+    if (polyText) polyText.textContent = zones[i].label || ('zone '+(i+1))
+    renderExport();
   });
   listEl.addEventListener('click', function(e){
     if (e.target.classList.contains('del')) { zones.splice(+e.target.dataset.i, 1); render(); return; }
