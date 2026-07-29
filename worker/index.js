@@ -41,7 +41,26 @@ const ADMIN_ROLES = new Set(["admin", "dm"])
 const isAdminRole = (role) => ADMIN_ROLES.has(role)
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
+    try {
+      return await handleRequest(request, env, ctx)
+    } catch (err) {
+      // Never let the Worker fall through to Cloudflare's HTML 500 page —
+      // clients (especially our own admin panel) can't parse HTML as JSON.
+      // Log to console for the tail dashboard and return a compact JSON body.
+      console.error("worker crash:", err && err.stack || err)
+      return new Response(JSON.stringify({
+        error: "worker-crash",
+        message: (err && (err.message || String(err))).slice(0, 300),
+      }), {
+        status: 500,
+        headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+      })
+    }
+  },
+}
+
+async function handleRequest(request, env, ctx) {
     const path = new URL(request.url).pathname
     const isPrivate = path.startsWith(PRIVATE_PREFIX)
 
@@ -79,16 +98,25 @@ export default {
     const auth = await authenticate(request, env)
     if (!auth.ok) return unauthorized()
 
+    // Fire-and-forget access log for ALL authenticated request paths (the
+    // isLoggablePath filter inside decides which ones actually get an entry).
+    if (ctx && ctx.waitUntil) ctx.waitUntil(logAccess(env, request, auth))
+
     // Small endpoint the page can call to render admin-only UI (edit buttons).
     // Returns identity + edit permissions; does not leak page content.
     if (path === "/whoami") {
+      // canEdit gates page edit/add buttons AND the ⚙ Admin menu. Only the
+      // top-tier admin (editLevel 1, not impersonating) gets these; other
+      // admin-role users (e.g. Billy at editLevel 2) see the wiki without
+      // author tools. Impersonating admin also sees the plain reader view.
+      const isTopAdmin = isAdminRole(auth.role) && auth.editLevel === 1 && !auth.viewAsBy
       return json({
         user: auth.user,
         role: auth.role,
         tier: auth.tier || null,
         editLevel: auth.editLevel,
-        canSeeAllTiers: isAdminRole(auth.role),
-        canEdit: isAdminRole(auth.role), // admin-only editing, for now
+        canSeeAllTiers: isAdminRole(auth.role) && !auth.viewAsBy,
+        canEdit: isTopAdmin,
         viewAsBy: auth.viewAsBy || null, // if set, admin is impersonating
       })
     }
@@ -130,7 +158,6 @@ export default {
     }
 
     return env.ASSETS.fetch(request)
-  },
 }
 
 // /private/<tier>/... — admin-tier roles see everything; players only their own.
@@ -153,14 +180,18 @@ const MAIN_BRANCH = "main"
 const STAGING_BRANCH = "staging"
 
 async function handleApi(path, request, env, auth) {
-  // /api/view-as must remain callable even DURING impersonation — otherwise
-  // an admin who impersonated a player would be stuck as that player. It
-  // passes the gate if the caller is currently an admin OR was originally
-  // an admin (viewAsBy). All other endpoints require the effective role
-  // to be admin.
-  const isRealAdmin = isAdminRole(auth.role) || !!auth.viewAsBy
+  // Hoist url/method to the top — the audit and users endpoints below use
+  // url.searchParams before the block that used to declare it further down,
+  // which threw "Cannot access 'url' before initialization" and 500'd.
+  const url = new URL(request.url)
+  const m = request.method
+  // "Top admin" = editLevel 1 admin. Only they can access the admin API.
+  // viewAsBy being set means the caller was originally a top admin who is
+  // currently impersonating — they keep API access so they can switch back
+  // (otherwise impersonation would be a one-way trip into the player role).
+  const isTopAdmin = !!auth.viewAsBy || (isAdminRole(auth.role) && auth.editLevel === 1)
   if (path === "/api/view-as") {
-    if (!isRealAdmin) return json({ error: "forbidden — admin only" }, 403)
+    if (!isTopAdmin) return json({ error: "forbidden — admin only" }, 403)
     if (request.method === "GET") {
       // List candidates (canonical names + roles/tiers, no hashes) for the picker
       let users = {}
@@ -186,24 +217,128 @@ async function handleApi(path, request, env, auth) {
     return json({ error: "method not allowed" }, 405)
   }
 
-  if (!isAdminRole(auth.role)) return json({ error: "forbidden — admin only" }, 403)
+  if (!isTopAdmin) return json({ error: "forbidden — editLevel-1 admin only" }, 403)
   if (!env.GITHUB_TOKEN) return json({ error: "editing not configured (GITHUB_TOKEN not set)" }, 501)
 
-  // ---- Users list (admin panel: no hashes, safe to hand to the browser) ----
+  // ---- Access log (admin panel) ----
+  // GET /api/audit?date=YYYY-MM-DD → that day's log, newest first
+  // GET /api/audit?days=7          → last N days aggregated (max 30)
+  if (path === "/api/audit" && request.method === "GET") {
+    if (!env.USERS_KV) return json({ error: "USERS_KV not configured — audit log needs KV" }, 501)
+    const daysParam = url.searchParams.get("days")
+    if (daysParam) {
+      const days = Math.max(1, Math.min(30, parseInt(daysParam, 10) || 1))
+      const now = Date.now()
+      const out = []
+      for (let i = 0; i < days; i++) {
+        const iso = new Date(now - i * 86400000).toISOString().slice(0, 10)
+        const raw = await env.USERS_KV.get("log:" + iso)
+        if (raw) { try { out.push(...JSON.parse(raw)) } catch {} }
+      }
+      out.sort((a, b) => (b.ts || "").localeCompare(a.ts || ""))
+      return json({ days, entries: out })
+    }
+    const date = url.searchParams.get("date") || new Date().toISOString().slice(0, 10)
+    const raw = await env.USERS_KV.get("log:" + date)
+    const entries = raw ? JSON.parse(raw).slice().reverse() : []
+    return json({ date, entries })
+  }
+
+  // ---- Users CRUD (KV-backed once USERS_KV is bound) ----------------------
+  const usersReadOnly = !env.USERS_KV
   if (path === "/api/users" && request.method === "GET") {
-    let users = {}
-    try { users = JSON.parse(env.WIKI_USERS || "{}") } catch { return json({ error: "WIKI_USERS malformed" }, 500) }
+    const users = await getUsers(env)
     const list = Object.keys(users).map((k) => ({
       user: k,
       role: users[k].role || "player",
       tier: users[k].tier || null,
       editLevel: Number.isFinite(users[k].editLevel) ? users[k].editLevel : null,
     }))
-    return json({ users: list, storage: "secret", note: "Editing WIKI_USERS from the wiki requires a Cloudflare API token or migrating to KV. Use the tool below to compute the updated JSON, then run: wrangler secret put WIKI_USERS" })
+    return json({
+      users: list,
+      storage: usersReadOnly ? "secret" : "kv",
+      note: usersReadOnly ? "Live editing needs USERS_KV — bind it in wrangler.jsonc and redeploy." : "",
+    })
   }
 
-  const url = new URL(request.url)
-  const m = request.method
+  // Common guard: writes need KV
+  const requireKV = () => usersReadOnly ? json({ error: "USERS_KV not configured — user edits require KV" }, 501) : null
+
+  if (path === "/api/users/password" && request.method === "POST") {
+    const guard = requireKV(); if (guard) return guard
+    const body = await request.json().catch(() => null)
+    if (!body || !body.user || !body.hash) return json({ error: "user and hash required" }, 400)
+    if (!/^[0-9a-fA-F]{64}$/.test(body.hash)) return json({ error: "hash must be 64-char hex sha256" }, 400)
+    const users = await getUsers(env)
+    const key = Object.keys(users).find((k) => k.toLowerCase() === String(body.user).toLowerCase())
+    if (!key) return json({ error: "user not found" }, 404)
+    users[key].hash = body.hash.toLowerCase()
+    await saveUsers(env, users)
+    return json({ ok: true, user: key })
+  }
+
+  if (path === "/api/users/rename" && request.method === "POST") {
+    const guard = requireKV(); if (guard) return guard
+    const body = await request.json().catch(() => null)
+    if (!body || !body.from || !body.to) return json({ error: "from and to required" }, 400)
+    const to = String(body.to).trim()
+    if (!/^[a-zA-Z0-9._-]{2,32}$/.test(to)) return json({ error: "new name must be 2-32 chars, letters/digits/._-" }, 400)
+    const users = await getUsers(env)
+    const fromKey = Object.keys(users).find((k) => k.toLowerCase() === String(body.from).toLowerCase())
+    if (!fromKey) return json({ error: "user not found" }, 404)
+    const conflict = Object.keys(users).find((k) => k.toLowerCase() === to.toLowerCase() && k !== fromKey)
+    if (conflict) return json({ error: "a user named '" + conflict + "' already exists (case-insensitive)" }, 409)
+    const record = users[fromKey]
+    delete users[fromKey]
+    users[to] = record
+    await saveUsers(env, users)
+    return json({ ok: true, from: fromKey, to })
+  }
+
+  if (path === "/api/users/create" && request.method === "POST") {
+    const guard = requireKV(); if (guard) return guard
+    const body = await request.json().catch(() => null)
+    if (!body || !body.user || !body.hash) return json({ error: "user and hash required" }, 400)
+    const name = String(body.user).trim()
+    const rec = {
+      hash: String(body.hash).toLowerCase(),
+      role: body.role || "player",
+    }
+    if (body.tier) rec.tier = String(body.tier)
+    if (body.editLevel != null) rec.editLevel = parseInt(body.editLevel, 10)
+    const err = validateUserRecord(rec, name); if (err) return json({ error: err }, 400)
+    const users = await getUsers(env)
+    if (Object.keys(users).some((k) => k.toLowerCase() === name.toLowerCase())) {
+      return json({ error: "user already exists" }, 409)
+    }
+    users[name] = rec
+    await saveUsers(env, users)
+    return json({ ok: true, user: name })
+  }
+
+  if (path === "/api/users/delete" && request.method === "POST") {
+    const guard = requireKV(); if (guard) return guard
+    const body = await request.json().catch(() => null)
+    if (!body || !body.user) return json({ error: "user required" }, 400)
+    const users = await getUsers(env)
+    const key = Object.keys(users).find((k) => k.toLowerCase() === String(body.user).toLowerCase())
+    if (!key) return json({ error: "user not found" }, 404)
+    // Never let an admin delete themselves — foot-gun. They can rename first,
+    // then have another admin delete the old name if truly needed.
+    if (auth.viewAsBy ? key.toLowerCase() === auth.viewAsBy.toLowerCase() : key.toLowerCase() === auth.user.toLowerCase()) {
+      return json({ error: "you cannot delete yourself — rename or ask another admin" }, 403)
+    }
+    // Never let the last admin be deleted.
+    const remainingAdmins = Object.keys(users).filter((k) => k !== key && ADMIN_ROLES.has(users[k].role))
+    if (ADMIN_ROLES.has(users[key].role) && !remainingAdmins.length) {
+      return json({ error: "cannot delete the last admin" }, 403)
+    }
+    delete users[key]
+    await saveUsers(env, users)
+    return json({ ok: true, user: key })
+  }
+
+  // (url + m are hoisted at the top of handleApi)
 
   // ---- Page CRUD (writes go to staging) ----
   if (path === "/api/page" && m === "GET") {
@@ -543,6 +678,98 @@ function bytesToBase64(bytes) {
   return btoa(bin)
 }
 
+// ---- Users store: KV-first, secret fallback (during migration) ----------
+// When USERS_KV is bound and has a `users` key, read it. If USERS_KV is
+// bound but empty, auto-seed once from the legacy WIKI_USERS secret. When
+// USERS_KV isn't bound at all, keep reading the secret directly (fully
+// backwards-compatible with the pre-migration deploy).
+async function getUsers(env) {
+  if (env.USERS_KV) {
+    // Wrap the KV read: if the binding is present but the namespace lookup
+    // itself fails (bad namespace id, network hiccup, KV outage), fall back
+    // to the legacy secret so auth doesn't 500 the whole site.
+    let raw = null
+    try { raw = await env.USERS_KV.get("users") }
+    catch { /* fall through to secret fallback below */ }
+    if (raw) { try { return JSON.parse(raw) } catch { return {} } }
+    // First read after migration: seed from the legacy secret if present.
+    if (env.WIKI_USERS) {
+      try {
+        const seed = JSON.parse(env.WIKI_USERS)
+        try { await env.USERS_KV.put("users", JSON.stringify(seed)) } catch { /* seed failed — still return seed */ }
+        return seed
+      } catch { /* malformed secret — ignore */ }
+    }
+    return {}
+  }
+  try { return JSON.parse(env.WIKI_USERS || "{}") } catch { return {} }
+}
+async function saveUsers(env, users) {
+  if (!env.USERS_KV) throw new Error("USERS_KV binding not configured — user edits require KV")
+  await env.USERS_KV.put("users", JSON.stringify(users))
+}
+
+// ---- Access log (best-effort, fire-and-forget) ---------------------------
+// Every meaningful HTML page view + logout is appended to a per-day array
+// under USERS_KV. Assets, /whoami, and other /api/* traffic are skipped so
+// the log stays about "who visited what page and when", not every HTTP call.
+// Entries expire after 35 days. Log is admin-viewable via /api/audit.
+const LOG_MAX_PER_DAY = 5000
+const LOG_TTL_SECONDS = 60 * 60 * 24 * 35
+function logDayKey(iso) { return "log:" + iso.slice(0, 10) }
+function isLoggablePath(path, method) {
+  if (path === "/logout") return true
+  if (path === "/whoami") return false
+  if (path.startsWith("/api/")) {
+    // Log identity/deploy events, skip the chatty read APIs
+    if (path === "/api/view-as" && method === "POST") return true
+    if (path === "/api/deploy") return true
+    if (path === "/api/page" && (method === "PUT" || method === "POST" || method === "DELETE")) return true
+    if (path === "/api/upload" && method === "POST") return true
+    if (path.startsWith("/api/users/")) return true
+    return false
+  }
+  if (path.startsWith("/static/")) return false
+  if (/\.(css|js|mjs|png|jpe?g|gif|webp|svg|avif|ico|woff2?|ttf|json|map|xml|txt)($|\?)/i.test(path)) return false
+  return true
+}
+async function logAccess(env, request, auth) {
+  if (!env.USERS_KV) return
+  const path = new URL(request.url).pathname
+  const method = request.method
+  if (!isLoggablePath(path, method)) return
+  const ts = new Date().toISOString()
+  const key = logDayKey(ts)
+  const entry = {
+    ts,
+    user: (auth && auth.user) || "-",
+    role: (auth && auth.role) || null,
+    tier: (auth && auth.tier) || null,
+    viewAsBy: (auth && auth.viewAsBy) || null, // admin impersonating this identity
+    path,
+    method,
+    ip: request.headers.get("CF-Connecting-IP") || null,
+    ua: (request.headers.get("User-Agent") || "").slice(0, 120),
+  }
+  try {
+    const raw = await env.USERS_KV.get(key)
+    const arr = raw ? JSON.parse(raw) : []
+    arr.push(entry)
+    if (arr.length > LOG_MAX_PER_DAY) arr.splice(0, arr.length - LOG_MAX_PER_DAY)
+    await env.USERS_KV.put(key, JSON.stringify(arr), { expirationTtl: LOG_TTL_SECONDS })
+  } catch { /* best-effort — never break a page view over a logging failure */ }
+}
+// Validate a user record before writing (defense against a corrupted PUT).
+function validateUserRecord(rec, name) {
+  if (!rec || typeof rec !== "object") return "record must be an object"
+  if (typeof rec.hash !== "string" || !/^[0-9a-fA-F]{64}$/.test(rec.hash)) return "hash must be a 64-char hex sha256"
+  if (rec.role && !["admin", "dm", "player"].includes(rec.role)) return "role must be admin, dm, or player"
+  if (rec.tier != null && typeof rec.tier !== "string") return "tier must be a string"
+  if (rec.editLevel != null && !(Number.isInteger(rec.editLevel) && rec.editLevel >= 1 && rec.editLevel <= 999)) return "editLevel must be an integer 1..999"
+  if (!/^[a-zA-Z0-9._-]{2,32}$/.test(name)) return "username must be 2-32 chars, letters/digits/._-"
+  return null
+}
+
 async function authenticate(request, env) {
   const header = request.headers.get("Authorization") || ""
   if (!header.startsWith("Basic ")) return { ok: false }
@@ -558,12 +785,7 @@ async function authenticate(request, env) {
     return { ok: false }
   }
 
-  let users = {}
-  try {
-    users = JSON.parse(env.WIKI_USERS || "{}")
-  } catch {
-    return { ok: false }
-  }
+  const users = await getUsers(env)
 
   // Case-insensitive username lookup. Stored key wins for canonical display;
   // any input casing matches. Passwords stay case-sensitive.
@@ -591,12 +813,14 @@ async function authenticate(request, env) {
         : 3,
   }
 
-  // View-as impersonation: only ADMIN-role callers can trigger this. After
-  // the real password check succeeds, if the AX_VIEW_AS cookie names another
-  // user (or "anonymous"), swap the returned role/tier so the site behaves
-  // as if THAT user were logged in. Real admin identity is kept in viewAsBy
-  // so the client can render a "Viewing as X" banner.
-  if (isAdminRole(role)) {
+  // View-as impersonation: only editLevel-1 ADMINS can trigger this. Lower-
+  // level admins (e.g. Billy at editLevel 2) can't impersonate other users.
+  // After the real password check succeeds, if the AX_VIEW_AS cookie names
+  // another user (or "anonymous"), swap the returned role/tier so the site
+  // behaves as if THAT user were logged in. Real admin identity is kept in
+  // viewAsBy so the client can render a "Viewing as X" banner and the API
+  // can allow the switch-back call.
+  if (isAdminRole(role) && realAuth.editLevel === 1) {
     const cookieHdr = request.headers.get("Cookie") || ""
     const m = /(?:^|;\s*)AX_VIEW_AS=([^;]+)/.exec(cookieHdr)
     const asName = m ? decodeURIComponent(m[1]) : null

@@ -7,7 +7,7 @@ content-start: 712
 tags: [species, rare, fae]
 creature-type: Fae (Full Fae)
 common: false
-modified: 2026-05-28T13:47:25.202Z
+modified: 2026-07-29T15:04:08.359Z
 ---
 
 # Winter Court Faerie
@@ -43,4 +43,4 @@ The **Summer and Winter Courts** exist in a state of ancient tension — rarely 
 
 ---
 
-*See also:* [[Species Index]] | [[Fae & Fae-touched]] | [[Summer Court Faerie]] | [[Aes Sídhe]] | [[Cosmology & The Planes]] | [[03 - Religion/Religious Orders/]]
+*See also:* [[Species Index]] | [[Fae & Fae-touched]] | [[Summer Court Faerie]] | [[Aes Sídhe]] | [[Cosmology & The Planes]] | [[Religious Orders]]

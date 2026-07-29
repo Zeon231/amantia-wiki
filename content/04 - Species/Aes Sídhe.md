@@ -7,7 +7,7 @@ content-start: 712
 tags: [species, rare, fae]
 creature-type: Fae (True Fae)
 common: false
-modified: 2026-05-28T13:46:38.407Z
+modified: 2026-07-29T15:03:38.534Z
 ---
 
 # Aes Sídhe
@@ -49,4 +49,4 @@ The Siórtharan kingdoms, particularly the **High Kingdom of Séraevirhae** and 
 
 ---
 
-*See also:* [[Species Index]] | [[Fae & Fae-touched]] | [[Elves]] | [[Cosmology & The Planes]] | [[03 - Religion/Religious Orders/]]
+*See also:* [[Species Index]] | [[Fae & Fae-touched]] | [[Elves]] | [[Cosmology & The Planes]] | [[Religious Orders]]
