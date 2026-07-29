@@ -73,6 +73,17 @@
       ".ax-tool label input{width:100%;padding:5px 8px;border:1px solid var(--gray);border-radius:4px;background:var(--light);color:var(--darkgray);margin-top:2px;box-sizing:border-box}",
       ".ax-btn.ax-small{padding:3px 9px;font-size:11px;font-weight:500}",
       ".ax-btn.ax-primary{background:#e8b04b;color:#111}",
+      /* audit log */
+      ".ax-log-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:end;padding-bottom:6px;border-bottom:1px solid var(--lightgray);margin-bottom:6px}",
+      ".ax-log-controls label{display:flex;flex-direction:column;font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;gap:2px}",
+      ".ax-log-controls select,.ax-log-controls input[type=search]{padding:4px 6px;border:1px solid var(--gray);border-radius:4px;background:var(--light);color:var(--darkgray);font-size:12px;text-transform:none;letter-spacing:normal}",
+      ".ax-log-controls label:has(input[type=checkbox]){flex-direction:row;align-items:center;text-transform:none;font-size:12px;letter-spacing:normal;color:var(--darkgray);gap:4px}",
+      ".ax-log-body{max-height:60vh;overflow-y:auto;font-size:12px}",
+      ".ax-log-table td.ts{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--gray)}",
+      ".ax-log-table td.path a{color:var(--secondary);text-decoration:none;word-break:break-all}",
+      ".ax-log-table td.path a:hover{text-decoration:underline}",
+      ".ax-log-table tr.row-session-start td{border-top:2px solid #7cc47a;padding-top:8px}",
+      ".ax-log-table .badge-session{background:#7cc47a;color:#111}",
       ".ax-admin .ax-body{padding:1rem 1.2rem;overflow-y:auto;max-height:60vh}",
       ".ax-admin .ax-body p{margin:.4rem 0}",
       ".ax-admin .ax-body h4{margin:1rem 0 .4rem;font-size:14px;color:var(--secondary)}",
@@ -335,7 +346,8 @@
       '<button data-act="deploy">🚀 Deploy Changes</button>' +
       '<button data-act="log">📜 Changes Log</button>' +
       '<button data-act="viewas">👤 View as…</button>' +
-      '<button data-act="users">🔑 Manage users</button>'
+      '<button data-act="users">🔑 Manage users</button>' +
+      '<button data-act="audit">📋 Access log</button>'
     document.body.appendChild(m)
     m.addEventListener("click", function (e) {
       var b = e.target.closest("button"); if (!b) return
@@ -344,6 +356,7 @@
       else if (b.dataset.act === "log") openChangesModal()
       else if (b.dataset.act === "viewas") openViewAsModal()
       else if (b.dataset.act === "users") openUsersModal()
+      else if (b.dataset.act === "audit") openAuditModal()
     })
     // click-outside dismisses
     setTimeout(function () {
@@ -440,6 +453,105 @@
       var diffs = (f.additions || f.deletions) ? ' <span class="pm">+' + f.additions + '/-' + f.deletions + '</span>' : ""
       return '<li><span class="sym ' + esc(f.status) + '">' + sym + '</span> ' + line + diffs + '</li>'
     }).join("") + '</ul>'
+  }
+
+  // ---- Access log (admin) -----------------------------------------------
+  // Reads /api/audit. Supports single-day and last-N-days views, filtering
+  // by user and by path substring. Groups consecutive requests by the same
+  // user within 30 min as a "session" so login/session-start moments are
+  // obvious at a glance without the Worker having to track sessions.
+  function openAuditModal() {
+    var ov = mkOverlay("Access log")
+    var body = ov.querySelector(".ax-body")
+    var footer = ov.querySelector("footer")
+    footer.innerHTML = '<button class="ax-btn ax-cancel">Close</button>'
+    footer.querySelector(".ax-cancel").addEventListener("click", function () { ov.remove() })
+    body.innerHTML =
+      '<div class="ax-log-controls">' +
+        '<label>Range <select id="ax-log-range">' +
+          '<option value="1">Today</option>' +
+          '<option value="2">Last 2 days</option>' +
+          '<option value="7" selected>Last 7 days</option>' +
+          '<option value="30">Last 30 days</option>' +
+        '</select></label>' +
+        '<label>User <select id="ax-log-user"><option value="">All</option></select></label>' +
+        '<label>Path contains <input type="search" id="ax-log-path" placeholder="e.g. brindelvik"/></label>' +
+        '<label><input type="checkbox" id="ax-log-sessions" checked/> Group sessions</label>' +
+        '<button class="ax-btn ax-small" id="ax-log-refresh">↻ Refresh</button>' +
+      '</div>' +
+      '<div id="ax-log-summary" class="hint" style="margin:6px 0"></div>' +
+      '<div id="ax-log-body" class="ax-log-body">Loading…</div>'
+    var rangeSel = body.querySelector("#ax-log-range")
+    var userSel = body.querySelector("#ax-log-user")
+    var pathIn = body.querySelector("#ax-log-path")
+    var sessionsCk = body.querySelector("#ax-log-sessions")
+    var refreshBtn = body.querySelector("#ax-log-refresh")
+    var out = body.querySelector("#ax-log-body")
+    var summary = body.querySelector("#ax-log-summary")
+    var allEntries = []
+    function fmtTs(iso) {
+      var d = new Date(iso)
+      return d.toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" })
+    }
+    function renderList() {
+      var filterUser = (userSel.value || "").toLowerCase()
+      var filterPath = (pathIn.value || "").toLowerCase()
+      var group = sessionsCk.checked
+      var filtered = allEntries.filter(function (e) {
+        if (filterUser && (e.user || "").toLowerCase() !== filterUser) return false
+        if (filterPath && (e.path || "").toLowerCase().indexOf(filterPath) === -1) return false
+        return true
+      })
+      summary.textContent = filtered.length + " event" + (filtered.length === 1 ? "" : "s") + " · " +
+        new Set(filtered.map(function (e) { return e.user })).size + " user" +
+        (new Set(filtered.map(function (e) { return e.user })).size === 1 ? "" : "s")
+      if (!filtered.length) { out.innerHTML = '<p class="hint">No entries match.</p>'; return }
+      var html = '<table class="ax-table ax-log-table"><thead><tr><th>When</th><th>User</th><th>Path</th><th>Method</th></tr></thead><tbody>'
+      var lastByUser = {}
+      var SESSION_GAP_MS = 30 * 60 * 1000
+      for (var i = 0; i < filtered.length; i++) {
+        var e = filtered[i]
+        var t = new Date(e.ts).getTime()
+        var prev = lastByUser[e.user]
+        var isSessionStart = group && (!prev || (prev - t) > SESSION_GAP_MS)
+        lastByUser[e.user] = t
+        var userTag = e.viewAsBy
+          ? esc(e.user) + ' <span class="badge">via ' + esc(e.viewAsBy) + '</span>'
+          : esc(e.user)
+        var method = (e.method === "GET" || !e.method) ? '' : '<span class="badge">' + esc(e.method) + '</span>'
+        html += '<tr' + (isSessionStart ? ' class="row-session-start"' : '') + '>' +
+          '<td class="ts">' + esc(fmtTs(e.ts)) + (isSessionStart ? ' <span class="badge badge-session">session</span>' : '') + '</td>' +
+          '<td>' + userTag + '</td>' +
+          '<td class="path"><a href="' + esc(e.path) + '" target="_blank" rel="noopener">' + esc(e.path) + '</a></td>' +
+          '<td>' + method + '</td>' +
+          '</tr>'
+      }
+      html += '</tbody></table>'
+      out.innerHTML = html
+    }
+    function load() {
+      out.innerHTML = '<p class="hint">Loading…</p>'
+      var days = parseInt(rangeSel.value, 10) || 1
+      fetch("/api/audit?days=" + days, { credentials: "same-origin" })
+        .then(function (r) { return r.json() })
+        .then(function (d) {
+          if (!d || (!d.entries && !d.error)) { out.innerHTML = '<p class="ax-status">No data.</p>'; return }
+          if (d.error) { out.innerHTML = '<p class="ax-status">Error: ' + esc(d.error) + '</p>'; return }
+          allEntries = d.entries || []
+          // Populate user dropdown from data
+          var users = Array.from(new Set(allEntries.map(function (e) { return e.user }))).sort()
+          var prev = userSel.value
+          userSel.innerHTML = '<option value="">All</option>' + users.map(function (u) { return '<option value="' + esc(u) + '"' + (u === prev ? ' selected' : '') + '>' + esc(u) + '</option>' }).join("")
+          renderList()
+        })
+        .catch(function (e) { out.innerHTML = '<p class="ax-status">Fetch failed: ' + esc(e.message) + '</p>' })
+    }
+    rangeSel.addEventListener("change", load)
+    userSel.addEventListener("change", renderList)
+    pathIn.addEventListener("input", renderList)
+    sessionsCk.addEventListener("change", renderList)
+    refreshBtn.addEventListener("click", load)
+    load()
   }
 
   // ---- View-as impersonation --------------------------------------------

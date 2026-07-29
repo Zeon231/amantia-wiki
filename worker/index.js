@@ -41,7 +41,7 @@ const ADMIN_ROLES = new Set(["admin", "dm"])
 const isAdminRole = (role) => ADMIN_ROLES.has(role)
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const path = new URL(request.url).pathname
     const isPrivate = path.startsWith(PRIVATE_PREFIX)
 
@@ -78,6 +78,10 @@ export default {
 
     const auth = await authenticate(request, env)
     if (!auth.ok) return unauthorized()
+
+    // Fire-and-forget access log for ALL authenticated request paths (the
+    // isLoggablePath filter inside decides which ones actually get an entry).
+    if (ctx && ctx.waitUntil) ctx.waitUntil(logAccess(env, request, auth))
 
     // Small endpoint the page can call to render admin-only UI (edit buttons).
     // Returns identity + edit permissions; does not leak page content.
@@ -188,6 +192,30 @@ async function handleApi(path, request, env, auth) {
 
   if (!isAdminRole(auth.role)) return json({ error: "forbidden — admin only" }, 403)
   if (!env.GITHUB_TOKEN) return json({ error: "editing not configured (GITHUB_TOKEN not set)" }, 501)
+
+  // ---- Access log (admin panel) ----
+  // GET /api/audit?date=YYYY-MM-DD → that day's log, newest first
+  // GET /api/audit?days=7          → last N days aggregated (max 30)
+  if (path === "/api/audit" && request.method === "GET") {
+    if (!env.USERS_KV) return json({ error: "USERS_KV not configured — audit log needs KV" }, 501)
+    const daysParam = url.searchParams.get("days")
+    if (daysParam) {
+      const days = Math.max(1, Math.min(30, parseInt(daysParam, 10) || 1))
+      const now = Date.now()
+      const out = []
+      for (let i = 0; i < days; i++) {
+        const iso = new Date(now - i * 86400000).toISOString().slice(0, 10)
+        const raw = await env.USERS_KV.get("log:" + iso)
+        if (raw) { try { out.push(...JSON.parse(raw)) } catch {} }
+      }
+      out.sort((a, b) => (b.ts || "").localeCompare(a.ts || ""))
+      return json({ days, entries: out })
+    }
+    const date = url.searchParams.get("date") || new Date().toISOString().slice(0, 10)
+    const raw = await env.USERS_KV.get("log:" + date)
+    const entries = raw ? JSON.parse(raw).slice().reverse() : []
+    return json({ date, entries })
+  }
 
   // ---- Users list (admin panel: no hashes, safe to hand to the browser) ----
   if (path === "/api/users" && request.method === "GET") {
@@ -543,6 +571,93 @@ function bytesToBase64(bytes) {
   return btoa(bin)
 }
 
+// ---- Users store: KV-first, secret fallback (during migration) ----------
+// When USERS_KV is bound and has a `users` key, read it. If USERS_KV is
+// bound but empty, auto-seed once from the legacy WIKI_USERS secret. When
+// USERS_KV isn't bound at all, keep reading the secret directly (fully
+// backwards-compatible with the pre-migration deploy).
+async function getUsers(env) {
+  if (env.USERS_KV) {
+    const raw = await env.USERS_KV.get("users")
+    if (raw) { try { return JSON.parse(raw) } catch { return {} } }
+    // First read after migration: seed from the legacy secret if present.
+    if (env.WIKI_USERS) {
+      try {
+        const seed = JSON.parse(env.WIKI_USERS)
+        await env.USERS_KV.put("users", JSON.stringify(seed))
+        return seed
+      } catch { /* malformed secret — ignore */ }
+    }
+    return {}
+  }
+  try { return JSON.parse(env.WIKI_USERS || "{}") } catch { return {} }
+}
+async function saveUsers(env, users) {
+  if (!env.USERS_KV) throw new Error("USERS_KV binding not configured — user edits require KV")
+  await env.USERS_KV.put("users", JSON.stringify(users))
+}
+
+// ---- Access log (best-effort, fire-and-forget) ---------------------------
+// Every meaningful HTML page view + logout is appended to a per-day array
+// under USERS_KV. Assets, /whoami, and other /api/* traffic are skipped so
+// the log stays about "who visited what page and when", not every HTTP call.
+// Entries expire after 35 days. Log is admin-viewable via /api/audit.
+const LOG_MAX_PER_DAY = 5000
+const LOG_TTL_SECONDS = 60 * 60 * 24 * 35
+function logDayKey(iso) { return "log:" + iso.slice(0, 10) }
+function isLoggablePath(path, method) {
+  if (path === "/logout") return true
+  if (path === "/whoami") return false
+  if (path.startsWith("/api/")) {
+    // Log identity/deploy events, skip the chatty read APIs
+    if (path === "/api/view-as" && method === "POST") return true
+    if (path === "/api/deploy") return true
+    if (path === "/api/page" && (method === "PUT" || method === "POST" || method === "DELETE")) return true
+    if (path === "/api/upload" && method === "POST") return true
+    if (path.startsWith("/api/users/")) return true
+    return false
+  }
+  if (path.startsWith("/static/")) return false
+  if (/\.(css|js|mjs|png|jpe?g|gif|webp|svg|avif|ico|woff2?|ttf|json|map|xml|txt)($|\?)/i.test(path)) return false
+  return true
+}
+async function logAccess(env, request, auth) {
+  if (!env.USERS_KV) return
+  const path = new URL(request.url).pathname
+  const method = request.method
+  if (!isLoggablePath(path, method)) return
+  const ts = new Date().toISOString()
+  const key = logDayKey(ts)
+  const entry = {
+    ts,
+    user: (auth && auth.user) || "-",
+    role: (auth && auth.role) || null,
+    tier: (auth && auth.tier) || null,
+    viewAsBy: (auth && auth.viewAsBy) || null, // admin impersonating this identity
+    path,
+    method,
+    ip: request.headers.get("CF-Connecting-IP") || null,
+    ua: (request.headers.get("User-Agent") || "").slice(0, 120),
+  }
+  try {
+    const raw = await env.USERS_KV.get(key)
+    const arr = raw ? JSON.parse(raw) : []
+    arr.push(entry)
+    if (arr.length > LOG_MAX_PER_DAY) arr.splice(0, arr.length - LOG_MAX_PER_DAY)
+    await env.USERS_KV.put(key, JSON.stringify(arr), { expirationTtl: LOG_TTL_SECONDS })
+  } catch { /* best-effort — never break a page view over a logging failure */ }
+}
+// Validate a user record before writing (defense against a corrupted PUT).
+function validateUserRecord(rec, name) {
+  if (!rec || typeof rec !== "object") return "record must be an object"
+  if (typeof rec.hash !== "string" || !/^[0-9a-fA-F]{64}$/.test(rec.hash)) return "hash must be a 64-char hex sha256"
+  if (rec.role && !["admin", "dm", "player"].includes(rec.role)) return "role must be admin, dm, or player"
+  if (rec.tier != null && typeof rec.tier !== "string") return "tier must be a string"
+  if (rec.editLevel != null && !(Number.isInteger(rec.editLevel) && rec.editLevel >= 1 && rec.editLevel <= 999)) return "editLevel must be an integer 1..999"
+  if (!/^[a-zA-Z0-9._-]{2,32}$/.test(name)) return "username must be 2-32 chars, letters/digits/._-"
+  return null
+}
+
 async function authenticate(request, env) {
   const header = request.headers.get("Authorization") || ""
   if (!header.startsWith("Basic ")) return { ok: false }
@@ -558,12 +673,7 @@ async function authenticate(request, env) {
     return { ok: false }
   }
 
-  let users = {}
-  try {
-    users = JSON.parse(env.WIKI_USERS || "{}")
-  } catch {
-    return { ok: false }
-  }
+  const users = await getUsers(env)
 
   // Case-insensitive username lookup. Stored key wins for canonical display;
   // any input casing matches. Passwords stay case-sensitive.
