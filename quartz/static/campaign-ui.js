@@ -57,6 +57,22 @@
       "#amantia-admin-menu{position:fixed;right:16px;bottom:60px;z-index:950;background:var(--light);border:1px solid var(--gray);border-radius:8px;padding:5px;display:flex;flex-direction:column;gap:4px;min-width:190px;box-shadow:0 4px 14px rgba(0,0,0,.35)}",
       "#amantia-admin-menu button{background:transparent;color:var(--darkgray);border:0;text-align:left;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:14px}",
       "#amantia-admin-menu button:hover{background:var(--lightgray)}",
+      /* view-as impersonation banner + user tables + tools */
+      "#ax-viewas-banner{position:fixed;top:0;left:0;right:0;z-index:9500;background:#7cc47a;color:#111;padding:6px 14px;font:600 13px system-ui,sans-serif;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.25)}",
+      "#ax-viewas-banner a{color:#111;text-decoration:underline;margin-left:.5em}",
+      ".ax-table{width:100%;border-collapse:collapse;font-size:13px;margin:.5rem 0}",
+      ".ax-table th,.ax-table td{padding:6px 8px;border-bottom:1px solid var(--lightgray);text-align:left;vertical-align:middle}",
+      ".ax-table th{font-weight:600;color:var(--gray);font-size:11px;text-transform:uppercase;letter-spacing:.5px}",
+      ".ax-table tr.row-current{background:rgba(124,196,122,.15)}",
+      ".ax-table .badge{display:inline-block;background:var(--lightgray);color:var(--darkgray);padding:1px 6px;border-radius:3px;font-size:11px;margin-right:3px}",
+      ".ax-table .badge-admin{background:#e8b04b;color:#111}",
+      ".ax-table .badge-player{background:#7cc47a;color:#111}",
+      ".ax-tool{background:var(--lightgray);padding:12px;border-radius:6px;margin-top:8px}",
+      ".ax-tool h3{margin:0 0 8px 0;font-size:14px;color:var(--darkgray)}",
+      ".ax-tool label{display:block;margin:6px 0}",
+      ".ax-tool label input{width:100%;padding:5px 8px;border:1px solid var(--gray);border-radius:4px;background:var(--light);color:var(--darkgray);margin-top:2px;box-sizing:border-box}",
+      ".ax-btn.ax-small{padding:3px 9px;font-size:11px;font-weight:500}",
+      ".ax-btn.ax-primary{background:#e8b04b;color:#111}",
       ".ax-admin .ax-body{padding:1rem 1.2rem;overflow-y:auto;max-height:60vh}",
       ".ax-admin .ax-body p{margin:.4rem 0}",
       ".ax-admin .ax-body h4{margin:1rem 0 .4rem;font-size:14px;color:var(--secondary)}",
@@ -281,6 +297,7 @@
     document.body.appendChild(bar)
     document.getElementById("ax-logout").addEventListener("click", logout)
     if (WHO.canEdit) addAdminTools()
+    renderViewAsBanner()
     // Re-run map decoration now that admin state is known (adds edit button)
     document.querySelectorAll(".location-map[data-ax-decorated]").forEach(function (m) { m.removeAttribute("data-ax-decorated") })
     decorateMaps()
@@ -316,13 +333,17 @@
     m.id = "amantia-admin-menu"
     m.innerHTML =
       '<button data-act="deploy">🚀 Deploy Changes</button>' +
-      '<button data-act="log">📜 Changes Log</button>'
+      '<button data-act="log">📜 Changes Log</button>' +
+      '<button data-act="viewas">👤 View as…</button>' +
+      '<button data-act="users">🔑 Manage users</button>'
     document.body.appendChild(m)
     m.addEventListener("click", function (e) {
       var b = e.target.closest("button"); if (!b) return
       m.remove()
       if (b.dataset.act === "deploy") openDeployModal()
       else if (b.dataset.act === "log") openChangesModal()
+      else if (b.dataset.act === "viewas") openViewAsModal()
+      else if (b.dataset.act === "users") openUsersModal()
     })
     // click-outside dismisses
     setTimeout(function () {
@@ -419,6 +440,184 @@
       var diffs = (f.additions || f.deletions) ? ' <span class="pm">+' + f.additions + '/-' + f.deletions + '</span>' : ""
       return '<li><span class="sym ' + esc(f.status) + '">' + sym + '</span> ' + line + diffs + '</li>'
     }).join("") + '</ul>'
+  }
+
+  // ---- View-as impersonation --------------------------------------------
+  function openViewAsModal() {
+    var ov = mkOverlay("View site as…")
+    var body = ov.querySelector(".ax-body")
+    body.innerHTML = '<p class="ax-status">Loading users…</p>'
+    var footer = ov.querySelector("footer")
+    footer.innerHTML = '<button class="ax-btn ax-cancel">Close</button>'
+    footer.querySelector(".ax-cancel").addEventListener("click", function () { ov.remove() })
+    fetch("/api/view-as", { credentials: "same-origin" })
+      .then(function (r) { return r.json() })
+      .then(function (d) {
+        if (!d || !d.users) { body.innerHTML = '<p class="ax-status">Failed to load: ' + esc((d && d.error) || "unknown") + '</p>'; return }
+        var current = d.current // null if not impersonating
+        var real = d.real
+        var rows = d.users.map(function (u) {
+          var isCurrent = current && u.user.toLowerCase() === current.toLowerCase()
+          var isReal = u.user.toLowerCase() === real.toLowerCase()
+          var badge = u.role === "admin" || u.role === "dm" ? '<span class="badge badge-admin">' + esc(u.role) + '</span>'
+            : '<span class="badge badge-player">player</span>' + (u.tier ? ' <span class="badge">tier: ' + esc(u.tier) + '</span>' : '')
+          return '<tr' + (isCurrent ? ' class="row-current"' : '') + '>' +
+            '<td>' + esc(u.user) + (isReal ? ' <span class="badge">you</span>' : '') + '</td>' +
+            '<td>' + badge + '</td>' +
+            '<td><button class="ax-btn" data-as="' + esc(u.user) + '"' + (isCurrent || isReal ? ' disabled' : '') + '>' + (isCurrent ? 'viewing' : 'View as') + '</button></td>' +
+            '</tr>'
+        }).join("")
+        body.innerHTML =
+          '<p class="hint">Simulate what each user actually sees. Your real login stays as <b>' + esc(real) + '</b> for audit.</p>' +
+          '<table class="ax-table"><thead><tr><th>User</th><th>Role</th><th></th></tr></thead><tbody>' + rows +
+          '<tr><td colspan="2"><em>Anonymous</em> — what a signed-out visitor would see (only meaningful with <code>PUBLIC_SHARED=true</code>)</td>' +
+          '<td><button class="ax-btn" data-as="anonymous"' + (current === "anonymous" ? ' disabled' : '') + '>' + (current === "anonymous" ? 'viewing' : 'View as') + '</button></td></tr>' +
+          '</tbody></table>' +
+          (current ? '<p><button class="ax-btn ax-primary" data-as="">↩ Return to your real view</button></p>' : '')
+        body.addEventListener("click", function (e) {
+          var b = e.target.closest("button[data-as]"); if (!b) return
+          var as = b.getAttribute("data-as") || null
+          b.disabled = true; b.textContent = "…"
+          fetch("/api/view-as", {
+            method: "POST", credentials: "same-origin",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ as: as }),
+          }).then(function (r) { return r.json() }).then(function () {
+            location.reload()
+          }).catch(function () { b.disabled = false; b.textContent = "Retry" })
+        })
+      })
+      .catch(function (e) { body.innerHTML = '<p class="ax-status">Failed to load: ' + esc(e.message) + '</p>' })
+  }
+  // Persistent banner when impersonating — makes it obvious the view is fake.
+  function renderViewAsBanner() {
+    if (!WHO || !WHO.viewAsBy) return
+    if (document.getElementById("ax-viewas-banner")) return
+    var bar = document.createElement("div")
+    bar.id = "ax-viewas-banner"
+    bar.innerHTML = '👁 Viewing as <b>' + esc(WHO.user) + '</b> (real: ' + esc(WHO.viewAsBy) + ') — <a href="#" id="ax-viewas-off">Return to your view</a>'
+    document.body.appendChild(bar)
+    document.getElementById("ax-viewas-off").addEventListener("click", function (e) {
+      e.preventDefault()
+      fetch("/api/view-as", {
+        method: "POST", credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ as: null }),
+      }).then(function () { location.reload() })
+    })
+  }
+
+  // ---- User management (read + client-side hash generator) --------------
+  function openUsersModal() {
+    var ov = mkOverlay("Manage users")
+    var body = ov.querySelector(".ax-body")
+    body.innerHTML = '<p class="ax-status">Loading users…</p>'
+    var footer = ov.querySelector("footer")
+    footer.innerHTML = '<button class="ax-btn ax-cancel">Close</button>'
+    footer.querySelector(".ax-cancel").addEventListener("click", function () { ov.remove() })
+    fetch("/api/users", { credentials: "same-origin" })
+      .then(function (r) { return r.json() })
+      .then(function (d) {
+        if (!d || !d.users) { body.innerHTML = '<p class="ax-status">Failed to load: ' + esc((d && d.error) || "unknown") + '</p>'; return }
+        var rows = d.users.map(function (u) {
+          return '<tr>' +
+            '<td>' + esc(u.user) + '</td>' +
+            '<td>' + esc(u.role) + (u.tier ? ' · tier ' + esc(u.tier) : '') + '</td>' +
+            '<td>' + (u.editLevel != null ? esc(String(u.editLevel)) : '—') + '</td>' +
+            '<td><button class="ax-btn ax-small" data-op="rename" data-user="' + esc(u.user) + '">Rename</button> ' +
+                '<button class="ax-btn ax-small" data-op="pw" data-user="' + esc(u.user) + '">Change password</button></td>' +
+            '</tr>'
+        }).join("")
+        body.innerHTML =
+          '<table class="ax-table"><thead><tr><th>User</th><th>Role</th><th>Edit lvl</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>' +
+          '<div id="ax-user-tool" style="margin-top:12px"></div>' +
+          '<p class="hint" style="margin-top:12px">' + esc(d.note || "") + '</p>'
+        body.addEventListener("click", function (e) {
+          var b = e.target.closest("button[data-op]"); if (!b) return
+          var user = b.getAttribute("data-user"), op = b.getAttribute("data-op")
+          if (op === "pw") openPasswordTool(user, d.users)
+          else if (op === "rename") openRenameTool(user, d.users)
+        })
+      })
+      .catch(function (e) { body.innerHTML = '<p class="ax-status">Failed to load: ' + esc(e.message) + '</p>' })
+  }
+  function updatedUsersJson(users, patch) {
+    // users is the list from /api/users (no hashes). We can only produce a
+    // PARTIAL patch. So instead we ask the admin to paste their current JSON
+    // and we splice in the change on their machine before showing them what
+    // to run.
+    var obj = {}
+    users.forEach(function (u) {
+      obj[u.user] = { hash: "<KEEP EXISTING>", role: u.role }
+      if (u.tier) obj[u.user].tier = u.tier
+      if (u.editLevel != null) obj[u.user].editLevel = u.editLevel
+    })
+    Object.assign(obj, patch || {})
+    return obj
+  }
+  function showJsonAndCommand(preamble, obj) {
+    var pretty = JSON.stringify(obj, null, 2)
+    var cmd = "echo '" + pretty.replace(/'/g, "'\\''") + "' | npx wrangler secret put WIKI_USERS"
+    return preamble +
+      '<p class="hint"><b>1.</b> Copy this JSON (edit the KEEP-EXISTING entries with your other users\' real hashes — see current secret via <code>wrangler secret list</code> → the JSON in your local notes):</p>' +
+      '<textarea readonly style="width:100%;height:180px;font:12px ui-monospace,monospace">' + esc(pretty) + '</textarea>' +
+      '<p class="hint"><b>2.</b> From your <code>blujelly-wiki</code> folder, run <code>npx wrangler secret put WIKI_USERS</code> and paste the JSON when prompted (do NOT use the shell one-liner above unless you\'re certain it won\'t leak into your history).</p>' +
+      '<p class="hint">The change goes live within ~30s. No redeploy needed.</p>'
+  }
+  async function sha256hex(str) {
+    var buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str))
+    return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, "0") }).join("")
+  }
+  function openPasswordTool(user, users) {
+    var host = document.getElementById("ax-user-tool")
+    host.innerHTML =
+      '<div class="ax-tool"><h3>🔑 Reset password for <code>' + esc(user) + '</code></h3>' +
+      '<label>New password<input type="password" id="ax-pw-new" autocomplete="new-password"/></label>' +
+      '<label>Confirm <input type="password" id="ax-pw-cnf" autocomplete="new-password"/></label>' +
+      '<button class="ax-btn ax-primary" id="ax-pw-go">Compute updated JSON</button>' +
+      '<div id="ax-pw-out"></div></div>'
+    document.getElementById("ax-pw-go").addEventListener("click", async function () {
+      var pw = document.getElementById("ax-pw-new").value
+      var cnf = document.getElementById("ax-pw-cnf").value
+      if (!pw || pw.length < 6) { alert("Password too short (min 6 chars)."); return }
+      if (pw !== cnf) { alert("Passwords don't match."); return }
+      var hash = await sha256hex(pw)
+      var patch = {}
+      var existing = users.find(function (u) { return u.user === user })
+      patch[user] = { hash: hash, role: existing.role }
+      if (existing.tier) patch[user].tier = existing.tier
+      if (existing.editLevel != null) patch[user].editLevel = existing.editLevel
+      document.getElementById("ax-pw-out").innerHTML = showJsonAndCommand(
+        '<p class="ax-status">✓ New SHA-256 hash computed. It is <b>never sent to the server</b>. Only you see it below.</p>',
+        updatedUsersJson(users, patch),
+      )
+    })
+  }
+  function openRenameTool(user, users) {
+    var host = document.getElementById("ax-user-tool")
+    host.innerHTML =
+      '<div class="ax-tool"><h3>✏ Rename <code>' + esc(user) + '</code></h3>' +
+      '<label>New username <input type="text" id="ax-rn-new" value="' + esc(user) + '"/></label>' +
+      '<p class="hint">Case-insensitive. Keeps the same hash, role, and tier. Old sessions must sign in again with the new name.</p>' +
+      '<button class="ax-btn ax-primary" id="ax-rn-go">Compute updated JSON</button>' +
+      '<div id="ax-rn-out"></div></div>'
+    document.getElementById("ax-rn-go").addEventListener("click", function () {
+      var newName = document.getElementById("ax-rn-new").value.trim()
+      if (!newName || newName === user) { alert("Enter a different name."); return }
+      var conflict = users.find(function (u) { return u.user.toLowerCase() === newName.toLowerCase() && u.user !== user })
+      if (conflict) { alert("A user named " + conflict.user + " already exists (case-insensitive)."); return }
+      var next = users.map(function (u) { return u.user === user ? Object.assign({}, u, { user: newName }) : u })
+      var obj = {}
+      next.forEach(function (u) {
+        obj[u.user] = { hash: "<KEEP EXISTING>", role: u.role }
+        if (u.tier) obj[u.user].tier = u.tier
+        if (u.editLevel != null) obj[u.user].editLevel = u.editLevel
+      })
+      document.getElementById("ax-rn-out").innerHTML = showJsonAndCommand(
+        '<p class="ax-status">✓ Rename staged in this JSON. Replace <code>&lt;KEEP EXISTING&gt;</code> with the actual hashes before applying.</p>',
+        obj,
+      )
+    })
   }
 
   function mkOverlay(title) {
