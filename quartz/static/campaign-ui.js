@@ -1714,10 +1714,25 @@
   }
 
   // ---- Explorer sidebar: Home button + hide duplicate folder-note entries ---
-  // Rule: any file entry whose displayed name matches its parent folder's name
-  // is a "folder-note stub" — hide it. Whitelist real folder-note pages that
-  // carry meaningful content (Brindelvik.md is a full location page, not a stub).
-  var EXPLORER_KEEP = /brindelvik|raudvatn|aldgrind/i
+  // Rule: normalize both sides (lowercase, strip emoji/leading punctuation)
+  // and hide any file entry whose normalized name matches its parent folder.
+  // These are structural folder notes (like NPCs.md inside 👥 NPCs/) that just
+  // duplicate the folder header. Real content-bearing folder notes are kept
+  // via the EXPLORER_KEEP whitelist (Brindelvik.md IS the location page).
+  var EXPLORER_KEEP = /brindelvik|raudvatn|ardgrind|tir-caelgormhaen|holy-rose-empire|hraesveil|ruzvakholl|the-untamed-marches|north-rose-subcontinent|ne-continent|the-crooked-lantern|shepherds-retreat|gran|naomhyrk|amantia-history/i
+  // Strip emoji/pictographs, leading punctuation (numbered prefixes like
+  // "02 - "), and collapse whitespace so "👥 NPCs" and "NPCs" match.
+  function normalizeExplorerName(s) {
+    return String(s || "")
+      // Remove emoji + pictographic symbols
+      .replace(/[\p{Extended_Pictographic}\p{Emoji_Presentation}]/gu, "")
+      // Remove common "NN - " numeric prefixes
+      .replace(/^\s*\d+\s*[-–—.]\s*/, "")
+      // Collapse whitespace and lowercase
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase()
+  }
   function decorateExplorer() {
     var explorer = document.querySelector(".explorer")
     if (!explorer) return
@@ -1730,17 +1745,17 @@
       homeLi.innerHTML = '<a href="/" class="nav-file-title tree-item-self" style="font-weight:600">🏠 Home</a>'
       ul.insertBefore(homeLi, ul.firstChild)
     }
-    // 2. Hide stub folder-note entries (displayed name == parent folder name)
+    // 2. Hide stub folder-note entries (normalized name == parent folder name)
     var folders = ul.querySelectorAll("li")
     folders.forEach(function (li) {
       var folderTitle = li.querySelector(":scope > .folder-container .folder-title, :scope > .nav-folder-title .folder-title")
       if (!folderTitle) return
-      var folderName = (folderTitle.textContent || "").trim()
-      if (!folderName) return
+      var folderKey = normalizeExplorerName(folderTitle.textContent)
+      if (!folderKey) return
       var childAnchors = li.querySelectorAll(":scope > .folder-outer .nav-file-title, :scope > ul .nav-file-title")
       childAnchors.forEach(function (a) {
-        var name = (a.textContent || "").trim()
-        if (name !== folderName) return
+        var nameKey = normalizeExplorerName(a.textContent)
+        if (nameKey !== folderKey) return
         if (EXPLORER_KEEP.test(a.getAttribute("href") || "")) return
         var wrap = a.closest("li")
         if (wrap) wrap.style.display = "none"
