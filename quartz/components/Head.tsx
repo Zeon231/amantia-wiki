@@ -108,6 +108,14 @@ export default (() => {
         {fileData.frontmatter?.portrait && (
           <meta name="portrait" content={String(fileData.frontmatter.portrait)} />
         )}
+        {/* Encounter roller: frontmatter `encounters: ["goblins x3", "owlbear @2"]`
+            — joined with `||` for a single meta value the client script parses. */}
+        {Array.isArray(fileData.frontmatter?.encounters) && (
+          <meta
+            name="encounters"
+            content={(fileData.frontmatter.encounters as unknown[]).map((e) => String(e)).join(" || ")}
+          />
+        )}
         <script src={joinSegments(baseDir, "static/campaign-ui.js")} defer></script>
 
         {css.map((resource) => CSSResourceToStyleElement(resource, true))}
