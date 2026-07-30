@@ -5,7 +5,7 @@ species: Dhampir
 class: Sorcerer
 level: 1
 status: active
-portrait: "/People/portraits/alexander.png"
+portrait: "02 - People/Portraits/alexander.png"
 modified: 2026-07-28T12:53:41.578Z
 ---
 
