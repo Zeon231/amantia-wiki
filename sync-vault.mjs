@@ -69,6 +69,11 @@ const SKIP_FOLDERS = new Set([
   // 'Amantia Source Material' is now PUBLISHED — the species/rules pages
   // link to its docx/pdf files as reference material. The folder contains
   // no session spoilers, only public campaign source docs.
+  // 'Player Guides' is a subfolder inside Amantia Source Material used
+  // as reference-only DM source material. Claude reads it on request to
+  // ingest wiki-worthy content into public pages, but the raw guides
+  // never publish. See Amantia Source Material/Player Guides/README.md.
+  'Player Guides',
   'website',
 ])
 
