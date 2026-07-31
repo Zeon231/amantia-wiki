@@ -10,7 +10,7 @@ size: Medium
 speed: 30 ft
 lifespan: ~750 years
 common: true
-modified: 2026-07-29T15:03:38.579Z
+modified: 2026-07-31T16:53:56.570Z
 ---
 
 # Elves
@@ -130,4 +130,4 @@ Elves can live well over 700 years. They reach adulthood around age 100, and thi
 
 ---
 
-*See also:* [[Species Index]] | [[Fae & Fae-touched]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Fae & Fae-touched]] | *(reference: Races of Amantia chapter — ask DM)*

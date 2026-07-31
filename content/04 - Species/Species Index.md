@@ -1,6 +1,6 @@
 ---
 tags: [species, index]
-modified: 2026-05-28T13:48:26.008Z
+modified: 2026-07-31T16:53:58.460Z
 ---
 
 # Species Index
@@ -8,8 +8,8 @@ modified: 2026-05-28T13:48:26.008Z
 Amantia is home to an extraordinary range of peoples. This index links to individual species notes. For full mechanical detail, see the source PDFs.
 
 > [!tip] Sources
-> Art: [[Amantia Source Material/Amantia Playable Species Images.pdf]]
-> Full mechanics: [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+> Art: *(reference: Playable Species Images guide — ask DM)*
+> Full mechanics: *(reference: Races of Amantia chapter — ask DM)*
 
 ---
 

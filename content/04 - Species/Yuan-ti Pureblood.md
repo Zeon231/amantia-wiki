@@ -7,7 +7,7 @@ content-start: 712
 tags: [species, rare]
 creature-type: Monstrosity (Humanoid)
 common: false
-modified: 2026-05-28T13:40:08.788Z
+modified: 2026-07-31T16:53:58.977Z
 ---
 
 # Yuan-ti Pureblood
@@ -44,4 +44,4 @@ The **Shessian Empire** — a Yuan-ti and Vanakuti human shared civilisation in 
 
 ---
 
-*See also:* [[Species Index]] | [[Other Species]] | [[Humans]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Other Species]] | [[Humans]] | *(reference: Races of Amantia chapter — ask DM)*

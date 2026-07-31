@@ -7,7 +7,7 @@ content-start: 712
 tags: [species, rare]
 creature-type: Humanoid (Bestial)
 common: false
-modified: 2026-05-28T13:40:08.694Z
+modified: 2026-07-31T16:53:57.272Z
 ---
 
 # Harengon
@@ -37,4 +37,4 @@ Rural and wild regions throughout Amantia. Not strongly tied to any single homel
 
 ---
 
-*See also:* [[Species Index]] | [[Other Species]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Other Species]] | *(reference: Races of Amantia chapter — ask DM)*

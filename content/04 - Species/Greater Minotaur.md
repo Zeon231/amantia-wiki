@@ -10,7 +10,7 @@ size: Medium
 speed: 30 ft
 lifespan: ~150 years
 common: false
-modified: 2026-06-10T15:28:40.855Z
+modified: 2026-07-31T16:53:57.194Z
 ---
 
 # Greater Minotaur
@@ -72,4 +72,4 @@ All minotaur society must contend with the shadow of Baphomet — the pull towar
 
 ---
 
-*See also:* [[Species Index]] | [[Deity Index]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Deity Index]] | *(reference: Races of Amantia chapter — ask DM)*

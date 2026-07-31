@@ -7,7 +7,7 @@ content-start: 712
 tags: [species, rare, draconic]
 creature-type: Humanoid (Draconic)
 common: false
-modified: 2026-05-28T13:40:08.704Z
+modified: 2026-07-31T16:53:57.884Z
 ---
 
 # Kobold
@@ -38,4 +38,4 @@ Dragon-adjacent territories and underground regions throughout Amantia. Found in
 
 ---
 
-*See also:* [[Species Index]] | [[Other Species]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Other Species]] | *(reference: Races of Amantia chapter — ask DM)*

@@ -1,7 +1,7 @@
 ---
 tags: [rules, backgrounds, origins, feats]
 system: D&D 5e 2024
-modified: 2026-06-07T15:55:41.801Z
+modified: 2026-07-31T16:53:59.551Z
 ---
 
 # Character Origins in Amantia
@@ -25,7 +25,7 @@ Each background provides:
 |------|----------------|
 | **Agent of the Realm** | Inspiring Strike (give Heroic Inspiration on crit); Reasserting Honor (advantage vs. foes who hit allies) |
 | **Alert** | Bonus to initiative; cannot be surprised |
-| *(more in source)* | See [[Amantia Source Material/Amantia Character Origins - Feats.pdf]] |
+| *(more in source)* | See *(reference: Feats guide — ask DM)* |
 
 ---
 
@@ -35,6 +35,6 @@ Each background provides:
 ---
 
 > [!tip] Sources
-> - [[Amantia Source Material/Amantia - Character Origins.docx]]
-> - [[Amantia Source Material/Amantia - Character Origins Feats.docx]]
-> - [[Amantia Source Material/AppendixA_Names_09March2024.pdf]] — Names by culture
+> - *(reference: Character Origins guide — ask DM)*
+> - *(reference: Character Origins & Feats guides — ask DM)*
+> - *(reference: Names appendix — ask DM)* — Names by culture

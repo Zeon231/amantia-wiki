@@ -1,7 +1,7 @@
 ---
 tags: [rules, classes]
 system: D&D 5e 2024
-modified: 2026-06-07T15:55:35.014Z
+modified: 2026-07-31T16:53:59.653Z
 ---
 
 # Character Classes in Amantia
@@ -30,4 +30,4 @@ Amantia uses the **2024 edition of Dungeons & Dragons**, with classes framed to 
 ---
 
 > [!tip] Source
-> Full class details in [[Amantia Source Material/Amantia - Character Classes.docx]]
+> Full class details in *(reference: Character Classes guide — ask DM)*

@@ -7,7 +7,7 @@ content-start: 712
 tags: [species, common, goblinoid]
 creature-type: Humanoid (Goblinoid)
 common: true
-modified: 2026-05-28T13:40:08.690Z
+modified: 2026-07-31T16:53:57.022Z
 ---
 
 # Goblin
@@ -37,4 +37,4 @@ Widespread — goblinoid territories, wilderness areas, frontier regions, and th
 
 ---
 
-*See also:* [[Species Index]] | [[Other Species]] | [[Bugbear]] | [[Hobgoblin]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Other Species]] | [[Bugbear]] | [[Hobgoblin]] | *(reference: Races of Amantia chapter — ask DM)*

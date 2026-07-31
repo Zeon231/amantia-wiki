@@ -7,7 +7,7 @@ content-start: 712
 tags: [species, rare, planar]
 creature-type: Humanoid (Gith)
 common: false
-modified: 2026-06-10T15:29:39.800Z
+modified: 2026-07-31T16:53:56.851Z
 ---
 
 # Githyanki & Githzerai
@@ -54,4 +54,4 @@ The **Theocracy of Gith** is a Gith-ruled state. Individual Gith are found near 
 
 ---
 
-*See also:* [[Species Index]] | [[Other Species]] | [[Cosmology & The Planes]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Other Species]] | [[Cosmology & The Planes]] | *(reference: Races of Amantia chapter — ask DM)*

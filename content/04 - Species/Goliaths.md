@@ -12,7 +12,7 @@ size: Medium
 speed: 30 ft
 lifespan: ~100 years
 common: false
-modified: 2026-06-10T15:30:23.403Z
+modified: 2026-07-31T16:53:57.109Z
 ---
 
 # Goliaths
@@ -124,4 +124,4 @@ They live in communities where every member contributes and those who cannot are
 
 ---
 
-*See also:* [[Species Index]] | [[Deity Index]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Deity Index]] | *(reference: Races of Amantia chapter — ask DM)*

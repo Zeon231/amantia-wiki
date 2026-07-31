@@ -5,7 +5,7 @@ banner-fade: -10
 banner-height: 700
 content-start: 712
 tags: [species, rare, index]
-modified: 2026-05-28T13:48:28.060Z
+modified: 2026-07-31T16:53:58.300Z
 ---
 
 # Other Playable Species
@@ -106,4 +106,4 @@ Less common playable species in Amantia. Found in specific regions or rare circu
 
 ---
 
-*See also:* [[Species Index]] | [[Fae & Fae-touched]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]] | [[Amantia Source Material/Amantia Playable Species Images.pdf]]
+*See also:* [[Species Index]] | [[Fae & Fae-touched]] | *(reference: Races of Amantia chapter — ask DM)* | *(reference: Playable Species Images guide — ask DM)*

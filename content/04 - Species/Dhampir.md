@@ -7,7 +7,7 @@ content-start: 712
 tags: [species, rare, lineage]
 creature-type: Humanoid (Lineage)
 common: false
-modified: 2026-05-28T13:40:08.658Z
+modified: 2026-07-31T16:53:56.411Z
 ---
 
 # Dhampir
@@ -37,4 +37,4 @@ The Duchy of Saxolace (deeply entangled with necromantic powers and vampiric nob
 
 ---
 
-*See also:* [[Species Index]] | [[Other Species]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Other Species]] | *(reference: Races of Amantia chapter — ask DM)*

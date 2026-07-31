@@ -12,7 +12,7 @@ size: Medium
 speed: 25 ft
 lifespan: ~350 years
 common: true
-modified: 2026-06-10T15:30:25.058Z
+modified: 2026-07-31T16:53:56.491Z
 ---
 
 # Dwarves
@@ -109,4 +109,4 @@ The dwarven pantheon is called the **Dwarven Celestial Council** — a council o
 
 ---
 
-*See also:* [[Species Index]] | [[Country Index]] | [[Deity Index]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Country Index]] | [[Deity Index]] | *(reference: Races of Amantia chapter — ask DM)*

@@ -10,7 +10,7 @@ size: Medium
 speed: 30 ft
 lifespan: ~450 years
 common: false
-modified: 2026-06-10T15:28:42.097Z
+modified: 2026-07-31T16:53:58.053Z
 ---
 
 # Loxodon
@@ -70,4 +70,4 @@ They are tireless and patient artisans with unrivalled intuitive craft — espec
 
 ---
 
-*See also:* [[Species Index]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | *(reference: Races of Amantia chapter — ask DM)*

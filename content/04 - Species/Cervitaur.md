@@ -7,7 +7,7 @@ content-start: 712
 tags: [species, rare, fae]
 creature-type: Fae (Humanoid/Beast hybrid)
 common: false
-modified: 2026-05-28T13:40:08.649Z
+modified: 2026-07-31T16:53:56.288Z
 ---
 
 # Cervitaur
@@ -37,4 +37,4 @@ Forest regions, almost exclusively in Fae-touched areas of the Siórtharan kingd
 
 ---
 
-*See also:* [[Species Index]] | [[Other Species]] | [[Centaur]] | [[Fae & Fae-touched]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Other Species]] | [[Centaur]] | [[Fae & Fae-touched]] | *(reference: Races of Amantia chapter — ask DM)*

@@ -7,7 +7,7 @@ content-start: 712
 tags: [species, rare, fae]
 creature-type: Fae
 common: false
-modified: 2026-05-28T13:40:08.766Z
+modified: 2026-07-31T16:53:58.377Z
 ---
 
 # Satyr
@@ -38,4 +38,4 @@ Fae-adjacent regions, particularly the High Kingdom of the Green Stars and fores
 
 ---
 
-*See also:* [[Species Index]] | [[Other Species]] | [[Fae & Fae-touched]] | [[Centaur]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Other Species]] | [[Fae & Fae-touched]] | [[Centaur]] | *(reference: Races of Amantia chapter — ask DM)*

@@ -7,7 +7,7 @@ content-start: 712
 tags: [species, rare, goblinoid]
 creature-type: Humanoid (Goblinoid)
 common: false
-modified: 2026-05-28T13:40:03.322Z
+modified: 2026-07-31T16:53:56.037Z
 ---
 
 # Bugbear
@@ -37,4 +37,4 @@ Wilderness regions, goblinoid territories, and frontier lands throughout Amantia
 
 ---
 
-*See also:* [[Species Index]] | [[Other Species]] | [[Goblin]] | [[Hobgoblin]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Other Species]] | [[Goblin]] | [[Hobgoblin]] | *(reference: Races of Amantia chapter — ask DM)*

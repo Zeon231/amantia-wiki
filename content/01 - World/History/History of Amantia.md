@@ -1,6 +1,6 @@
 ---
 tags: [world, history, lore]
-modified: 2026-07-28T12:40:29.234Z
+modified: 2026-07-31T16:53:46.938Z
 ---
 
 # History of Amantia
@@ -89,4 +89,4 @@ Amid the contest of wyrm and titan, the **Fae** entered Amantia not by banner or
 *To be expanded as the campaign unfolds.*
 
 > [!tip] Source
-> Full history sourced from [[Amantia Source Material/Amantia - History of Amantia.docx]]
+> Full history sourced from *(reference: Annals of Amantia — ask DM)*

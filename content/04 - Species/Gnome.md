@@ -7,7 +7,7 @@ content-start: 712
 tags: [species, common]
 creature-type: Humanoid
 common: true
-modified: 2026-06-10T15:29:26.975Z
+modified: 2026-07-31T16:53:56.941Z
 ---
 
 # Gnome
@@ -52,4 +52,4 @@ The more common and sociable of the two subtypes. Forest Gnomes live in hidden c
 
 ---
 
-*See also:* [[Species Index]] | [[Other Species]] | [[Dwarves]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Other Species]] | [[Dwarves]] | *(reference: Races of Amantia chapter — ask DM)*

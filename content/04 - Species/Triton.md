@@ -7,7 +7,7 @@ content-start: 712
 tags: [species, rare]
 creature-type: Humanoid (Aquatic)
 common: false
-modified: 2026-05-28T13:40:08.775Z
+modified: 2026-07-31T16:53:58.774Z
 ---
 
 # Triton
@@ -39,4 +39,4 @@ Coastal regions and deep ocean territories. Found near the Admiralty of Sjóskja
 
 ---
 
-*See also:* [[Species Index]] | [[Other Species]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Other Species]] | *(reference: Races of Amantia chapter — ask DM)*

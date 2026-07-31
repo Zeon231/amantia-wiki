@@ -7,7 +7,7 @@ content-start: 712
 tags: [species, rare, fae]
 creature-type: Fae (Humanoid/Beast hybrid)
 common: false
-modified: 2026-05-28T13:40:08.642Z
+modified: 2026-07-31T16:53:56.212Z
 ---
 
 # Centaur
@@ -37,4 +37,4 @@ Open plains and frontier regions. Found in the Untamed Marches and Sikassan gras
 
 ---
 
-*See also:* [[Species Index]] | [[Other Species]] | [[Cervitaur]] | [[Fae & Fae-touched]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Other Species]] | [[Cervitaur]] | [[Fae & Fae-touched]] | *(reference: Races of Amantia chapter — ask DM)*

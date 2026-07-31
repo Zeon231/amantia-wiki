@@ -10,7 +10,7 @@ size: Medium
 speed: 30 ft
 lifespan: ~80 years
 common: true
-modified: 2026-05-28T05:35:07.485Z
+modified: 2026-07-31T16:53:57.801Z
 ---
 
 # Humans
@@ -41,7 +41,7 @@ Humans are the most common people in Amantia, found on every continent and in vi
 **Cultural Notes:**
 - Strong bardic tradition — the High Council of Bards and Druids wields real political power in many Siórtharan kingdoms.
 - The Oath of the Wolf (Tir Maelwynnara) is an example of the deep covenant culture — binding mortals, druids, and spirits.
-- Names tend toward melodic Celtic constructions (see [[Amantia Source Material/AppendixA_Names_09March2024.pdf]]).
+- Names tend toward melodic Celtic constructions (see *(reference: Names appendix — ask DM)*).
 
 ---
 
@@ -142,4 +142,4 @@ Humans are the most common people in Amantia, found on every continent and in vi
 
 ---
 
-*See also:* [[Species Index]] | [[Country Index]] | [[Amantia Source Material/AppendixA_Names_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Country Index]] | *(reference: Names appendix — ask DM)*

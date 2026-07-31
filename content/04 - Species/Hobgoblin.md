@@ -7,7 +7,7 @@ content-start: 712
 tags: [species, rare, goblinoid]
 creature-type: Humanoid (Goblinoid)
 common: false
-modified: 2026-05-28T13:40:08.700Z
+modified: 2026-07-31T16:53:57.390Z
 ---
 
 # Hobgoblin
@@ -42,4 +42,4 @@ The **Garud-Guur Empire** is a Hobgoblin-ruled empire in Amantia. Individual Hob
 
 ---
 
-*See also:* [[Species Index]] | [[Other Species]] | [[Goblin]] | [[Bugbear]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Other Species]] | [[Goblin]] | [[Bugbear]] | *(reference: Races of Amantia chapter — ask DM)*

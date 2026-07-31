@@ -7,7 +7,7 @@ content-start: 712
 tags: [species, rare]
 creature-type: Humanoid
 common: false
-modified: 2026-05-28T13:40:08.721Z
+modified: 2026-07-31T16:53:58.220Z
 ---
 
 # Orc
@@ -37,4 +37,4 @@ Widespread frontier presence. Found throughout the northern kingdoms, the Untame
 
 ---
 
-*See also:* [[Species Index]] | [[Other Species]] | [[Goliaths]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Other Species]] | [[Goliaths]] | *(reference: Races of Amantia chapter — ask DM)*

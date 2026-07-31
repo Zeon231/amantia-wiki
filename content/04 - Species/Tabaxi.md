@@ -13,7 +13,7 @@ size: Medium
 speed: 30 ft
 lifespan: ~100 years
 common: false
-modified: 2026-06-10T15:30:27.930Z
+modified: 2026-07-31T16:53:58.573Z
 ---
 
 # Tabaxi
@@ -109,4 +109,4 @@ Tabaxi alignment tends toward **Chaotic**, following impulse and curiosity — e
 
 ---
 
-*See also:* [[Species Index]] | [[Country Index]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Country Index]] | *(reference: Races of Amantia chapter — ask DM)*

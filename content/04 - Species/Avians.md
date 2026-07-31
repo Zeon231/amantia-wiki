@@ -12,7 +12,7 @@ size: Medium
 speed: 30 ft (walk), 50 ft (fly)
 lifespan: ~100 years
 common: false
-modified: 2026-06-10T15:30:20.528Z
+modified: 2026-07-31T16:53:55.954Z
 ---
 
 # Avians
@@ -133,4 +133,4 @@ Most avian adventurers leave their aeries out of a mix of wanderlust and duty â€
 
 ---
 
-*See also:* [[Species Index]] | [[Cosmology & The Planes]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Cosmology & The Planes]] | *(reference: Races of Amantia chapter â€” ask DM)*

@@ -7,7 +7,7 @@ content-start: 712
 tags: [species, rare]
 creature-type: Monstrosity (playable lineage)
 common: false
-modified: 2026-05-28T13:40:08.714Z
+modified: 2026-07-31T16:53:58.134Z
 ---
 
 # Medusa (Lesser)
@@ -36,4 +36,4 @@ Rare. Found primarily in the Republic of Arcadia region, where Medusa mythology 
 
 ---
 
-*See also:* [[Species Index]] | [[Other Species]] | [[Amantia Source Material/ChapterTwo_RacesOfAmantia_09March2024.pdf]]
+*See also:* [[Species Index]] | [[Other Species]] | *(reference: Races of Amantia chapter — ask DM)*
