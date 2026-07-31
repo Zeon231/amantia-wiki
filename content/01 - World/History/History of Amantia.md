@@ -1,6 +1,6 @@
 ---
 tags: [world, history, lore]
-modified: 2026-07-31T16:53:46.938Z
+modified: 2026-07-31T19:38:54.455Z
 ---
 
 # History of Amantia
@@ -84,9 +84,49 @@ Amid the contest of wyrm and titan, the **Fae** entered Amantia not by banner or
 
 ---
 
-## Later Ages
+## The Age of Mortal Dawning (c. 26,000 – 18,215 BA)
 
-*To be expanded as the campaign unfolds.*
+> *"When the old empires dimmed and the seas began to calm, the gods themselves trembled before the weight of creation."*
+> — Elder Maelvyrn of the First Grove
+
+- **c. 25,800 BA** — In the deep places beneath the newborn mountains, **[[Ylmodra]]** molds the world's heart and wakes it, giving rise to the **Kazdurim** — the first dwarves. On the surface, **Rhaevira Moeneth** and **Thalanor Moeneth** weave spirit into enduring form and bring forth the **Elyrhae** — the first elves, unified as *the First Kindred* before their later split into Vanaril, Sylvalûn, Faenari, Nero, and Kharunyel. Other lineages stir into coherence in the wilder seams — *Bestial Humanoids*: [[Tabaxi]] cat-folk, horned labyrinth-kin ([[Greater Minotaur|Minotaur]]), scale-folk of the deltas ([[Yuan-ti Pureblood|Yuan-ti]], [[Lizardfolk]]), and the wind-borne [[Avians]].
+- **c. 25,500–23,000 BA** — *The Era of the First Holds.* The Kazdurim carve permanent runic halls into mountain roots, bargain with earth-spirits, and master mineral-tempered steel. Wars against remnant giant warlords. Proverb still quoted: *"Stone keeps memory longer than kings."*
+- **c. 25,400–22,500 BA** — Elyrhae expand through forests and moon-silver coasts, building **living architectures** (groves shaped into halls, ley-lines woven into pathways). Long wary rivalry with the dragon-kin who linger in the higher airs.
+- Human tribes wander in the margins throughout — hunters, herders, scavengers of ruins. **Seeds of the [[Siórtharan]]** trace to this era through slow consolidation.
+- Northern frost is touched by Ylmodra's breath — the **[[Iljarnskarn]]** emerge, mortals of giant blood suited to hard climates.
+- Southern coasts harden mortals into peoples: the **[[Malkûn]]** under desert discipline, the **[[Bakassari]]** in flood-fertile riverlands.
+- **c. 19,000–18,215 BA** — Omens multiply. Coastlines creep, storms arrive out of season, ley-lines sing with unstable harmonics. Prophets speak of an approaching fracture.
+
+---
+
+## Age of Sundering and Ashes (18,215 – 7,000 BA)
+
+> *"The Sundering did not end the world; it merely taught it to bleed slowly."*
+> — Hearth-Recorder Brannic
+
+- **18,215–17,998 BA — The Crownshard War.** The elder polities polarize into an **Alliance of Light** (preservative elven realms, Ruzvakun dwarves, the Summer Court, oath-bound giants, metallic dragons) versus an **Alliance of Shadow** (Durakhald dwarves, Kharunyel elves, the Winter Court, harsher giants, chromatic dragons, mortal cults). Fought with continent-wrenching sorceries, planar rents, unshackled elemental forces — a war *over the world's operating principles*.
+- **17,998 BA — The Crownshard Comet.** A blood-red comet appears on the eve of the decisive engagement. Fae and elven astrologers record it unanimously as omen: *the world's crown would be split.*
+- **The Sundering.** The single world of Amantia is rendered into the subcontinents of **Arcavéa, Bakassari, Malkûn, the Rose, and the central ocean realms.** Mountains thrust upward as if panicked; inland seas tore open; coastlines rewrote in a single convulsion. Great elven kingdoms, dwarven holds, dragon dominions, and faerie demesnes vanish — *cartographic amputation.*
+- **17,960 BA — The Black Ash Rains.** The **Bakassari Rift** answers with fire; linked volcanoes erupt and ashfall dims the sky for three years across the south. Famine and warning enter common memory.
+- **c. 17,500–7,900 BA — Shattered Realms.** The elder folk consolidate in enclaves; survivors rebuild in the lee of ruins. Faenari elves gather on the sea-isles as **[[The High Kingdom of Séraevirhae|Séraevirhae]]** and reclaim a foothold at **Tu Liraenyllae**. Vanaril withdraw into **Elarathir** as wardens. The **Kharunyel** are driven beneath the earth after a shadow-war; they forge uneasy compacts with the Durakhald dwarves, seeding **Edrum-Khaelyth**. Sylvanûn survive as dispersed forest-kin. Goblin, orcish, and hobgoblin clans multiply in the debris. Tabaxi keep mobile trade routes; Avians hold the highest crags; Yuan-ti wait in hidden temple-cities.
+
+---
+
+## Dawn of Human Culture (c. 7,000 – 5,500 BA)
+
+> *"We were not the first to wake, yet we were the first to insist that tomorrow could be written."*
+> — Maera of the Moon Circle
+
+- The chaos of the Shattered Realms settles. Climate calms, coastlines stabilize, ley-lines re-harmonize. Humans, previously forced into motion, begin to root.
+- **c. 7,000 BA — Proto-[[Siórtharan]] Tribes** coalesce on Lunethaen Myrvelae and neighboring islands. They measure time in *cycles* (moon, tide, storm) rather than administrative years. Sacred geography: standing stones at headlands and thin-veiled groves. Wary mentorship from elven and fae neighbors.
+- **c. 6,912 BA — The Moon-Ring of Tirael.** Siórtharan tradition raises the first Moon Circle above the sea cliffs — a triple ring of stone standing for kin, land, and oath.
+- Six durable human cultures begin to distinguish themselves: [[Siórtharan]], [[Iljarnskarn]], [[Bakassari]], [[Malkûn]], [[Vanakuti]], and the ancestors of the [[Holy Rose Empire|Arcavéans]].
+
+---
+
+## Rise of Human Civilizations · Age of Human Expansion · Age of Fractured Crowns (c. 5,500 BA – 1681 AR)
+
+*Detailed sections still to summarize from the Annals — the source doc covers each in dense prose (~200 lines each). Add as ingest bandwidth allows. The current campaign takes place in the closing years of the **Age of Fractured Crowns and Shadowed Frontiers** (1–1681 AR).*
 
 > [!tip] Source
-> Full history sourced from *(reference: Annals of Amantia — ask DM)*
+> Full history from *Annals of Amantia.docx* (Player Guides, ingested 2026-07-31). The Amantian Calendar structure lives at [[Amantian Calendar]].

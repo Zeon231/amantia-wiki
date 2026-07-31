@@ -1,6 +1,6 @@
 ---
 tags: [world, calendar]
-modified: 2026-06-07T15:55:28.048Z
+modified: 2026-07-31T19:39:03.420Z
 ---
 
 # The Amantian Calendar
@@ -68,3 +68,7 @@ The moon governs tides at roughly **12-hour intervals**. Intercalary festival da
 Years are counted as **BA** (Before the Arcadian Age) or **AR** (After Reckoning). The current year in Arcavéan archives is **1681 AR** at the time of the Annals of Amantia.
 
 See [[History of Amantia]] for the full historical timeline.
+
+---
+
+*Calendar structure sourced from Annals of Amantia.docx (Player Guides). The moon-phase detail here was already extracted before this ingest; the Annals prose adds context — "time is the quiet governor of empires" — worth reading in the source doc for the flavor.*
