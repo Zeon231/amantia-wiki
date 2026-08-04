@@ -1,6 +1,6 @@
 ---
 tags: [world, cosmology, plane, index]
-modified: 2026-07-29T20:15:09.957Z
+modified: 2026-08-04T19:34:10.911Z
 ---
 
 # The Planes
@@ -9,7 +9,7 @@ The planes of Amantia's cosmos, per [[Cosmology & The Planes]]. Each plane has i
 
 ## Divine / Aligned Planes
 
-- **[[Arcadia]]** — home of the [[Arcavéan Pantheon]]; ordered, lawful, agrarian
+- **[[Arcadia]]** — home of the [[Arcavean Pantheon]]; ordered, lawful, agrarian
 - **[[Ysgard]]** — plane of heroic warfare and endless battle-glory
 - **Others** — TBD as they enter play
 

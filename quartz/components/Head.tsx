@@ -116,6 +116,11 @@ export default (() => {
             content={(fileData.frontmatter.encounters as unknown[]).map((e) => String(e)).join(" || ")}
           />
         )}
+        {/* DM review flag: frontmatter `dm-review: "reason"` renders a yellow
+            badge only for admins/dm, linking to the private review queue. */}
+        {fileData.frontmatter?.["dm-review"] && (
+          <meta name="dm-review" content={String(fileData.frontmatter["dm-review"])} />
+        )}
         <script src={joinSegments(baseDir, "static/campaign-ui.js")} defer></script>
 
         {css.map((resource) => CSSResourceToStyleElement(resource, true))}

@@ -74,6 +74,9 @@
       ".ax-btn.ax-small{padding:3px 9px;font-size:11px;font-weight:500}",
       ".ax-btn.ax-primary{background:#e8b04b;color:#111}",
       ".ax-btn.ax-danger{background:#c0392b;color:#fff}",
+      /* DM review badge */
+      ".ax-dm-review{background:#fff4d6;color:#5a3d00;border-left:4px solid #e8b04b;padding:8px 12px;margin:0 0 1rem 0;border-radius:0 6px 6px 0;font-size:13px}",
+      ".ax-dm-review a{color:#8a4b00;font-weight:600}",
       /* Presenter mode: hide chrome, center + enlarge content */
       "body.ax-presenter .sidebar,body.ax-presenter #quartz-body>*:not(.center),body.ax-presenter .page-header,body.ax-presenter #amantia-session-bar,body.ax-presenter #ax-capture-btn{display:none!important}",
       "body.ax-presenter .center{max-width:min(900px,92vw)!important;margin:2rem auto!important;font-size:1.08rem;line-height:1.65}",
@@ -1480,6 +1483,24 @@
   // ---- Portrait: render <img> from the note's `portrait:` frontmatter field.
   //      Zero-config in the note itself — Head.tsx surfaces it as <meta name="portrait">.
   //      Missing/empty portrait -> nothing renders (no broken image).
+  // ---- DM review flag ----
+  // A page with frontmatter `dm-review: "reason"` gets a yellow badge above
+  // its title (admin/dm only), linking to the private DM Review Queue.
+  function renderDmReviewBadge() {
+    var meta = document.querySelector('meta[name="dm-review"]')
+    if (!meta) return
+    if (!WHO || !WHO.canSeeAllTiers) return // admin/dm only — never leak to players
+    var reason = (meta.getAttribute("content") || "").trim()
+    if (!reason) return
+    var article = document.querySelector("article")
+    if (!article || article.querySelector(".ax-dm-review")) return
+    var badge = document.createElement("div")
+    badge.className = "ax-dm-review"
+    badge.innerHTML = '⚠️ <b>DM review:</b> ' + esc(reason) +
+      ' — <a href="/private/dm/dm-review-queue">open review queue →</a>'
+    article.insertBefore(badge, article.firstChild)
+  }
+
   function renderPortrait() {
     var meta = document.querySelector('meta[name="portrait"]')
     if (!meta) return
@@ -1800,6 +1821,7 @@
     renderTimeline()
     tidyPlaceholders()
     renderPortrait()
+    renderDmReviewBadge()
     decorateMaps()
     decorateZoomImages()
     setupLightbox()

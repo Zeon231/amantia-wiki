@@ -1,7 +1,8 @@
 ---
 tags: [religion, pantheon]
 source: Gods List.docx (Player Guides)
-modified: 2026-07-31T19:35:56.374Z
+dm-review: "Spelling — DM source has 'Arcavean' (no accent), existing wiki lore uses 'Arcavéan'. Confirm canonical."
+modified: 2026-08-04T19:39:59.965Z
 ---
 
 # The Arcavean Pantheon
@@ -41,8 +42,8 @@ modified: 2026-07-31T19:35:56.374Z
 | **[[Virellion]]** — *Lord of Revels* | Intermediate God of Theatre, Festivals, Wine, Hedonism, Debauchery, Satyrs | CN | Knowledge, Life, Trickery | A twisted horn spilling wine and ivy beside a laughing satyr mask |
 | **[[Volcrathor]]** — *Hearth of Earthquakes and Volcanoes* | Intermediate God of Earthquakes, Destruction, Volcanoes | CN | Light, Tempest | A split obsidian stone erupting with molten gold |
 | **[[Threxavar]]** — *Strife Bringer* | Greater God (Arch Fiend) of Strife, Tyranny, Lies, the Right of Nobility; The Enemy | LE | Death, Order, Trickery, War | A thorned white rose wrapped in a rusted chain, petals falling to dust |
-| **[[Dolosara]]** — *The Lady of Pain* | Lesser Goddess of Pain, Torture, the Pain of Cold & Ice, Suffering, Domination | LE | Death, Order | A silver whip coiled around a jagged shard of blue-white ice Funerata Tenebra (Lady of Two Faces) Greater Goddess of Epidemics, Pestilence, Misfortune, Nyxvaleth Elves; Guardian of the Fugue Plane |
-| **[[Death, Order]]** | A silver whip coiled around a jagged shard of blue-white ice Funerata Tenebra (Lady of Two Faces) Greater Goddess of Epidemics, Pestilence, Misfortune, Nyxvaleth Elves; Guardian of the Fugue Plane | NE | Death, Grave, Trickery | A mask, one have pale ivory and the other ashen black, from with hangs a veil of funerary beads, a silver circlet of bone and thorn rests on the brow |
+| **[[Dolosara]]** — *The Lady of Pain* | Lesser Goddess of Pain, Torture, the Pain of Cold & Ice, Suffering, Domination | LE | Death, Order | A silver whip coiled around a jagged shard of blue-white ice |
+| **[[Funerata Tenebra]]** — *Lady of Two Faces* | Greater Goddess of Epidemics, Pestilence, Misfortune, Nyxvaleth Elves; Guardian of the Fugue Plane | NE | Death, Grave, Trickery | A mask, one half pale ivory and the other ashen black, from which hangs a veil of funerary beads, a silver circlet of bone and thorn rests on the brow |
 | **[[Gelarissa]]** — *Queen of Shadows* | Greater Goddess of Unseelie Fae, Unseelie Fae Magic, Evil Lycanthropes, Nightmares; Queen of the Winter Court | NE | Arcana, Light, Trickery | An obsidian ring encasing a dead moth |
 | **[[Umbraeia]]** — *Mother of Veiled Secrets* | Greater Goddess (Arch Fiend) of Caverns, Shadows, Darkness, Night, Secrets, Shadow Magic | NE | Arcana, Knowledge | Black sphere ringed with runes of purple flame |
 | **[[Dolmyrion]]** — *The Shadow Phantom* | Intermediate God of Thieves, Shadows, Deception, Fear | NE | Death, Knowledge, Trickery | Black velvet mask tinged with red |

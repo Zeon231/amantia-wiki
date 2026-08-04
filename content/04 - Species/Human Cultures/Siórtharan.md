@@ -2,7 +2,7 @@
 tags: [species, human, culture, stub]
 inspiration: Medieval Scotland / Celtic
 region: North Rose Subcontinent
-modified: 2026-07-29T20:14:20.717Z
+modified: 2026-08-04T19:34:21.298Z
 ---
 
 # Siórtharan
@@ -11,7 +11,7 @@ The **Siórtharan** are the dominant human ethnicity across the [[North Rose Sub
 
 ## Religion
 
-- Traditional: **[[Siórtharan Pantheon]]** — older highland gods still worshipped in [[Tir Caelgormhaen]] and rural Rose Subcontinent
+- Traditional: **[[Siórthara Pantheon]]** — older highland gods still worshipped in [[Tir Caelgormhaen]] and rural Rose Subcontinent
 - Where Siórtharans live under Empire rule, many now follow the [[Holy Rose Empire Church]] (Arcavéan pantheon)
 
 ## In the Campaign
@@ -21,4 +21,4 @@ The **Siórtharan** are the dominant human ethnicity across the [[North Rose Sub
 
 ---
 
-*See also:* [[Human Cultures]] | [[Humans]] | [[Tir Caelgormhaen]] | [[Siórtharan Pantheon]]
+*See also:* [[Human Cultures]] | [[Humans]] | [[Tir Caelgormhaen]] | [[Siórthara Pantheon]]

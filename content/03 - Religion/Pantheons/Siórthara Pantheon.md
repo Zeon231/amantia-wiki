@@ -1,7 +1,8 @@
 ---
 tags: [religion, pantheon]
 source: Gods List.docx (Player Guides)
-modified: 2026-07-31T19:35:56.374Z
+dm-review: "Spelling — DM source has 'Siórthara' (no trailing n), existing wiki lore uses 'Siórtharan'. Confirm canonical."
+modified: 2026-08-04T19:40:33.982Z
 ---
 
 # The Siórthara Pantheon
